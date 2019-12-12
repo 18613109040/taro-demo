@@ -1,0 +1,17 @@
+@import '../../styles/theme';
+.material-design-fill{
+  border: 1px solid $brand-3;
+  position: relative;
+}
+.material-design-input{
+  width: 100%;
+  height: 88px;
+}
+.material-design-lable{
+  position: absolute;
+  background: $brand-8;
+  padding: 2px 5px 2px 5px;
+  font-size: $font-size-16;
+  margin-top: -100px;
+  margin-left: $h-spacing-10;
+}
