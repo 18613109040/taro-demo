@@ -1,5 +1,5 @@
 
-$hd: 2 !default; // 基本单位
+$hd: 2px; // 基本单位
 $brand-1: #283282; //品牌色、主色调、主要按钮
 $brand-2: #1D31AA; //可点击的小按钮
 $brand-3: #6973A0; //弱一些的文字，按钮
@@ -24,7 +24,9 @@ $font-size-30: 15 * $hd;
 $font-size-32: 16 * $hd;
 $font-size-34: 17 * $hd;
 $font-size-36: 18 * $hd;
+$font-size-38: 19 * $hd;
 $font-size-40: 20 * $hd;
+$font-size-42: 21 * $hd;
 $font-size-48: 24 * $hd;
 $font-size-70: 35 * $hd;
 // 水平间距
@@ -54,3 +56,11 @@ $v-spacing-32: 16 * $hd;
 $v-spacing-48: 24 * $hd;
 $v-spacing-100: 50 * $hd;
 
+// 圆角
+$radius-4: 2 * $hd;
+$radius-8: 4 * $hd;
+$radius-12: 6 * $hd;
+$radius-16: 8 * $hd;
+$radius-24: 12 * $hd;
+$radius-28: 14 * $hd;
+$radius-circle: 50%;

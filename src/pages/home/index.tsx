@@ -3,7 +3,8 @@ import { View } from '@tarojs/components';
 import { AtSteps, AtInput, AtForm } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import { InitStateProps } from './model'
-import CInput from '../../components/Input' 
+import CInput from '../../components/Input'
+import Item from '../../components/Form/item'
 import './index.scss';
 type IProps = InitStateProps
 type IState = {}
@@ -54,7 +55,18 @@ class Home extends Component<IProps,IState> {
             onChange={this.stepChange}
           />
         </View>
-        <CInput/>
+        <AtInput/>
+        <Item 
+          label='国籍'
+          name="hy"
+          rules={[{
+            required: true,
+            pattern: /^\s*[0-9a-z]{5,15}\s*$/,
+            message: 'Please select your country!'
+          }]}
+        >
+          <CInput defaultValue=""/>
+        </Item>
         {/* <AtForm>
           <AtInput 
             name='value' 
