@@ -1,0 +1,37 @@
+{
+  "id": "1564160",
+  "name": "demo",
+  "font_family": "FontAwesome",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1001659",
+      "name": "工作信息",
+      "font_class": "gongzuoxinxi",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "1001663",
+      "name": "个人信息",
+      "font_class": "gerenxinxi",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "2150786",
+      "name": "身份证",
+      "font_class": "credentials_icon",
+      "unicode": "e674",
+      "unicode_decimal": 58996
+    },
+    {
+      "icon_id": "4251739",
+      "name": "联系人",
+      "font_class": "lianxiren",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    }
+  ]
+}

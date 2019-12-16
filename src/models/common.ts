@@ -1,14 +1,15 @@
 import Taro from '@tarojs/taro';
 import { fromJS } from 'immutable';
+import { SystemInfoProps } from '../interface/common'
 const systemInfo = Taro.getSystemInfoSync();
-const initState = {
+type InitStateProps = {
+  systemInfo: SystemInfoProps;
+  userInfo: object;
+}
+const initState:InitStateProps = {
   systemInfo: systemInfo,
-  custom: {
-    statusBarHeight: 20,
-    customBarHeight: 44,
-    screenHeight: 667,
-    windowHeight: 667,
-    tabBarHeight: 50
+  userInfo: {
+    name: '骊山'
   }
 }
 export default {

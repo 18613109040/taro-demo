@@ -1,5 +1,5 @@
 
-$hd: 2px; // 基本单位
+$hd: 2; // 基本单位
 $brand-1: #283282; //品牌色、主色调、主要按钮
 $brand-2: #1D31AA; //可点击的小按钮
 $brand-3: #6973A0; //弱一些的文字，按钮
@@ -13,54 +13,58 @@ $brand-11: #FFE4B8;
 $brand-12: #FE677A;
 $brand-13: #DFF6EA;
 
-$font-size-16: 8 * $hd;
-$font-size-18: 8 * $hd;
-$font-size-20: 10 * $hd;
-$font-size-22: 11 * $hd;
-$font-size-24: 12 * $hd;
-$font-size-26: 13 * $hd;
-$font-size-28: 14 * $hd;
-$font-size-30: 15 * $hd;
-$font-size-32: 16 * $hd;
-$font-size-34: 17 * $hd;
-$font-size-36: 18 * $hd;
-$font-size-38: 19 * $hd;
-$font-size-40: 20 * $hd;
-$font-size-42: 21 * $hd;
-$font-size-48: 24 * $hd;
-$font-size-70: 35 * $hd;
+$font-size-16: 8px * $hd;
+$font-size-18: 8px * $hd;
+$font-size-20: 10px * $hd;
+$font-size-22: 11px * $hd;
+$font-size-24: 12px * $hd;
+$font-size-26: 13px * $hd;
+$font-size-28: 14px * $hd;
+$font-size-30: 15px * $hd;
+$font-size-32: 16px * $hd;
+$font-size-34: 17px * $hd;
+$font-size-36: 18px * $hd;
+$font-size-38: 19px * $hd;
+$font-size-40: 20px * $hd;
+$font-size-42: 21px * $hd;
+$font-size-48: 24px * $hd;
+$font-size-70: 35px * $hd;
 // 水平间距
-$h-spacing-4: 2 * $hd;
-$h-spacing-6: 3 * $hd;
-$h-spacing-10: 5 * $hd;
-$h-spacing-16: 8 * $hd;
-$h-spacing-20: 10 * $hd;
-$h-spacing-22: 11 * $hd;
-$h-spacing-24: 12 * $hd;
-$h-spacing-30: 15 * $hd;
-$h-spacing-40: 20 * $hd;
-$h-spacing-50: 25 * $hd;
-$h-spacing-60: 30 * $hd;
-$h-spacing-80: 40 * $hd;
+$h-spacing-4: 2px * $hd;
+$h-spacing-6: 3px * $hd;
+$h-spacing-10: 5px * $hd;
+$h-spacing-16: 8px * $hd;
+$h-spacing-20: 10px * $hd;
+$h-spacing-22: 11px * $hd;
+$h-spacing-24: 12px * $hd;
+$h-spacing-30: 15px * $hd;
+$h-spacing-40: 20px * $hd;
+$h-spacing-50: 25px * $hd;
+$h-spacing-60: 30px * $hd;
+$h-spacing-80: 40px * $hd;
 
 // 垂直间距
-$v-spacing-4: 2 * $hd;
-$v-spacing-8: 4 * $hd;
-$v-spacing-10: 5 * $hd;
-$v-spacing-12: 6 * $hd;
-$v-spacing-20: 10 * $hd;
-$v-spacing-24: 12 * $hd;
-$v-spacing-28: 14 * $hd;
-$v-spacing-30: 15 * $hd;
-$v-spacing-32: 16 * $hd;
-$v-spacing-48: 24 * $hd;
-$v-spacing-100: 50 * $hd;
+$v-spacing-4: 2px * $hd;
+$v-spacing-8: 4px * $hd;
+$v-spacing-10: 5px * $hd;
+$v-spacing-12: 6px * $hd;
+$v-spacing-20: 10px * $hd;
+$v-spacing-24: 12px * $hd;
+$v-spacing-28: 14px * $hd;
+$v-spacing-30: 15px * $hd;
+$v-spacing-32: 16px * $hd;
+$v-spacing-48: 24px * $hd;
+$v-spacing-100: 50px * $hd;
 
 // 圆角
-$radius-4: 2 * $hd;
-$radius-8: 4 * $hd;
-$radius-12: 6 * $hd;
-$radius-16: 8 * $hd;
-$radius-24: 12 * $hd;
-$radius-28: 14 * $hd;
+$radius-4: 2px * $hd;
+$radius-8: 4px * $hd;
+$radius-12: 6px * $hd;
+$radius-16: 8px * $hd;
+$radius-24: 12px * $hd;
+$radius-28: 14px * $hd;
 $radius-circle: 50%;
+
+
+
+

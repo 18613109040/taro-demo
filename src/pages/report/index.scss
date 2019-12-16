@@ -1,0 +1,21 @@
+@import '../../styles/theme';
+page{
+  background: $brand-5;
+}
+.report-page{
+  .report-card{
+    background: $brand-8;
+    padding: $v-spacing-30;
+    .card-row{
+      display: flex;
+      align-items: center;
+      .card-title{
+        font-size: $font-size-32;
+      }
+    }
+    .add-button{
+      width: 100px;
+      margin-top: $v-spacing-20;
+    }
+  }
+}

@@ -1,35 +1,41 @@
-import Taro, { Component , ComponentClass} from '@tarojs/taro';
-import { View } from '@tarojs/components';
-import { AtSteps, AtInput, AtForm } from 'taro-ui';
+import Taro, { Component, ComponentClass } from '@tarojs/taro';
+import { View, Text, ScrollView } from '@tarojs/components';
+import { AtSteps, AtButton, AtForm, AtAvatar, AtGrid } from 'taro-ui';
 import { connect } from '@tarojs/redux';
-import { InitStateProps } from './model'
+import { StepsProps } from './model'
+import { FormProps } from '../../interface/form'
 import CInput from '../../components/Input'
-import Item from '../../components/Form/item'
+import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
-type IProps = InitStateProps
-type IState = {}
 
-@connect(({home}) => ({
-  steps: home.steps
+type IState = {}
+type IProps =  {
+  steps: Array<StepsProps>;
+  form: Array<FormProps>;
+  dispatch: any;
+  systemInfo: SystemInfoProps;
+  userInfo: any;
+  common: any;
+}
+@connect(({ home, common }) => ({
+  steps: home.steps,
+  form: home.form,
+  systemInfo: common.systemInfo,
+  userInfo: common.userInfo
 }))
-class Home extends Component<IProps,IState> {
+class Home extends Component<IProps, IState> {
   config = {
     navigationBarTitleText: 'home',
   };
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-     
+
     }
   }
   componentDidMount = () => {
-    // console.dir(this.props.home)
-    // const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'home/getAppBannerAction',
-    //   payload: {}
-    // })
-    
+
+
   };
 
   //分享
@@ -44,40 +50,68 @@ class Home extends Component<IProps,IState> {
   stepChange = (current) => {
     console.dir(current)
   }
+  formSubmit = () => {
+    console.dir(this.props.form)
+  }
+  onChange = (obj) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'home/setFormValue',
+      payload: obj
+    })
+  }
   render() {
-    const { steps } = this.props;
+    const { steps, form, systemInfo, userInfo } = this.props;
+    const statusBarHeight = systemInfo.statusBarHeight || 0;
+    const screenHeight = systemInfo.screenHeight || 0;
+    const customHeight = statusBarHeight+44;
+    const rendeForm =
+      <AtForm >
+        {
+          form.map((item,index) => {
+            if (item.type === 'input') {
+              return (
+              <View key={item.name} className="form-item">
+                <CInput
+                  {...item}
+                  onChange={(obj)=>this.onChange({...obj,index:index})}
+                />
+              </View>)
+            }
+          })
+        }
+      </AtForm>
+    
     return (
       <View className="home-page">
-        <View className="at-steps-bg">
-          <AtSteps 
+        {/* <View style={`margin-top : ${statusBarHeight}px`}></View> */}
+        <View className="nav-bar">
+          <AtAvatar circle size="small" image='https://jdc.jd.com/img/200'/>
+          <Text className="user-info-name">{userInfo.name}</Text>
+        </View>
+        <ScrollView
+          className='scrollview'
+          scrollY
+          scrollWithAnimation
+          scrollTop={customHeight}
+          style={`height: ${screenHeight}px`}
+        >
+          
+        </ScrollView>
+        {/* <View className="at-steps-bg">
+          <AtSteps
             items={steps}
             current={0}
             onChange={this.stepChange}
           />
         </View>
-        <AtInput/>
-        <Item 
-          label='国籍'
-          name="hy"
-          rules={[{
-            required: true,
-            pattern: /^\s*[0-9a-z]{5,15}\s*$/,
-            message: 'Please select your country!'
-          }]}
-        >
-          <CInput defaultValue=""/>
-        </Item>
-        {/* <AtForm>
-          <AtInput 
-            name='value' 
-            title='文本' 
-            type='text' 
-            placeholder='单行文本' 
-          />
-        </AtForm> */}
+        <View className="home-page-content">
+          {rendeForm}
+          <AtButton onClick={this.formSubmit} >提交</AtButton>
+        </View> */}
       </View>
     );
   }
 }
 
-export default Home  as ComponentClass<IProps, IState>;
+export default Home as ComponentClass<IProps, IState>;

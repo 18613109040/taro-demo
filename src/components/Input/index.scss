@@ -34,3 +34,18 @@
   // border-radius: $radius-16;
   // border: 1px solid $brand-3;
 }
+.error-msg{
+  color: $brand-6;
+  font-size: $font-size-24;
+  margin-left: $h-spacing-20;
+}
+.error-msg-disable{
+  color: $brand-6;
+  font-size: $font-size-24;
+  margin-left: $h-spacing-20;
+  visibility: hidden;
+}
+.error-des{
+  margin-top: -$v-spacing-8;
+  margin-bottom: $v-spacing-20;
+}

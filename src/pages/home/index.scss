@@ -1,5 +1,22 @@
 @import '../../styles/theme';
+.home-page{
+  .nav-bar{
+    height: 44PX;
+    display: flex;
+    align-items: center;
+    padding-left: $h-spacing-30;
+    .user-info-name{
+      margin-left: $h-spacing-30;
+    }
+  }
+}
 .at-steps-bg{
   background: $brand-5;
-  padding: $h-spacing-20;
+  // padding: 0px $h-spacing-20 0px $h-spacing-20;
+}
+.form-item{
+  margin-bottom: $v-spacing-20;
+}
+.home-page-content{
+  padding: $h-spacing-30;
 }

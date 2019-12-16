@@ -1,0 +1,20 @@
+@import '../../styles/theme';
+.login-page{
+  height: 100%;
+  padding: $v-spacing-30;
+  .login-page-title{
+    font-size: $font-size-42;
+    color: $brand-9;
+    margin-bottom: $v-spacing-100;
+    padding-top: $v-spacing-100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-page-buttom{
+    margin-top: $v-spacing-30;
+  }
+  .login-page-password{
+    margin-top: $v-spacing-30;
+  }
+}

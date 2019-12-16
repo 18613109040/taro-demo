@@ -1,22 +1,21 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
+import { AtList, AtListItem, AtIcon, AtButton } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import './index.scss';
+type IState = {}
+type IProps = {
 
-@connect(({loading }) => ({
+}
+@connect(({ }) => ({
 
 }))
-class Account extends Component {
+class UserInfo extends Component<IProps, IState>{
   config = {
-    navigationBarTitleText: '我的',
-  };
+    navigationBarTitleText: '用户信息',
+  }
 
   componentDidMount = () => {
-
-  };
-
-  //分享
-  onShareAppMessage() {
 
   }
 
@@ -24,14 +23,16 @@ class Account extends Component {
   onReachBottom() {
 
   }
-
+  goToUserInfo=()=> {
+    
+  }
   render() {
     return (
-      <View className="home-page">
-        <Text>我的</Text>
+      <View className="user-info-page">
+       
       </View>
     );
   }
 }
 
-export default Account;
+export default UserInfo;

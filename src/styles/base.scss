@@ -1,5 +1,14 @@
+/** taro-ui 主题配置 **/
+$color-brand: #283282;
+/** **** **/
+
 @import "./theme.scss";
 @import "~taro-ui/dist/style/index.scss";
+@import './iconfont.scss';
+page{
+  width: 100%;
+  height: 100%;
+}
 .page {
   display: flex;
   flex-direction: column;

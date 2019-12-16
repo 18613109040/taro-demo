@@ -91,10 +91,11 @@ const config = {
       }
     }
   },
-  // alias: {
-  //   '@/components': path.resolve(__dirname, '..', 'src/components'),
-  //   '@/utils': path.resolve(__dirname, '..', 'src/utils')
-  // }
+  alias: {
+    '@/components': path.resolve(__dirname, '..', 'src/components'),
+    '@/utils': path.resolve(__dirname, '..', 'src/utils'),
+    '@/interface': path.resolve(__dirname, '..', 'src/interface')
+  }
 }
 
 module.exports = function (merge) {

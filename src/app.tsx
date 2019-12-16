@@ -14,8 +14,13 @@ const store = dvaApp.getStore();
 class App extends Component {
   config: Config = {
     pages: [
-      'pages/home/index',
+      'pages/idcard/index',
+      'pages/report/index',
+      'pages/userinfo/index',
+      'pages/userlist/index',
       'pages/account/index',
+      'pages/home/index',
+      'pages/login/index'      
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -24,37 +29,38 @@ class App extends Component {
       navigationBarTextStyle: 'black',
       // navigationStyle: "custom"
     },
-    // tabBar: {
-    //   list: [
-    //     {
-    //       pagePath: 'pages/home/index',
-    //       text: '机票',
-    //       iconPath: './images/tab/home.png',
-    //       selectedIconPath: './images/tab/home-active.png',
-    //     },
-    //     {
-    //       pagePath: 'pages/products/index',
-    //       text: '订单',
-    //       iconPath: './images/tab/find.png',
-    //       selectedIconPath: './images/tab/find-active.png',
-    //     },
-    //     {
-    //       pagePath: 'pages/account/index',
-    //       text: '我的',
-    //       iconPath: './images/tab/account.png',
-    //       selectedIconPath: './images/tab/account-active.png',
-    //     },
-    //   ],
-    //   color: '#333',
-    //   selectedColor: '#333',
-    //   backgroundColor: '#fff',
-    //   borderStyle: 'white',
-    // },
+    tabBar: {
+      list: [
+        {
+          pagePath: 'pages/home/index',
+          text: '机票',
+          iconPath: './images/tabBar/home.png',
+          selectedIconPath: './images/tabBar/home-fill.png',
+        },
+        // {
+        //   pagePath: 'pages/products/index',
+        //   text: '订单',
+        //   iconPath: './images/tab/find.png',
+        //   selectedIconPath: './images/tab/find-active.png',
+        // },
+        {
+          pagePath: 'pages/account/index',
+          text: '我的',
+          iconPath: './images/tabBar/my.png',
+          selectedIconPath: './images/tabBar/my-fill.png',
+        },
+      ],
+      color: '#333',
+      selectedColor: '#283282',
+      backgroundColor: '#fff',
+      borderStyle: 'white',
+    },
   };
   componentWillMount() {
     // store.dispatch({
     //   type: 'common/'
     // })
+    // console.dir(Taro.getMenuButtonBoundingClientRect())
   }
   componentDidMount() {}
 
