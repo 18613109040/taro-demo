@@ -1,4 +1,4 @@
-import Taro, { useState } from '@tarojs/taro';
+import Taro, { useState, useEffect } from '@tarojs/taro';
 import { Input, View, Text } from '@tarojs/components';
 import { RulesProps } from '../../interface/form'
 import classnames from "classnames";
@@ -10,14 +10,20 @@ type InputProps = {
   rules: Array<RulesProps>;
   trigger?: string;
   type?: any;
+  defaultValue?: any;
+  error?: boolean;
   onChange?: (obj:object)=>void;
 }
 const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
+  const { trigger, rules, label, name, onChange, type, defaultValue } = props;
   const [focus, setFocus] = useState(false);
   const [errorIndex, setErrorIndex] = useState<number>(-1);
-  const [value, setValue] = useState(props.value);
-  const { trigger, rules, label, name, onChange, type } = props;
+  const [value, setValue] = useState(defaultValue);
   const error = errorIndex >= 0 ? true : false;
+  useEffect(()=>{
+    if(props.error)
+      setErrorIndex(0)
+  },[props.error])
   const fillClass = classnames({
     'material-design-fill': true,
     'material-design-fill-error': error
@@ -36,7 +42,11 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
     setFocus(false)
     if (trigger === "onBlur") {
       const findIndex = rules.findIndex(rule => {
-        return rule.required && !e.currentTarget.value.match(rule.pattern)
+        if(rule.required){
+          return !e.currentTarget.value.match(rule.pattern)
+        }else{
+          return e.currentTarget.value && !e.currentTarget.value.match(rule.pattern)
+        }
       })
       setErrorIndex(findIndex)
     }
@@ -47,7 +57,7 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
   }
   const oninput = (e) => {
     setValue(e.currentTarget.value)
-    if (trigger === "onChange" || !trigger) {
+    if (trigger === "onChange" || !trigger || error) {
       const findIndex = rules.findIndex(rule => {
         return rule.required && !e.currentTarget.value.match(rule.pattern)
       })

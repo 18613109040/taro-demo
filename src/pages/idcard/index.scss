@@ -4,4 +4,17 @@ page{
 }
 .id-card-page{
   padding: $v-spacing-30;
+  .form-row{
+    display: flex;
+    align-items: center;
+  }
+  .form-item{
+    flex: 1;
+  }
+  .pading-form{
+    margin-left: $h-spacing-30;
+  }
+}
+.iconfont-down::after {
+  content: "\e64a";
 }

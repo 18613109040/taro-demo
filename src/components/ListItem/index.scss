@@ -1,0 +1,59 @@
+@import '../../styles/theme';
+
+.list{
+
+  .list-default{
+    border: 1px solid $brand-3;
+    border-radius: $radius-8;
+    height: 82px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+  }
+  .list-value{
+    font-size: $font-size-36;
+    padding-left: $h-spacing-22;
+    flex: 1;
+  }
+  .list-error{
+    border: 1px solid $brand-6 !important;
+  }
+  .material-design-lable{
+    position: absolute;
+    font-size: $font-size-36;
+    margin-left: $h-spacing-20;
+    word-break: keep-all;
+    color: $brand-10;
+  }
+  .material-design-lable-focus{
+    transform-origin: 0 0;
+    pointer-events: none;
+    background: $brand-8;
+    padding: 2px 10px 2px 10px;
+    opacity: 1;
+    transition: all .1s;
+    transform: translateY(-40px);
+    font-size: $font-size-24;
+    color: $brand-2;
+  }
+  .error-msg{
+    color: $brand-6;
+    font-size: $font-size-24;
+    margin-left: $h-spacing-20;
+  }
+  .error-msg-disable{
+    color: $brand-6;
+    font-size: $font-size-24;
+    margin-left: $h-spacing-20;
+    visibility: hidden;
+  }
+  .error-des{
+    margin-top: -$v-spacing-8;
+    margin-bottom: $v-spacing-10;
+  }
+  .down-icon{
+    position: absolute;
+    right: $v-spacing-20;
+  }
+}

@@ -1,10 +1,17 @@
 {
-  "id": "1564160",
-  "name": "demo",
-  "font_family": "FontAwesome",
+  "id": "1564224",
+  "name": "demo1",
+  "font_family": "iconfont",
   "css_prefix_text": "icon",
   "description": "",
   "glyphs": [
+    {
+      "icon_id": "566360",
+      "name": "箭头",
+      "font_class": "jiantou",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
     {
       "icon_id": "1001659",
       "name": "工作信息",
@@ -32,6 +39,13 @@
       "font_class": "lianxiren",
       "unicode": "e645",
       "unicode_decimal": 58949
+    },
+    {
+      "icon_id": "6429415",
+      "name": "联系人",
+      "font_class": "lianxiren1",
+      "unicode": "e618",
+      "unicode_decimal": 58904
     }
   ]
 }

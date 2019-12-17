@@ -1,4 +1,8 @@
 @import '../../styles/theme';
+
+.choose-addr{
+  width: 100%;
+}
 .animation-element-wrapper {
   display: flex;  
   position: fixed;
@@ -7,6 +11,7 @@
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.6);
+  z-index: 10;
   .animation-element {
     display: flex;
     position: fixed;
@@ -55,5 +60,8 @@
     line-height: 50px;
     font-size: $font-size-34;
     font-family: Arial, Helvetica, sans-serif;
+  }
+  .at-list__item-extra{
+    max-width: 500px !important;
   }
 }
