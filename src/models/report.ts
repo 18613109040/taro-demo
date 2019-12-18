@@ -1,7 +1,8 @@
 import { fromJS } from 'immutable';
-import { FormProps } from '../interface/form'
+import { FormProps, StepsProps } from '../interface/form'
 export type InitStateProps = {
-  idCard: Array<FormProps>
+  idCard: Array<FormProps>;
+  steps: Array<StepsProps>;
 }
 const initState:InitStateProps = {
   idCard: [{
@@ -118,6 +119,19 @@ const initState:InitStateProps = {
         label: '证件签发地',
         trigger: 'onBlur',
       }]
+  }],
+  steps: [{
+    title: '基本信息',
+    desc: '',
+  },{
+    title: '车辆信息',
+    desc: '',
+  },{
+    title: '产品信息',
+    desc: '',
+  },{
+    title: '材料附件',
+    desc: '',
   }]
 }
 export default {

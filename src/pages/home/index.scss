@@ -1,22 +1,16 @@
 @import '../../styles/theme';
 .home-page{
-  .nav-bar{
-    height: 44PX;
+  .add-place{
+    background: $brand-5;
+    height: 300px;
+    color: $brand-1;
+    border-radius: $radius-16;
+    margin: $v-spacing-30;
     display: flex;
     align-items: center;
-    padding-left: $h-spacing-30;
-    .user-info-name{
+    justify-content: center;
+    .text{
       margin-left: $h-spacing-30;
     }
   }
-}
-.at-steps-bg{
-  background: $brand-5;
-  // padding: 0px $h-spacing-20 0px $h-spacing-20;
-}
-.form-item{
-  margin-bottom: $v-spacing-20;
-}
-.home-page-content{
-  padding: $h-spacing-30;
 }

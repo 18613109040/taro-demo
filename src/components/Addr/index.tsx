@@ -62,7 +62,7 @@ const Addr: Taro.FC<AddrProps> = (props: AddrProps) => {
                 <PickerViewColumn>
                   {
                     provinces.map(item => {
-                      return <View key={item.code}>{item.name}</View>
+                      return <View key={item.code} >{item.name}</View>
                     })
                   }
                 </PickerViewColumn>

@@ -3,19 +3,16 @@ page{
   background: $brand-5;
 }
 .report-page{
-  .report-card{
+  .step{
     background: $brand-8;
-    padding: $v-spacing-30;
-    .card-row{
-      display: flex;
-      align-items: center;
-      .card-title{
-        font-size: $font-size-32;
-      }
-    }
-    .add-button{
-      width: 100px;
-      margin-top: $v-spacing-20;
+    padding-top: $v-spacing-30;
+    padding-bottom: $v-spacing-20;
+  }
+  .list{
+    background: $brand-8;
+    margin-top: $v-spacing-20;
+    .item-extra__info{
+      color: $brand-1;
     }
   }
 }
