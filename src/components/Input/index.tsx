@@ -4,10 +4,9 @@ import { RulesProps } from '../../interface/form'
 import classnames from "classnames";
 import './index.scss'
 type InputProps = {
-  value?: string,
   label?: string,
   name?: string,
-  rules: Array<RulesProps>;
+  rules?: Array<RulesProps>;
   trigger?: string;
   type?: any;
   defaultValue?: any;
@@ -41,7 +40,7 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
   const onblur = (e) => {
     setFocus(false)
     if (trigger === "onBlur") {
-      const findIndex = rules.findIndex(rule => {
+      const findIndex:any = rules&&rules.findIndex(rule => {
         if(rule.required){
           return !e.currentTarget.value.match(rule.pattern)
         }else{
@@ -58,7 +57,7 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
   const oninput = (e) => {
     setValue(e.currentTarget.value)
     if (trigger === "onChange" || !trigger || error) {
-      const findIndex = rules.findIndex(rule => {
+      const findIndex:any = rules&&rules.findIndex(rule => {
         return rule.required && !e.currentTarget.value.match(rule.pattern)
       })
       setErrorIndex(findIndex)

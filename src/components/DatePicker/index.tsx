@@ -6,13 +6,15 @@ import './index.scss'
 type DatePickerProps = {
   onChange:(value)=>void;
   label?: string;
-  value?: string;
+  defaultValue?: string;
   error?: boolean;
   rules?: Array<RulesProps>;
+  end?: string;
+  start?: string;
 }
 const DatePicker: Taro.FC<DatePickerProps> = (props: DatePickerProps) => {
-  const { label, value, error, rules, onChange } = props;
-  const [title, setTitle] = useState(value)
+  const { label, defaultValue, error, rules, onChange, end, start } = props;
+  const [title, setTitle] = useState(defaultValue)
   const errorMsg = rules && rules[0].message
   const onGengerChange = (e) => {
     setTitle(e.detail.value)
@@ -21,7 +23,9 @@ const DatePicker: Taro.FC<DatePickerProps> = (props: DatePickerProps) => {
   return (
     <View className="date-picker">
       <Picker 
-        mode='date' 
+        mode='date'
+        end={end}
+        start={start}
         onChange={onGengerChange}>
         <ListItem
           label={label}

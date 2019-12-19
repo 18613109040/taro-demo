@@ -14,6 +14,44 @@ page{
   .pading-form{
     margin-left: $h-spacing-30;
   }
+  .flex-row{
+    display: flex;
+    align-items: center;
+    .col{
+      flex: 1;
+    }
+    .col-right{
+      flex: 1;
+      margin-left: $h-spacing-30;
+    }
+  }
+  .effectivene-list{
+    display: flex;
+    align-items: center;
+    height: 88px;
+    border: 1px solid $brand-3;
+    padding-left: $h-spacing-20;
+    padding-right: $h-spacing-20;
+    border-radius: $radius-8;
+    color: $brand-10;
+    margin-bottom: $v-spacing-30;
+    .title{
+      flex: 1;
+      font-size: $font-size-36;
+    }
+    .radio{
+      margin-left: $h-spacing-20;
+    }
+  }
+  .id-card-view{
+    position: relative;
+    .loading{
+      position: absolute;
+      right: $h-spacing-20;
+      top: $h-spacing-20;
+    }
+  }
+ 
 }
 .iconfont-down::after {
   content: "\e64a";

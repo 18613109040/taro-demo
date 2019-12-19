@@ -1,12 +1,11 @@
 import Taro, { useState } from '@tarojs/taro';
-import { View, Text, Picker } from '@tarojs/components';
+import { View, Picker } from '@tarojs/components';
 import ListItem from '../ListItem'
 import { RulesProps } from '../../interface/form'
 import './index.scss'
 type GenderProps = {
   onChange?:(value)=>void;
   label?: string;
-  value?: string;
   defaultValue?: any;
   error?: boolean;
   rules?: Array<RulesProps>;
@@ -18,7 +17,7 @@ const Gender: Taro.FC<GenderProps> = (props: GenderProps) => {
   const [title, setTitle] = useState(defaultValue)
   const onGengerChange = (e) => {
     setTitle(gender[e.detail.value].name)
-    if(onChange) onChange({value: gender[e.detail.value], error: false})
+    if(onChange) onChange({value: gender[e.detail.value].name, error: false})
   }
   return (
     <View className="gender">

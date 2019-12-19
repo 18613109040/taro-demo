@@ -12,7 +12,14 @@ page{
     background: $brand-8;
     margin-top: $v-spacing-20;
     .item-extra__info{
-      color: $brand-1;
+      color: $brand-2;
     }
   }
+  .list-row-c{
+    margin-bottom: $v-spacing-20;
+  }
+ 
+}
+.iconfont-idcard::after {
+  content: "\e674";
 }

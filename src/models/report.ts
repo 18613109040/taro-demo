@@ -1,125 +1,66 @@
 import { fromJS } from 'immutable';
-import { FormProps, StepsProps } from '../interface/form'
+import { FormDataProps, StepsProps } from '../interface/form'
 export type InitStateProps = {
-  idCard: Array<FormProps>;
+  formData: FormDataProps
   steps: Array<StepsProps>;
 }
 const initState:InitStateProps = {
-  idCard: [{
-    key: 1,
-    children: [{
-      type: 'input',
-      name: 'accountName',
-      rules: [{
-        required: true,
-        pattern: /^(([\u4e00-\u9fff]{2,4})|([a-z\.\s\,]{2,50}))$/i,
-        message: '请输入正确的姓名!'
-      }],
-      value: '',
-      defaultValue: '',
-      label: '姓名',
-      trigger: 'onChange',
-    }],
-  },{
-    key: 2,
-    children:[{
-        type: 'input',
-        name: 'code',
-        rules: [{
-          required: true,
-          pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-          message: '请输入正确的身份证号!'
-        }],
-        value: '',
-        defaultValue: '',
-        label: '身份证号',
-        trigger: 'onChange',
-      }]
-  },{
-    key: 3,
-    children:[{
-      type: 'date',
-      name: 'startTime',
-      rules: [{
-        required: true,
-        // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-        message: '请填写开始时间'
-      }],
-      value: '',
-      defaultValue: '',
-      label: '开始时间',
-      trigger: 'onChange',
-    },{
-      type: 'date',
-      name: 'endTime',
-      rules: [{
-        required: true,
-        // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-        message: '请填写结束时间'
-      }],
-      value: '',
-      defaultValue: '',
-      label: '结束时间',
-      trigger: 'onChange',
-    }]
-  },{
-    key: 4,
-    children:[{
-        type: 'addr',
-        name: 'addr',
-        rules: [{
-          required: true,
-          // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-          message: '请选择地址'
-        }],
-        value: '',
-        defaultValue: '',
-        label: '地址',
-        trigger: 'onChange',
-      }]
-  },{
-    key: 5,
-    children:[{
-        type: 'input',
-        name: 'addrdetail',
-        rules: [{
-          required: true,
-          pattern: /^\s*\S{2,}\s*$/,
-          message: '请输入详细地址'
-        }],
-        value: '',
-        defaultValue: '',
-        label: '详细地址',
-        trigger: 'onBlur',
-      }]
-  },{
-    key: 6,
-    children:[{
-        type: 'gender',
-        name: 'gender',
-        rules: [{
-          required: true,
-          // pattern: /^\s*\S{2,}\s*$/,
-          message: '请选择性别'
-        }],
-        value: '',
-        defaultValue: '',
-        label: '性别',
-        trigger: 'onBlur',
-      },{
-        type: 'input',
-        name: 'place',
-        rules: [{
-          required: true,
-          pattern: /^\s*\S{2,}\s*$/,
-          message: '请填写证件签发地'
-        }],
-        value: '',
-        defaultValue: '',
-        label: '证件签发地',
-        trigger: 'onBlur',
-      }]
-  }],
+  formData: {
+    name: '',// 姓名
+    idCard: '', // 身份证号
+    sex: '', // 性别
+    birthday: '', // 出生日期
+    placeOfissue: '', //证件签发地
+    effectiveness: false, //是否长期有效
+    idCardStartDate: '', //身份证开始日期
+    idCardEndDate: '', // 身份证结束日期
+    idAddrProvince: '', // 身份证省
+    idAddrCity: '', //市
+    idAddrArea: '', // 区
+    idAddrDetails: '', //身份证省市区及详细地址
+    isDriverLicense: false, //驾照情况
+    censusRegisterProvince: '',
+    censusRegisterCity: '',
+    censusRegisterCounty: '',
+    censusRegisterAddress: '',  // 户籍所在省市区及地址详细
+    phone: '', //手机号
+    education: '', //申请人学历
+    marriage: '', // 婚姻状况
+    childrenSum: '', // 家庭人口数量
+    childrenStatus: '',// 子女个数
+    email: '', // 常用邮箱
+    realEstateCategory: '', // 微信号
+    livesProvince: '',  //省
+    livesCity: '', //市
+    livesCountry: '', // 区
+    livesAddress: '', // 现居住省市区及详细地
+    contactName1: '', // 联系人姓名1
+    contactRelationship1: '', //联系人借款人关系1
+    contactPhone1: '', //联系人手机号1
+    contactIdCard1: '', // 联系人身份证号1
+    contactName2: '', // 联系人姓名2
+    contactRelationship2: '', //联系人借款人关系2
+    contactPhone2: '', //联系人手机号2
+    contactIdCard2: '', // 联系人身份证号2
+    contactName3: '', // 联系人姓名3
+    contactRelationship3: '', //联系人借款人关系3
+    contactPhone3: '', //联系人手机号3
+    contactIdCard3: '', // 联系人身份证号3
+    companyName: '', // 公司名称
+    yearsWorking: '', // 工龄（年）
+    jobYears: '',// 现公司工作年限
+    entryUnitTime: '', //进入单位时间
+    annualIncome: '',//个人税后月收入(元)
+    unitPhoneNumber: '', //单位电话
+    companyProvince: '', // 户籍所在省
+    companyCity: '', // 户籍所在市
+    companyCounty: '', //区
+    companyAddress: '', //公司所在省市区及地址
+    clGuaranteeInfoListStr: [], // 担保人信息
+    clCarInfoListStr: [],//车辆信息
+    clProductTypeListStr: [], //产品信息
+    clCollectGatheringInfoListStr: []
+  },
   steps: [{
     title: '基本信息',
     desc: '',
@@ -141,14 +82,9 @@ export default {
   effects: {},
 
   reducers: {
-    setIdCardValue(state, {payload}){
-      const { x, y, value, error } = payload;
-      state.idCard[x].children[y].value = value;
-      state.idCard[x].children[y].error = error;
-      return fromJS(state).toJS()
-    },
-    setIdCard(state, {payload}){
-      state.idCard = payload;
+    setFormData(state, {payload}) {
+      const { formData }= state
+      state.formData = { ...formData, ...payload }
       return fromJS(state).toJS()
     }
   },
