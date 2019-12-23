@@ -68,8 +68,8 @@ const CarBaseInfo: Taro.FC<IProps> = (props: IProps) => {
           <Text className="list-item-text">{newCarPrice}</Text>
         </View>
         <View className='list-item'>
-          <Text>发动机号:</Text>
-          <Text className="list-item-text">{engineNo}</Text>
+          <Text>车商零售价(元):</Text>
+          <Text className="list-item-text">{advanceOffer}</Text>
         </View>
       </View>
 
@@ -86,14 +86,15 @@ const CarBaseInfo: Taro.FC<IProps> = (props: IProps) => {
           <Text className="list-item-text">{powerCteType}</Text>
         </View>
         <View className='list-item'>
-          <Text>行驶里程(整数km):</Text>
+          <Text>行驶里程(km):</Text>
           <Text className="list-item-text">{drivenDistance}</Text>
         </View>
       </View>
       <View className='info-item'>
+       
         <View className='list-item'>
-          <Text>车商零售价(元):</Text>
-          <Text className="list-item-text">{advanceOffer}</Text>
+          <Text>发动机号:</Text>
+          <Text className="list-item-text">{engineNo}</Text>
         </View>
         <View className='list-item'>
           <Text>上牌地址:</Text>
