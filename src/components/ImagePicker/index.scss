@@ -1,10 +1,9 @@
 @import '../../styles/theme';
 .image-picker{
   width: 190px;
-  height: 210px;
+  height: 300px;
   text-align: center;
 }
 .error-image-picker{
-  border: 1px solid $brand-6 !important;
   color: $brand-6;
 }

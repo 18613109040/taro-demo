@@ -17,9 +17,10 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
   const [file, setFile] = useState(files)
   const onChangeImage = (fileList) => {
     setFile(fileList)
+    
   }
   return (
-    <View className={`image-picker ${error? 'error': ''}`}>
+    <View className={`image-picker ${error? 'error-image-picker': ''}`}>
       <AtImagePicker
         files={file}
         multiple={false}
