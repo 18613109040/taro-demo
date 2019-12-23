@@ -1,0 +1,34 @@
+@import '../../styles/theme';
+.contact-card-info{
+  padding-top: $v-spacing-20;
+  padding-bottom: $v-spacing-30;
+  .card{
+    .header{
+      display: flex;
+      align-items: center;
+      padding: $v-spacing-10 $v-spacing-30 $v-spacing-10 $v-spacing-30;
+      .text{
+        font-size: $font-size-32;
+      }
+      .abs{
+        color: $brand-2;
+        font-size: $font-size-28;
+      }
+    }
+    
+  }
+  .info-item {
+    padding: $v-spacing-10 $v-spacing-30 $v-spacing-10 $v-spacing-30;
+    font-size: $font-size-28;
+    display: flex;
+    align-items: center;
+    .list-item{
+      display: flex;
+      align-items: center;
+      flex: 1;
+      .list-item-text{
+        margin-left: $h-spacing-30; 
+      }
+    }
+  }
+}

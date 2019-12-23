@@ -1,4 +1,4 @@
-import Taro, { useState } from '@tarojs/taro';
+import Taro, { useState, useEffect } from '@tarojs/taro';
 import { View, Text, PickerView, PickerViewColumn } from '@tarojs/components';
 import { getProvinceData, getCity, getCounty } from '../../utils/area'
 import { RulesProps } from '../../interface/form'
@@ -37,6 +37,10 @@ const Addr: Taro.FC<AddrProps> = (props: AddrProps) => {
     setExtraText(`${provinces[values[0]].name}/${citys[values[1]].name}/${countys[values[2]].name}`)
     if(onChange) onChange({value: [provinces[values[0]], citys[values[1]], countys[values[2]]], error: false})
   }
+  useEffect(()=>{
+    if(props.defaultValue)
+    setExtraText(props.defaultValue)
+  },[props.defaultValue])
   return (
     <View className="choose-addr">
       <ListItem

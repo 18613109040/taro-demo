@@ -3,12 +3,12 @@ import { View, Text } from '@tarojs/components';
 import { FormDataProps } from '../../interface/form'
 import './index.scss'
 type IdCardInfoProps = {
-  idCardData: FormDataProps
+  data: FormDataProps
 }
 const IdCardInfo: Taro.FC<IdCardInfoProps> = (props: IdCardInfoProps) => {
-  const { idCardData } =  props
-  const { name, idCard, sex, birthday, placeOfissue, idCardStartDate, idCardEndDate, effectiveness, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails } = idCardData || {
-    name: '', idCard:'', sex: '', birthday: '', placeOfissue: false, idCardStartDate: '', idCardEndDate:'', effectiveness: '',  idAddrProvince: '', idAddrCity: '', idAddrArea: '', idAddrDetails: '' 
+  const { data } =  props
+  const { name, idCard, sex, birthday, placeOfissue, idCardStartDate, idCardEndDate, effectiveness, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails,  censusRegisterProvince, censusRegisterCity,censusRegisterCounty,censusRegisterAddress } = data || {
+    name: '', idCard:'', sex: '', birthday: '', placeOfissue: false, idCardStartDate: '', idCardEndDate:'', effectiveness: '',  idAddrProvince: '', idAddrCity: '', idAddrArea: '', idAddrDetails: '', censusRegisterProvince: '', censusRegisterCity: '',censusRegisterCounty:'',censusRegisterAddress:''
   };
   return (
     <View className="id-card-info">
@@ -48,6 +48,12 @@ const IdCardInfo: Taro.FC<IdCardInfoProps> = (props: IdCardInfoProps) => {
         <View className='list-item'>
           <Text>地址:</Text>
           <Text className="list-item-text">{`${idAddrProvince}${idAddrCity}${idAddrArea}${idAddrDetails}`}</Text>
+        </View>
+      </View>
+      <View className='info-item'>
+        <View className='list-item'>
+          <Text>户籍地址:</Text>
+          <Text className="list-item-text">{`${censusRegisterProvince}${censusRegisterCity}${censusRegisterCounty}${censusRegisterAddress}`}</Text>
         </View>
       </View>
     </View>

@@ -1,4 +1,4 @@
-import Taro, { Component, ComponentClass } from '@tarojs/taro';
+import Taro, { PureComponent, ComponentClass } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
 import { AtIcon, AtButton, AtForm, AtAvatar, AtGrid } from 'taro-ui';
 import { connect } from '@tarojs/redux';
@@ -22,7 +22,7 @@ type IProps = {
   systemInfo: common.systemInfo,
   userInfo: common.userInfo
 }))
-class Home extends Component<IProps, IState> {
+class Home extends PureComponent<IProps, IState> {
   config = {
     navigationBarTitleText: 'home',
   };

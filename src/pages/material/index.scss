@@ -1,0 +1,12 @@
+@import '../../styles/theme';
+page{
+  background: $brand-8;
+}
+.material-card-page{
+  padding: $v-spacing-30;
+ .list-row{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+ }
+}

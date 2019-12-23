@@ -19,8 +19,9 @@ export type FormProps = {
 }
 
 export type StepsProps = {
-  title: string;
-  desc: string;
+  title?: string;
+  desc?: string;
+  status?: string;
 }
 export type GuaranteeInfoProps = {
   name: string; //担保姓名
@@ -34,7 +35,7 @@ export type GuaranteeInfoProps = {
   address: string; //详细地址
   companyName: string; //公司名称
   companyPhone: string; //公司电话
-  annualIncome: number; //月收入
+  annualIncome: number | string; //月收入
   province: string; //公司省
   city: string; //公司市
   area: string; //区
@@ -42,13 +43,14 @@ export type GuaranteeInfoProps = {
 }
 export type CarInfoProps = {
   powerCteType: string; // 动力系统类别 
-  useType: string; //用途 
+  drivenDistance: number|string; //行驶里程（整数km）
+  advanceOffer: number|string; //车商零售价（元）
   licenseProvince: string; // 省
   valuationCity: string;
   licenseCounty: string;
+
   licenseOwner: string; //* 行驶证车主名 
-  drivenDistance: number|string; //行驶里程（整数km）
-  advanceOffer: number|string; //车商零售价（元）
+  useType: string; //用途 
   carType: string; // 车型
   carColour: string; //车辆颜色
   carNo: string; // 车牌号
@@ -99,6 +101,7 @@ export type FormDataProps = {
   censusRegisterCity?: string;
   censusRegisterCounty?: string;
   censusRegisterAddress?: string;  // 户籍所在省市区及地址详细
+  
   phone?: string; //手机号
   education?: string; //申请人学历
   marriage?: string; // 婚姻状况
@@ -110,6 +113,18 @@ export type FormDataProps = {
   livesCity?: string; //市
   livesCountry?: string; // 区
   livesAddress?: string; // 现居住省市区及详细地
+  companyName?: string; // 公司名称
+  yearsWorking?: number|string; // 工龄（年）
+  jobYears?: string;// 现公司工作年限
+  entryUnitTime?: number|string; //进入单位时间
+  annualIncome?: number|string; //个人税后月收入(元)
+  unitPhoneNumber?: string; //单位电话
+  companyProvince?: string; // 户籍所在省
+  companyCity?: string; // 户籍所在市
+  companyCounty?: string; //区
+  companyAddress?: string; //公司所在省市区及地址
+
+  
   contactName1?: string; // 联系人姓名1
   contactRelationship1?: string; //联系人借款人关系1
   contactPhone1?: string; //联系人手机号1
@@ -122,18 +137,9 @@ export type FormDataProps = {
   contactRelationship3?: string; //联系人借款人关系3
   contactPhone3?: string; //联系人手机号3
   contactIdCard3?: string; // 联系人身份证号3
-  companyName?: string; // 公司名称
-  yearsWorking?: number|string; // 工龄（年）
-  jobYears?: string;// 现公司工作年限
-  entryUnitTime?: number|string; //进入单位时间
-  annualIncome?: number|string; //个人税后月收入(元)
-  unitPhoneNumber?: string; //单位电话
-  companyProvince?: string; // 户籍所在省
-  companyCity?: string; // 户籍所在市
-  companyCounty?: string; //区
-  companyAddress?: string; //公司所在省市区及地址
-  clGuaranteeInfoListStr?: Array<GuaranteeInfoProps>; // 担保人信息
-  clCarInfoListStr?: Array<CarInfoProps>; //车辆信息
-  clProductTypeListStr?: Array<ProductTypeProps>; //产品信息
-  clCollectGatheringInfoListStr?: Array<GatheringInfoProps>
+  
+  clGuaranteeInfoListStr?: GuaranteeInfoProps; // 担保人信息
+  clCarInfoListStr?: CarInfoProps; //车辆信息
+  clProductTypeListStr?: ProductTypeProps; //产品信息
+  clCollectGatheringInfoListStr?: GatheringInfoProps
 }

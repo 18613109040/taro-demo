@@ -19,6 +19,7 @@ const Gender: Taro.FC<GenderProps> = (props: GenderProps) => {
     setTitle(gender[e.detail.value].name)
     if(onChange) onChange({value: gender[e.detail.value].name, error: false})
   }
+
   return (
     <View className="gender">
       <Picker 

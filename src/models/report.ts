@@ -1,7 +1,9 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps } from '../interface/form'
+import { validRepetition } from '../services/report'
 export type InitStateProps = {
-  formData: FormDataProps
+  formData: FormDataProps;
+  current: number;
   steps: Array<StepsProps>;
 }
 const initState:InitStateProps = {
@@ -18,22 +20,35 @@ const initState:InitStateProps = {
     idAddrCity: '', //市
     idAddrArea: '', // 区
     idAddrDetails: '', //身份证省市区及详细地址
-    isDriverLicense: false, //驾照情况
     censusRegisterProvince: '',
     censusRegisterCity: '',
     censusRegisterCounty: '',
     censusRegisterAddress: '',  // 户籍所在省市区及地址详细
+
+
+    email: '', // 常用邮箱
+    isDriverLicense: false, //驾照情况
     phone: '', //手机号
+    realEstateCategory: '', // 微信号
     education: '', //申请人学历
     marriage: '', // 婚姻状况
     childrenSum: '', // 家庭人口数量
     childrenStatus: '',// 子女个数
-    email: '', // 常用邮箱
-    realEstateCategory: '', // 微信号
     livesProvince: '',  //省
     livesCity: '', //市
     livesCountry: '', // 区
     livesAddress: '', // 现居住省市区及详细地
+    companyName: '', // 公司名称
+    yearsWorking: '', // 工龄（年）
+    jobYears: '',// 现公司工作年限
+    entryUnitTime: '', //进入单位时间
+    annualIncome: '',//个人税后月收入(元)
+    unitPhoneNumber: '', //单位电话
+    companyProvince: '', // 户籍所在省
+    companyCity: '', // 户籍所在市
+    companyCounty: '', //区
+    companyAddress: '', //公司所在省市区及地址
+
     contactName1: '', // 联系人姓名1
     contactRelationship1: '', //联系人借款人关系1
     contactPhone1: '', //联系人手机号1
@@ -46,45 +61,130 @@ const initState:InitStateProps = {
     contactRelationship3: '', //联系人借款人关系3
     contactPhone3: '', //联系人手机号3
     contactIdCard3: '', // 联系人身份证号3
-    companyName: '', // 公司名称
-    yearsWorking: '', // 工龄（年）
-    jobYears: '',// 现公司工作年限
-    entryUnitTime: '', //进入单位时间
-    annualIncome: '',//个人税后月收入(元)
-    unitPhoneNumber: '', //单位电话
-    companyProvince: '', // 户籍所在省
-    companyCity: '', // 户籍所在市
-    companyCounty: '', //区
-    companyAddress: '', //公司所在省市区及地址
-    clGuaranteeInfoListStr: [], // 担保人信息
-    clCarInfoListStr: [],//车辆信息
-    clProductTypeListStr: [], //产品信息
-    clCollectGatheringInfoListStr: []
+     // 担保人信息
+    clGuaranteeInfoListStr: {
+      name: '', //担保姓名
+      relationship: '', //与担保人关系
+      phone: '', //电话号码
+      cardId: '',// 身份证号
+      email: '', // 邮箱
+      liveProvince: '', //现居住省
+      liveCity: '', // 市
+      liveArea: '', //区
+      address: '',//详细地址
+      companyName: '', //公司名称
+      companyPhone: '', //公司电话
+      annualIncome: '', //月收入
+      province: '',//公司省
+      city: '', //公司市
+      area: '',//区
+      companyAddress: '',//详细地址
+    },
+    //车辆信息
+    clCarInfoListStr: {
+      powerCteType: '', // 动力系统类别 
+      drivenDistance: '', //行驶里程（整数km）
+      advanceOffer: '', //车商零售价（元）
+      licenseProvince: '', // 省
+      valuationCity: '',
+      licenseCounty: '',
+      licenseOwner: '', //* 行驶证车主名 
+      useType: '', //用途 
+      carType: '', // 车型
+      carColour: '', //车辆颜色
+      carNo: '', // 车牌号
+      carBrand: '', // 品牌
+      factoryDay: '', //出厂日期
+      carFristLoginDay: '', //初次登记日期
+      engineNo: '', //发动机号
+      newCarPrice : '', //新车指导价(元) 
+      carSystem : '', //车系 
+      carDisplacement: '',//排量(L)
+      frameNumber: '' //车架号
+    },
+    //产品信息
+    clProductTypeListStr: {
+      name: '',// 产品名称
+      applyAmount: '',//申请金额
+      loanAmount: '', //放款金额
+      repaymentCount: '', //期数
+      repaymentTotalAmount: '', //总还款金额
+      bond: '',//租赁保证金
+      gpsCost: '',//GPS费用
+      productDescription: '' //产品说明
+    },
+    //银行卡
+    clCollectGatheringInfoListStr: {
+      bankNoType: '',//银行卡类型
+      bankType: '', //收款账户类型
+      accountName: '', //开户名
+      bankPhone: '', //银行预留手机号
+      openingBank: '', //开户行
+      accountOpeningBranch: '', //开户支行
+      bankNo: '', //联行号
+      repaymentAccount: '' //还款账号
+    }
   },
+  current: 0,
   steps: [{
     title: '基本信息',
     desc: '',
+    status: ''
   },{
     title: '车辆信息',
     desc: '',
+    status: ''
   },{
     title: '产品信息',
     desc: '',
+    status: ''
   },{
     title: '材料附件',
     desc: '',
+    status: ''
   }]
 }
 export default {
   namespace: 'report',
   state: fromJS(initState).toJS(),
 
-  effects: {},
+  effects: {
+    // 校验身份证号码
+    *validRepetitionAction({payload}, { call, put }){
+      const res = yield call(validRepetition,payload)
+      return res;
+    }
+  },
 
   reducers: {
     setFormData(state, {payload}) {
       const { formData }= state
       state.formData = { ...formData, ...payload }
+      return fromJS(state).toJS()
+    },
+    setGuarantee(state, {payload}){
+      const { formData : {clGuaranteeInfoListStr}}= state;
+      state.formData.clGuaranteeInfoListStr  = Object.assign({},clGuaranteeInfoListStr, payload )
+      return fromJS(state).toJS()
+    },
+    setCarInfo(state, {payload}){
+      const { formData : {clCarInfoListStr}}= state;
+      state.formData.clCarInfoListStr  = Object.assign({},clCarInfoListStr, payload )
+      return fromJS(state).toJS()
+    },
+    setProductInfo(state, {payload}){
+      const { formData : {clProductTypeListStr}}= state;
+      state.formData.clProductTypeListStr  = Object.assign({},clProductTypeListStr, payload )
+      return fromJS(state).toJS()
+    },
+    setBankInfo(state, {payload}){
+      const { formData : {clCollectGatheringInfoListStr}}= state;
+      state.formData.clCollectGatheringInfoListStr  = Object.assign({},clCollectGatheringInfoListStr, payload )
+      return fromJS(state).toJS()
+    },
+    setSteps(state, {payload}){
+      state.steps[payload].status = 'success'
+      state.current = state.current+1
       return fromJS(state).toJS()
     }
   },

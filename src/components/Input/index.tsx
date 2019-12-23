@@ -11,18 +11,23 @@ type InputProps = {
   type?: any;
   defaultValue?: any;
   error?: boolean;
+  disabled?: boolean;
   onChange?: (obj:object)=>void;
 }
 const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
-  const { trigger, rules, label, name, onChange, type, defaultValue } = props;
+  const { trigger, rules, label, name, onChange, type, defaultValue, disabled } = props;
   const [focus, setFocus] = useState(false);
   const [errorIndex, setErrorIndex] = useState<number>(-1);
   const [value, setValue] = useState(defaultValue);
   const error = errorIndex >= 0 ? true : false;
   useEffect(()=>{
-    if(props.error)
+    if(props.error){
       setErrorIndex(0)
-  },[props.error])
+    }
+    if(props.defaultValue){
+      setValue(props.defaultValue)
+    }
+  },[props.error,props.defaultValue])
   const fillClass = classnames({
     'material-design-fill': true,
     'material-design-fill-error': error
@@ -50,7 +55,7 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
       setErrorIndex(findIndex)
     }
     onChange && onChange({
-      value: e.currentTarget.value,
+      value: e.currentTarget.value.trim(),
       error: error
     })
   }
@@ -74,11 +79,12 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
           onBlur={onblur}
           onInput={oninput}
           type={type||'text'}
+          disabled={disabled}
         />
         <Text className={lableClass}>{label || props.label}</Text>
       </View>
       <View className="error-des">
-        <Text className={error?"error-msg":"error-msg-disable"}>{rules[errorIndex].message}</Text>
+        <Text className={error?"error-msg":"error-msg-disable"}>{rules&&rules[errorIndex].message}</Text>
       </View>
       
     </View>

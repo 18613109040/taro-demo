@@ -31,8 +31,16 @@ type IState = {
   idAddrArea: string; // 区
   idAddrError: boolean;
   idAddrDetails: string; //身份证省市区及详细地址
+  censusRegisterProvince: string;
+  censusRegisterCity: string;
+  censusRegisterCounty: string;
+  censusRegisterAddress: string;
+  censusRegisterError: boolean;
+  censusRegisterAddressError: boolean;
   idAddrDetailsError: boolean;
   validateStatus: string;
+  idCardMsg: string;
+  
 }
 type IProps = {
   report: InitStateProps;
@@ -47,63 +55,124 @@ class IdCard extends Component<IProps, IState>{
   }
   constructor(props) {
     super(props)
+    const { name, idCard, sex, birthday,censusRegisterAddress, placeOfissue,idCardStartDate,idCardEndDate,   effectiveness, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails,censusRegisterProvince, censusRegisterCity, censusRegisterCounty  } = props.report.formData
     this.state = {
-      name: '', // 姓名
+      name: name|| '', // 姓名
       nameError: false,
-      idCard: '', // 身份证号
+      idCard: idCard|| '', // 身份证号
       idCardError: false,
-      sex: '',// 性别
+      sex: sex||'',// 性别
       sexError: false,
-      birthday: '', // 出生日期
+      birthday: birthday||'', // 出生日期
       birthdayError: false,
-      placeOfissue: '',//证件签发地
+      placeOfissue: placeOfissue||'',//证件签发地
       placeOfissueError: false,
-      effectiveness: false,  //是否长期有效
-      idCardStartDate: '',//身份证开始日期
+      effectiveness: effectiveness|| false,  //是否长期有效
+      idCardStartDate: idCardStartDate|| '',//身份证开始日期
       idCardStartDateError: false,
-      idCardEndDate: '', // 身份证结束日期
+      idCardEndDate: idCardEndDate|| '', // 身份证结束日期
       idCardEndDateError: false,
-      idAddrProvince: '', // 身份证省
-      idAddrCity: '',//市
-      idAddrArea: '', // 区
+      idAddrProvince: idAddrProvince|| '', // 身份证省
+      idAddrCity: idAddrCity||'',//市
+      idAddrArea: idAddrArea||'', // 区
       idAddrError: false,
-      idAddrDetails: '', //身份证省市区及详细地址
+      idAddrDetails: idAddrDetails||'', //身份证省市区及详细地址
       idAddrDetailsError: false,
+      censusRegisterProvince: censusRegisterProvince||'',
+      censusRegisterCity: censusRegisterCity||'',
+      censusRegisterCounty: censusRegisterCounty||'',
+      censusRegisterError: false,
+      censusRegisterAddress: censusRegisterAddress||'',
+      censusRegisterAddressError: false,
       validateStatus: '',
-    } || props.report
+      idCardMsg: '请输入正确的身份证号!'
+    }
   }
   componentDidMount = () => {
 
+    this.setState({
+
+    })
   }
-  onChange = (obj) => {
+  onChange = async (obj) => {
     const {error, value, valueKey, errorKey} = obj;
     if(valueKey === 'idCard'){
       if(!error){
         this.setState({
-          validateStatus: 'validating'
+          validateStatus: 'validating',
+          idCard: value
         })
+        const {dispatch} = this.props;
+        const res = await dispatch({
+          type: 'report/validRepetitionAction',
+          payload: {
+            idCard: value,
+            id: ''
+          }
+        })
+        const { success, obj } = res
+        if(success && obj && obj.length===0){
+          this.setState({
+            validateStatus: 'success',
+            idCardError: false,
+            idCardMsg: '请输入正确的身份证号!' 
+          })
+        }else{
+          this.setState({
+            validateStatus: '',
+            idCardError: true,
+            idCardMsg: '该身份证号已经存在系统中'
+          })
+        }
       }
     }else{
       this.setState({
         [`${errorKey}`]: error,
         [`${valueKey}`]: value
       })
+      if(valueKey === 'idAddrDetails'&& !error && !this.state.censusRegisterAddress){
+        this.setState({
+          censusRegisterAddress: value
+        })
+      }
     }
     
   }
   onChangeAddr = (obj) => {
     const {error, value} = obj;
+    const {censusRegisterProvince,censusRegisterCity,censusRegisterCounty} = this.state;
+    if(!censusRegisterProvince&&!censusRegisterCity&&!censusRegisterCounty){
+      this.setState({
+        idAddrError: error,
+        idAddrProvince: value[0].name,
+        idAddrCity: value[1].name,
+        idAddrArea: value[2].name,
+        censusRegisterProvince: value[0].name,
+        censusRegisterCity: value[1].name,
+        censusRegisterCounty: value[2].name,
+      })     
+    }else{
+      this.setState({
+        idAddrError: error,
+        idAddrProvince: value[0].name,
+        idAddrCity: value[1].name,
+        idAddrArea: value[2].name,
+      })
+    }
+  }
+  onChangeCensusRegister=(obj)=>{
+    const {error, value} = obj;
     this.setState({
-      idAddrError: error,
-      idAddrProvince: value[0].name,
-      idAddrCity: value[1].name,
-      idAddrArea: value[2].name, 
+      censusRegisterError: error,
+      censusRegisterProvince: value[0].name,
+      censusRegisterCity: value[1].name,
+      censusRegisterCounty: value[2].name, 
     })
   }
   save = () => {
     const keys: Array<string> = ['name', 'idCard', 'sex', 'birthday', 'placeOfissue', 'effectiveness', 'idCardStartDate',
-    'idCardEndDate', 'idAddrProvince', 'idAddrCity', 'idAddrArea', 'idAddrDetails' ]
-    const { name, idCard, sex, birthday, placeOfissue,idCardStartDate,idCardEndDate,   effectiveness, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails   } = this.state;
+    'idCardEndDate', 'idAddrProvince', 'idAddrCity', 'idAddrArea', 'idAddrDetails', 'censusRegisterProvince', 'censusRegisterCity','censusRegisterAddress',  'censusRegisterCounty' ]
+    const { name, idCard, sex, censusRegisterAddress, birthday, placeOfissue,idCardStartDate,idCardEndDate,   effectiveness, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails,censusRegisterProvince, censusRegisterCity, censusRegisterCounty } = this.state;
     let temp: IState = this.state;
     keys.map(key=>{
       if(!this.state[key]){
@@ -111,6 +180,8 @@ class IdCard extends Component<IProps, IState>{
           temp.idCardEndDateError = false 
         }else if((key === 'idAddrProvince' || key === 'idAddrCity' || key === 'idAddrArea') && (!idAddrProvince&&!idAddrCity&&!idAddrArea) ){
             temp.idAddrError =  true 
+        }else if((key === 'censusRegisterProvince' || key === 'censusRegisterCity' || key === 'censusRegisterCounty') && (!censusRegisterProvince&&!censusRegisterCity&&!censusRegisterCounty) ){
+          temp.censusRegisterError =  true 
         }else{
           temp[`${key}Error`] = true
         }
@@ -126,11 +197,10 @@ class IdCard extends Component<IProps, IState>{
         dispatch({
           type: 'report/setFormData',
           payload: {
-            name, idCard, sex, birthday, placeOfissue,idCardStartDate,idCardEndDate,   effectiveness, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails 
+            name, censusRegisterAddress, idCard, sex, birthday, placeOfissue,idCardStartDate,idCardEndDate,   effectiveness, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails 
           }
         })
       }
-        
     })
   }
   effectivenessChange=(e)=>{
@@ -142,7 +212,8 @@ class IdCard extends Component<IProps, IState>{
   render() {
     const { name, nameError, idCard, idCardError, sex, sexError, birthday, birthdayError, placeOfissue, placeOfissueError,
       effectiveness, idCardStartDate, idCardStartDateError, idCardEndDate, idCardEndDateError, idAddrProvince,
-      idAddrCity, idAddrArea, idAddrError, idAddrDetails, idAddrDetailsError, validateStatus } = this.state;
+      idAddrCity, idAddrArea, idAddrError, idAddrDetails, idAddrDetailsError, validateStatus, idCardMsg, 
+      censusRegisterProvince, censusRegisterCity,censusRegisterCounty,censusRegisterAddress,censusRegisterError,censusRegisterAddressError} = this.state;
     return (
       <View className="id-card-page">
         {/* {rendeForm} */}
@@ -168,8 +239,9 @@ class IdCard extends Component<IProps, IState>{
             rules={[{
               required: true,
               pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-              message: '请输入正确的身份证号!'
+              message: idCardMsg//'请输入正确的身份证号!'
             }]}
+            type="idcard"
             trigger='onChange'
             error={idCardError}
             onChange={(obj)=>this.onChange({ ...obj, errorKey: 'idCardError', valueKey: 'idCard'})}
@@ -179,7 +251,7 @@ class IdCard extends Component<IProps, IState>{
             validateStatus === 'validating' ?
             <View className="loading">
             <AtLoading/>
-          </View>: ''
+          </View>:validateStatus === 'success' ?  <View className="loading"> <AtIcon value='check' size='20' color="#283282" /> </View>: ''
           }
           
         </View>
@@ -259,6 +331,20 @@ class IdCard extends Component<IProps, IState>{
           </View>
           }
         </View>
+        {/* 证件签发地 */}
+        <CInput
+          name='placeOfissue'
+          defaultValue={placeOfissue}
+          label="证件签发地"
+          rules={[{
+            required: true,
+            pattern: /^\s*\S{2,}\s*$/,
+            message: '请输入证件签发地址!'
+          }]}
+          trigger='onBlur'
+          error={placeOfissueError}
+          onChange={(obj)=>this.onChange({ ...obj,  errorKey: 'placeOfissueError', valueKey: 'placeOfissue'})}
+        />
         <Addr
           label="地址"
           defaultValue={(idAddrProvince||idAddrCity||idAddrArea)?`${idAddrProvince}/${idAddrCity}/${idAddrArea}`:''}
@@ -284,19 +370,31 @@ class IdCard extends Component<IProps, IState>{
           error={idAddrDetailsError}
           onChange={(obj)=>this.onChange({ ...obj, errorKey: 'idAddrDetailsError', valueKey: 'idAddrDetails'})}
         />
-        {/* 证件签发地 */}
-        <CInput
-          name='placeOfissue'
-          defaultValue={placeOfissue}
-          label="证件签发地"
+        {/* 户籍所在地 */}
+        <Addr
+          label="户籍地址" 
+          defaultValue={(censusRegisterProvince||censusRegisterCity||censusRegisterCounty)?`${censusRegisterProvince}/${censusRegisterCity}/${censusRegisterCounty}`:''}
+          error={censusRegisterError}
+          rules={[{
+            required: true,
+            // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+            message: '请选择户籍地址!'
+          }]}
+          onChange={(obj)=>this.onChangeCensusRegister({ ...obj })}
+        />
+         {/* 详细地址 */}
+         <CInput
+          name='idAddrDetails'
+          defaultValue={censusRegisterAddress}
+          label="详细地址"
           rules={[{
             required: true,
             pattern: /^\s*\S{2,}\s*$/,
-            message: '请输入证件签发地址!'
+            message: '请输入详细地址!'
           }]}
           trigger='onBlur'
-          error={placeOfissueError}
-          onChange={(obj)=>this.onChange({ ...obj,  errorKey: 'placeOfissueError', valueKey: 'placeOfissue'})}
+          error={censusRegisterAddressError}
+          onChange={(obj)=>this.onChange({ ...obj, errorKey: 'censusRegisterAddressError', valueKey: 'censusRegisterAddress'})}
         />
         <AtButton type='primary' onClick={this.save}>保存</AtButton>
       </View>

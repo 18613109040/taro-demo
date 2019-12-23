@@ -1,4 +1,4 @@
-import Taro, { Component, ComponentClass } from '@tarojs/taro';
+import Taro, { PureComponent, ComponentClass } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { AtButton, AtForm, AtInput } from 'taro-ui';
 import { connect } from '@tarojs/redux';
@@ -19,7 +19,7 @@ type IProps = {
 @connect(({ common }) => ({
   systemInfo: common.systemInfo
 }))
-class Login extends Component<IProps, IState> {
+class Login extends PureComponent<IProps, IState> {
   config = {
     navigationBarTitleText: '登录',
   };
@@ -33,7 +33,7 @@ class Login extends Component<IProps, IState> {
     }
   }
   componentDidMount = () => {
-    console.dir(this.props.systemInfo)
+ 
 
   };
 

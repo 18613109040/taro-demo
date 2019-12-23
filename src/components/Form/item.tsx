@@ -12,7 +12,6 @@ const Item: Taro.FC<ContentProps> = (props: ContentProps) => {
     })
     state[`${name}`] = val;
     setState(state)
-    console.dir(state)
     setErrorIndex(findIndex)
   }
   return (

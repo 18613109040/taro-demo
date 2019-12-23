@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro';
+import Taro, { PureComponent } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
 import { AtList, AtListItem, AtIcon, AtButton } from "taro-ui"
 import { connect } from '@tarojs/redux';
@@ -10,7 +10,7 @@ type IProps = {
 @connect(({ }) => ({
 
 }))
-class UserInfo extends Component<IProps, IState>{
+class UserInfo extends PureComponent<IProps, IState>{
   config = {
     navigationBarTitleText: '用户信息',
   }

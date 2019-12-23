@@ -1,10 +1,10 @@
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { PureComponent, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 
 type PageState = {
 }
 
-class App extends Component<{}, PageState> {
+class App extends PureComponent<{}, PageState> {
 
   config: Config = {
     navigationBarTitleText: 'taro-music'

@@ -46,6 +46,13 @@
       "font_class": "lianxiren1",
       "unicode": "e618",
       "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "7674919",
+      "name": "成功",
+      "font_class": "xiaoxi-chenggong",
+      "unicode": "e71b",
+      "unicode_decimal": 59163
     }
   ]
 }
