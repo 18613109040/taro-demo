@@ -7,10 +7,11 @@ import BaseInfo from '../../components/BaseInfo'
 import ContactInfo from '../../components/ContactInfo'
 import GuaranteeInfo from '../../components/GuaranteeInfo'
 import CarBaseInfo from '../../components/CarBaseInfo'
+import List from '../../components/List'
 import { InitStateProps } from '../../models/report';
 import './index.scss';
 type IState = {
- 
+
 }
 type IProps = {
   report: InitStateProps;
@@ -81,69 +82,61 @@ class Report extends Component<IProps, IState>{
     const { name, phone, contactName1, clGuaranteeInfoListStr, clCarInfoListStr } = formData
     if (current === 0) {
       return (
-        <View>
-          <View className="list">
-            <AtListItem
-              iconInfo={{
-                prefixClass: 'iconfont',
-                size: 25,
-                color: '#1D31AA',
-                value: 'idcard'
-              }}
-              hasBorder={false}
-              className="list-row-c"
-              title='身份证信息(必填)'
-              extraText={name ? '编辑' : '添加'}
-              onClick={this.idCardinfo} />
-            {name && <IdCardInfo data={formData} />}
-          </View>
-          <View className="list">
-            <AtListItem
-              iconInfo={{
-                // prefixClass: 'iconfont',
-                size: 25,
-                color: '#1D31AA',
-                value: 'user'
-              }}
-              hasBorder={false}
-              className="list-row-c"
-              title='个人信息(必填)'
-              extraText={phone ? '编辑' : '添加'}
-              onClick={this.myInfo} />
-            {phone && <BaseInfo data={formData} />}
-          </View>
+        <View className="list">
+          <List
+            title="身份证信息(必填)"
+            arrow={true}
+            extraColor={name ? '#4fc79a' : '#ffd915'}
+            extraText={name ? '完成' : '去完成'}
+            iconInfo={{
+              prefixClass: 'iconfont',
+              size: 25,
+              color: '#1D31AA',
+              value: 'idcard'
+            }}
+            onClick={this.idCardinfo}
+          />
+          {/* {name && <IdCardInfo data={formData} />} */}
+          <List
+            title="个人信息(必填)"
+            arrow={true}
+            extraColor={phone ? '#4fc79a' : '#ffd915'}
+            extraText={phone ? '完成' : '去完成'}
+            iconInfo={{
+              size: 25,
+              color: '#1D31AA',
+              value: 'user'
+            }}
+            onClick={this.myInfo}
+          />
+          {/* {phone && <BaseInfo data={formData} />} */}
+          <List
+            title="联系人信息(必填)"
+            arrow={true}
+            extraColor={contactName1 ? '#4fc79a' : '#ffd915'}
+            extraText={contactName1 ? '完成' : '去完成'}
+            iconInfo={{
+              size: 25,
+              color: '#1D31AA',
+              value: 'phone'
+            }}
+            onClick={this.contactInfo}
+          />
+          {/* {contactName1 && <ContactInfo data={formData} />} */}
+          <List
+            title="担保人信息(必填)"
+            arrow={true}
+            extraColor={clGuaranteeInfoListStr && clGuaranteeInfoListStr.name ? '#4fc79a' : '#ffd915'}
+            extraText={clGuaranteeInfoListStr && clGuaranteeInfoListStr.name ? '完成' : '去完成'}
+            iconInfo={{
+              size: 25,
+              color: '#1D31AA',
+              value: 'user'
+            }}
+            onClick={this.guaranteeInfo}
+          />
+          {/* {clGuaranteeInfoListStr && clGuaranteeInfoListStr.name && <GuaranteeInfo data={clGuaranteeInfoListStr} />} */}
 
-          <View className="list">
-            <AtListItem
-              iconInfo={{
-                // prefixClass: 'iconfont',
-                size: 25,
-                color: '#1D31AA',
-                value: 'phone'
-              }}
-              hasBorder={false}
-              className="list-row-c"
-              title='联系人信息(必填)'
-              extraText={contactName1 ? '编辑' : '添加'}
-              onClick={this.contactInfo} />
-            {contactName1 && <ContactInfo data={formData} />}
-          </View>
-
-          <View className="list">
-            <AtListItem
-              iconInfo={{
-                // prefixClass: 'iconfont',
-                size: 25,
-                color: '#1D31AA',
-                value: 'user'
-              }}
-              hasBorder={false}
-              className="list-row-c"
-              title='担保人信息(选填)'
-              extraText={clGuaranteeInfoListStr && clGuaranteeInfoListStr.name ? '编辑' : '添加'}
-              onClick={this.guaranteeInfo} />
-            {clGuaranteeInfoListStr && clGuaranteeInfoListStr.name && <GuaranteeInfo data={clGuaranteeInfoListStr} />}
-          </View>
         </View>
       )
     } else if (current === 1) {
@@ -181,6 +174,7 @@ class Report extends Component<IProps, IState>{
             onChange={this.onChangeStep}
           />
         </View>
+
         {
           this.renderStepContent()
         }

@@ -17,4 +17,20 @@
   .login-page-password{
     margin-top: $v-spacing-30;
   }
+  .code-image-view{
+    width: 190px;
+    height: 88px;
+    margin-left: $h-spacing-20;
+  }
+  .code-image{
+    width: 180px;
+    height: 88px;
+  }
+  .rand-code{
+    display: flex;
+    align-items: flex-start;
+    .code{
+      flex: 1;
+    }
+  }
 }

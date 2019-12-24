@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro';
 import { fromJS } from 'immutable';
+import { login } from '../services/common'
 import { SystemInfoProps } from '../interface/common'
 const systemInfo = Taro.getSystemInfoSync();
 type InitStateProps = {
@@ -16,7 +17,12 @@ export default {
   namespace: 'common',
   state: fromJS(initState).toJS(),
 
-  effects: {},
+  effects: {
+    *loginAction({payload}, { call, put }){
+      const res = yield call(login,payload)
+      return res;
+    }
+  },
 
   reducers: {
     // set

@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro';
 import { AtIcon } from 'taro-ui'
-import { View, Text } from '@tarojs/components';
+import { View, Text, Icon } from '@tarojs/components';
 import classnames from "classnames";
 import './index.scss'
 type FrameProps = {
@@ -24,7 +24,7 @@ const ListItem: Taro.FC<FrameProps> = (props: FrameProps) => {
     if(onClick) onClick(e)
   }
   return (
-    <View className="list">
+    <View className="list-item-com">
       <View className={listClass} onClick={listClick}>
         <Text className={lableClass}>{label}</Text>
         {value&&<Text className="list-value">{value}</Text>}
@@ -32,9 +32,12 @@ const ListItem: Taro.FC<FrameProps> = (props: FrameProps) => {
           <AtIcon prefixClass='iconfont' value='down' size='16' color='#BEC1D9'/>
         </View>
       </View>
-      <View className="error-des">
-        <Text className={error?"error-msg":"error-msg-disable"}>{errorMsg}</Text>
-      </View>
+      {
+        error&&<View className="error-msg">
+          <Icon size='12' type='warn' color='#FF7800' />
+          <Text className="error-des">{errorMsg}</Text>
+        </View>
+      }
     </View>
   )
 }

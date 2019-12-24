@@ -1,12 +1,20 @@
 @import '../../styles/theme';
 page{
-  background: $brand-8;
+  background: $brand-13;
 }
 .material-card-page{
-  padding: $v-spacing-30;
  .list-row{
    display: flex;
    align-items: center;
    justify-content: space-between;
+   padding: $h-spacing-20;
+ }
+ .card-list{
+  background: $brand-8;
+   padding-bottom: $h-spacing-60;
+ }
+ .title{
+    font-size: $font-size-30;
+    padding: $h-spacing-30;
  }
 }

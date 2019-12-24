@@ -1,8 +1,17 @@
 @import '../../styles/theme';
 .image-picker{
   width: 190px;
-  height: 300px;
+  height: 180px;
   text-align: center;
+  .lable{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-size-24;
+    .required-icon{
+      color: $brand-12;
+    }
+  }
 }
 .error-image-picker{
   color: $brand-6;

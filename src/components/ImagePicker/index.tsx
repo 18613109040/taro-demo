@@ -10,14 +10,15 @@ type IProps = {
   onChange?:(value)=>void;
   label?: string;
   error?: boolean;
-  files?: Array<IFiles>
+  files?: Array<IFiles>;
+  required?: boolean; 
 }
 const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
-  const { label, error, files } = props||{ files:[] };
+  const { label, error, files, required } = props||{ files:[] };
   const [file, setFile] = useState(files)
   const onChangeImage = (fileList) => {
     setFile(fileList)
-    
+
   }
   return (
     <View className={`image-picker ${error? 'error-image-picker': ''}`}>
@@ -29,7 +30,10 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
         showAddBtn={file&&file.length>0?false:true}
         onChange={onChangeImage}
       />
-      <View>
+      <View className="lable">
+        {
+          required&& <Text className="required-icon">*</Text>
+        }
         <Text>{label}</Text>
       </View>
     </View>

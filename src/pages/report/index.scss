@@ -14,9 +14,7 @@ page{
   .list{
     background: $brand-8;
     margin-top: $v-spacing-20;
-    .item-extra__info{
-      color: $brand-2;
-    }
+    padding: $v-spacing-30;
   }
   .list-row-c{
     margin-bottom: $v-spacing-20;

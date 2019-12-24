@@ -15,28 +15,25 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/material/index',
-      'pages/product/index',
+      'pages/idcard/index',
       'pages/report/index',
+      
+      'pages/product/index',
+     
       'pages/home/index',
       'pages/car/base',
-      
-      
       'pages/guarantee/index',
-      
-      
       'pages/contact/index',
       'pages/base/index',
-      'pages/idcard/index',
-      
+   
       'pages/userinfo/index',
       'pages/userlist/index',
       'pages/account/index',
-      
-      'pages/login/index'      
+      'pages/login/index',
     ],
     window: {
       backgroundTextStyle: 'dark',
-      navigationBarBackgroundColor: '#F6F5FA',
+      navigationBarBackgroundColor: '#F5F5FA',
       navigationBarTitleText: 'Taro Demo',
       navigationBarTextStyle: 'black',
       // navigationStyle: "custom"
@@ -74,7 +71,7 @@ class App extends Component {
     // })
     // console.dir(Taro.getMenuButtonBoundingClientRect())
   }
-  componentDidMount() {}
+  componentDidMount() { }
 
   render() {
     return (

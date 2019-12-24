@@ -1,5 +1,5 @@
 import Taro, { useState, useEffect } from '@tarojs/taro';
-import { Input, View, Text } from '@tarojs/components';
+import { Input, View, Text, Icon } from '@tarojs/components';
 import { RulesProps } from '../../interface/form'
 import classnames from "classnames";
 import './index.scss'
@@ -69,7 +69,7 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
     }
   }
   return (
-    <View>
+    <View className="material-input">
       <View className={fillClass}>
         <Input
           name={name}
@@ -83,9 +83,15 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
         />
         <Text className={lableClass}>{label || props.label}</Text>
       </View>
-      <View className="error-des">
-        <Text className={error?"error-msg":"error-msg-disable"}>{rules&&rules[errorIndex].message}</Text>
+      {
+        error&&<View className="error-msg">
+        <Icon size='12' type='warn' color='#FF7800' />
+        <Text className="error-des">{rules&&rules[errorIndex].message}</Text>
       </View>
+      }
+      {/* <View className="error-des">
+        <Text className={error?"error-msg":"error-msg-disable"}>{rules&&rules[errorIndex].message}</Text>
+      </View> */}
       
     </View>
   )

@@ -16,7 +16,7 @@ export default (options = { method: 'GET', data: {} }) => {
     },
     header: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Cookie': 'Hm_lvt_098e6e84ab585bf0c2e6853604192b8b=1575814668; i18n_browser_Lang=zh-cn; JEECGINDEXSTYLE=hplus; ZINDEXNUMBER=1990; JSESSIONID=71F328AC0B32024777D899ACA07D601B; Hm_lpvt_098e6e84ab585bf0c2e6853604192b8b=1576806973'
+      'Cookie': 'Hm_lvt_098e6e84ab585bf0c2e6853604192b8b=1575814668; i18n_browser_Lang=zh-cn; JEECGINDEXSTYLE=hplus; ZINDEXNUMBER=1990; JSESSIONID=E0593F3940127DC2AACA64151A099F05; Hm_lpvt_098e6e84ab585bf0c2e6853604192b8b=1577157854'
     },
     method: options.method.toUpperCase(),
   }).then(res => {
