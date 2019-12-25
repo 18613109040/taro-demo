@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text } from '@tarojs/components';
+import { View, ScrollView } from '@tarojs/components';
 import { AtButton } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import moment from 'moment'
@@ -8,6 +8,7 @@ import BasePicker from '../../components/BasePicker'
 import Addr from '../../components/Addr';
 import DatePicker from '../../components/DatePicker'
 import { InitStateProps } from '../../models/report';
+import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
 type IState = {
   licenseOwner: string; //* 行驶证车主名 
@@ -49,10 +50,12 @@ type IState = {
 }
 type IProps = {
   report: InitStateProps;
+  systemInfo: SystemInfoProps;
   dispatch?: any;
 }
-@connect(({ report }) => ({
-  report: report
+@connect(({ report, common }) => ({
+  report: report,
+  systemInfo: common.systemInfo
 }))
 class CarBase extends Component<IProps, IState>{
   config = {
@@ -151,259 +154,267 @@ class CarBase extends Component<IProps, IState>{
 
   }
   render() {
-    const { licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo, 
+    const { licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo,
       carTypeError, useTypeError, carBrandError, carSystemError, carColourError, factoryDayError, carFristLoginDayError, carNoError, carDisplacementError, frameNumberError, powerCteTypeError, drivenDistanceError, advanceOfferError, addrError, newCarPriceError, engineNoError } = this.state;
+    const { windowHeight } = this.props.systemInfo;
     return (
       <View className="content-table-form">
-        <View className="flex-row">
-          <View className="col">
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={{ height: `${windowHeight - 60}px` }}
+        >
+          <View className="card-body">
+            <View className="flex-row">
+              <View className="col">
+                <CInput
+                  name='licenseOwner'
+                  defaultValue={licenseOwner}
+                  label="行驶证车主名(必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^(([\u4e00-\u9fff]{2,4})|([a-z\.\s\,]{2,50}))$/i,
+                    message: '请输入联系人姓名!'
+                  }]}
+                  error={false}
+                  disabled={true}
+                />
+              </View>
+              <View className="col-right">
+                <CInput
+                  name='carType'
+                  defaultValue={carType}
+                  label="车型(必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{2,}\s*$/,
+                    message: '请输入车型!'
+                  }]}
+                  error={carTypeError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'carTypeError', valueKey: 'carType' })}
+                />
+              </View>
+            </View>
+            <View className="flex-row">
+              <View className="col">
+                <CInput
+                  name='useType'
+                  defaultValue={useType}
+                  label="用途(必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{2,}\s*$/,
+                    message: '请输入用途!'
+                  }]}
+                  error={useTypeError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'useTypeError', valueKey: 'useType' })}
+                />
+              </View>
+              <View className="col-right">
+                <CInput
+                  name='carBrand'
+                  defaultValue={carBrand}
+                  label="品牌(必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{2,}\s*$/,
+                    message: '请输入品牌!'
+                  }]}
+                  error={carBrandError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'carBrandError', valueKey: 'carBrand' })}
+                />
+              </View>
+            </View>
+            <View className="flex-row">
+              <View className="col">
+                <CInput
+                  name='carSystem'
+                  defaultValue={carSystem}
+                  label="车系(必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{2,}\s*$/,
+                    message: '请输入车系!'
+                  }]}
+                  error={carSystemError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'carSystemError', valueKey: 'carSystem' })}
+                />
+              </View>
+              <View className="col-right">
+                <BasePicker
+                  label="车辆颜色(必填)"
+                  defaultValue={carColour}
+                  error={carColourError}
+                  rules={[{
+                    required: true,
+                    message: '请选择车辆颜色!'
+                  }]}
+                  range={[{ name: '灰色' }, { name: '白色' }, { name: '棕色' }, { name: '黄色' }, { name: '红色' }, { name: '紫色' }, { name: '绿色' }, { name: '多彩色' }, { name: '黑色' }, { name: '银灰色' },
+                  { name: '香槟色' }, { name: '橙色' }, { name: '粉红色' }, { name: '蓝色' }, { name: '咖啡色' }, { name: '其他' }]}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'carColourError', valueKey: 'carColour' })}
+                />
+              </View>
+            </View>
+            <View className="flex-row">
+              <View className="col">
+                <DatePicker
+                  label="出厂日期(必填)"
+                  defaultValue={factoryDay}
+                  error={factoryDayError}
+                  rules={[{
+                    required: true,
+                    // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+                    message: '请选择出厂日期!'
+                  }]}
+                  end={moment().format('YYYY-MM-DD')}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'factoryDayError', valueKey: 'factoryDay' })}
+                />
+              </View>
+              <View className="col-right">
+                <DatePicker
+                  label="初次登记日期(必填)"
+                  defaultValue={carFristLoginDay}
+                  error={carFristLoginDayError}
+                  rules={[{
+                    required: true,
+                    // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+                    message: '请选择初次登记日期!'
+                  }]}
+                  end={moment().format('YYYY-MM-DD')}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'carFristLoginDayError', valueKey: 'carFristLoginDay' })}
+                />
+              </View>
+            </View>
+            <View className="flex-row">
+              <View className="col">
+                <CInput
+                  name='carNo'
+                  defaultValue={carNo}
+                  label="车牌号(必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{2,}\s*$/,
+                    message: '请输入车牌号!'
+                  }]}
+                  error={carNoError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'carNoError', valueKey: 'carNo' })}
+                />
+              </View>
+              <View className="col-right">
+                <CInput
+                  name='carDisplacement'
+                  defaultValue={carDisplacement}
+                  label="排量(L)(选填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{2,}\s*$/,
+                    message: '请输入排量!'
+                  }]}
+                  type="digit"
+                  error={carDisplacementError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'carDisplacementError', valueKey: 'carDisplacement' })}
+                />
+              </View>
+            </View>
+            <View className="flex-row">
+              <View className="col">
+                <CInput
+                  name='newCarPrice'
+                  defaultValue={newCarPrice}
+                  label="新车指导价(元)(必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{2,}\s*$/,
+                    message: '请输入新车指导价!'
+                  }]}
+                  error={newCarPriceError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'newCarPriceError', valueKey: 'newCarPrice' })}
+                />
+              </View>
+              <View className="col-right">
+                <CInput
+                  name='engineNo'
+                  defaultValue={engineNo}
+                  label="发动机号(必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{2,}\s*$/,
+                    message: '请输入发动机号!'
+                  }]}
+                  error={engineNoError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'engineNoError', valueKey: 'engineNo' })}
+                />
+              </View>
+            </View>
             <CInput
-              name='licenseOwner'
-              defaultValue={licenseOwner}
-              label="行驶证车主名(必填)"
-              rules={[{
-                required: true,
-                pattern: /^(([\u4e00-\u9fff]{2,4})|([a-z\.\s\,]{2,50}))$/i,
-                message: '请输入联系人姓名!'
-              }]}
-              error={false}
-              disabled={true}
-            />
-          </View>
-          <View className="col-right">
-            <CInput
-              name='carType'
-              defaultValue={carType}
-              label="车型(必填)"
+              name='frameNumber'
+              defaultValue={frameNumber}
+              label="车架号(必填)"
               rules={[{
                 required: true,
                 pattern: /^\s*\S{2,}\s*$/,
-                message: '请输入车型!'
+                message: '请输入车架号!'
               }]}
-              error={carTypeError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'carTypeError', valueKey: 'carType' })}
+              error={frameNumberError}
+              onChange={(obj) => this.onChange({ ...obj, errorKey: 'frameNumberError', valueKey: 'frameNumber' })}
             />
-          </View>
-        </View>
-        <View className="flex-row">
-          <View className="col">
-            <CInput
-              name='useType'
-              defaultValue={useType}
-              label="用途(必填)"
-              rules={[{
-                required: true,
-                pattern: /^\s*\S{2,}\s*$/,
-                message: '请输入用途!'
-              }]}
-              error={useTypeError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'useTypeError', valueKey: 'useType' })}
-            />
-          </View>
-          <View className="col-right">
-            <CInput
-              name='carBrand'
-              defaultValue={carBrand}
-              label="品牌(必填)"
-              rules={[{
-                required: true,
-                pattern: /^\s*\S{2,}\s*$/,
-                message: '请输入品牌!'
-              }]}
-              error={carBrandError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'carBrandError', valueKey: 'carBrand' })}
-            />
-          </View>
-        </View>
-        <View className="flex-row">
-          <View className="col">
-            <CInput
-              name='carSystem'
-              defaultValue={carSystem}
-              label="车系(必填)"
-              rules={[{
-                required: true,
-                pattern: /^\s*\S{2,}\s*$/,
-                message: '请输入车系!'
-              }]}
-              error={carSystemError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'carSystemError', valueKey: 'carSystem' })}
-            />
-          </View>
-          <View className="col-right">
-            <BasePicker
-              label="车辆颜色(必填)"
-              defaultValue={carColour}
-              error={carColourError}
-              rules={[{
-                required: true,
-                message: '请选择车辆颜色!'
-              }]}
-              range={[{ name: '灰色' }, { name: '白色' }, { name: '棕色' }, { name: '黄色' }, { name: '红色' }, { name: '紫色' }, { name: '绿色' }, { name: '多彩色' }, { name: '黑色' }, { name: '银灰色' },
-              { name: '香槟色' }, { name: '橙色' }, { name: '粉红色' }, { name: '蓝色' }, { name: '咖啡色' }, { name: '其他' }]}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'carColourError', valueKey: 'carColour' })}
-            />
-          </View>
-        </View>
-        <View className="flex-row">
-          <View className="col">
-            <DatePicker
-              label="出厂日期(必填)"
-              defaultValue={factoryDay}
-              error={factoryDayError}
+            <View className="flex-row">
+              <View className="col">
+                <BasePicker
+                  label="动力系统类别(必填)"
+                  defaultValue={powerCteType}
+                  error={powerCteTypeError}
+                  rules={[{
+                    required: true,
+                    message: '请选择动力系统类别!'
+                  }]}
+                  range={[{ name: '传统动力' }]}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'powerCteTypeError', valueKey: 'powerCteType' })}
+                />
+              </View>
+              <View className="col-right">
+                <CInput
+                  name='drivenDistance'
+                  defaultValue={drivenDistance}
+                  label="行驶里程(km) (必填)"
+                  rules={[{
+                    required: true,
+                    pattern: /^\s*\S{1,}\s*$/,
+                    message: '请输入行驶里程!'
+                  }]}
+                  type="number"
+                  error={drivenDistanceError}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'drivenDistanceError', valueKey: 'drivenDistance' })}
+                />
+              </View>
+            </View>
+            <Addr
+              label="上牌地址(必填)"
+              defaultValue={(licenseProvince || valuationCity || licenseCounty) ? `${licenseProvince}/${valuationCity}/${licenseCounty}` : ''}
+              error={addrError}
               rules={[{
                 required: true,
                 // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-                message: '请选择出厂日期!'
+                message: '请选择上牌地址!'
               }]}
-              end={moment().format('YYYY-MM-DD')}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'factoryDayError', valueKey: 'factoryDay' })}
+              onChange={(obj) => this.onChangeAddr({ ...obj })}
             />
-          </View>
-          <View className="col-right">
-            <DatePicker
-              label="初次登记日期(必填)"
-              defaultValue={carFristLoginDay}
-              error={carFristLoginDayError}
-              rules={[{
-                required: true,
-                // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-                message: '请选择初次登记日期!'
-              }]}
-              end={moment().format('YYYY-MM-DD')}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'carFristLoginDayError', valueKey: 'carFristLoginDay' })}
-            />
-          </View>
-        </View>
-        <View className="flex-row">
-          <View className="col">
             <CInput
-              name='carNo'
-              defaultValue={carNo}
-              label="车牌号(必填)"
-              rules={[{
-                required: true,
-                pattern: /^\s*\S{2,}\s*$/,
-                message: '请输入车牌号!'
-              }]}
-              error={carNoError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'carNoError', valueKey: 'carNo' })}
-            />
-          </View>
-          <View className="col-right">
-            <CInput
-              name='carDisplacement'
-              defaultValue={carDisplacement}
-              label="排量(L)(选填)"
-              rules={[{
-                required: true,
-                pattern: /^\s*\S{2,}\s*$/,
-                message: '请输入排量!'
-              }]}
-              type="digit"
-              error={carDisplacementError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'carDisplacementError', valueKey: 'carDisplacement' })}
-            />
-          </View>
-        </View>
-        <View className="flex-row">
-          <View className="col">
-            <CInput
-              name='newCarPrice'
-              defaultValue={newCarPrice}
-              label="新车指导价(元)(必填)"
-              rules={[{
-                required: true,
-                pattern: /^\s*\S{2,}\s*$/,
-                message: '请输入新车指导价!'
-              }]}
-              error={newCarPriceError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'newCarPriceError', valueKey: 'newCarPrice' })}
-            />
-          </View>
-          <View className="col-right">
-            <CInput
-              name='engineNo'
-              defaultValue={engineNo}
-              label="发动机号(必填)"
-              rules={[{
-                required: true,
-                pattern: /^\s*\S{2,}\s*$/,
-                message: '请输入发动机号!'
-              }]}
-              error={engineNoError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'engineNoError', valueKey: 'engineNo' })}
-            />
-          </View>
-        </View>
-        <CInput
-          name='frameNumber'
-          defaultValue={frameNumber}
-          label="车架号(必填)"
-          rules={[{
-            required: true,
-            pattern: /^\s*\S{2,}\s*$/,
-            message: '请输入车架号!'
-          }]}
-          error={frameNumberError}
-          onChange={(obj) => this.onChange({ ...obj, errorKey: 'frameNumberError', valueKey: 'frameNumber' })}
-        />
-        <View className="flex-row">
-          <View className="col">
-            <BasePicker
-              label="动力系统类别(必填)"
-              defaultValue={powerCteType}
-              error={powerCteTypeError}
-              rules={[{
-                required: true,
-                message: '请选择动力系统类别!'
-              }]}
-              range={[{ name: '传统动力' }]}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'powerCteTypeError', valueKey: 'powerCteType' })}
-            />
-          </View>
-          <View className="col-right">
-            <CInput
-              name='drivenDistance'
-              defaultValue={drivenDistance}
-              label="行驶里程(km) (必填)"
+              name='advanceOffer'
+              defaultValue={advanceOffer}
+              label="车商零售价(元) (必填)"
               rules={[{
                 required: true,
                 pattern: /^\s*\S{1,}\s*$/,
-                message: '请输入行驶里程!'
+                message: '请输入车商零售价!'
               }]}
               type="number"
-              error={drivenDistanceError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'drivenDistanceError', valueKey: 'drivenDistance' })}
+              error={advanceOfferError}
+              onChange={(obj) => this.onChange({ ...obj, errorKey: 'advanceOfferError', valueKey: 'advanceOffer' })}
             />
           </View>
-        </View>
-        <Addr
-          label="上牌地址(必填)"
-          defaultValue={(licenseProvince || valuationCity || licenseCounty) ? `${licenseProvince}/${valuationCity}/${licenseCounty}` : ''}
-          error={addrError}
-          rules={[{
-            required: true,
-            // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-            message: '请选择上牌地址!'
-          }]}
-          onChange={(obj) => this.onChangeAddr({ ...obj })}
-        />
-        <CInput
-          name='advanceOffer'
-          defaultValue={advanceOffer}
-          label="车商零售价(元) (必填)"
-          rules={[{
-            required: true,
-            pattern: /^\s*\S{1,}\s*$/,
-            message: '请输入车商零售价!'
-          }]}
-          type="number"
-          error={advanceOfferError}
-          onChange={(obj) => this.onChange({ ...obj, errorKey: 'advanceOfferError', valueKey: 'advanceOffer' })}
-        />
-
-        <View className="btn">
+        </ScrollView>
+        <View className="btn-bottom">
           <AtButton type='primary' onClick={this.save}>保存</AtButton>
         </View>
 

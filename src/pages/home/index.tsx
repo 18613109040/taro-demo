@@ -24,7 +24,7 @@ type IProps = {
 }))
 class Home extends PureComponent<IProps, IState> {
   config = {
-    navigationBarTitleText: 'home',
+    navigationBarTitleText: '',
   };
   constructor(props) {
     super(props)
@@ -57,7 +57,16 @@ class Home extends PureComponent<IProps, IState> {
       <View className="home-page">
         <View className="add-place" onClick={this.addApply}>
           <AtIcon value='add-circle' size='30' color='#283282' />
+          <Text className="text">进件快速申请</Text>
+        </View>
+        <View className="add-place" onClick={this.addApply}>
+          <AtIcon value='add-circle' size='30' color='#283282' />
           <Text className="text">新增进件申请</Text>
+        </View>
+        <View>
+          <View></View>
+          <View></View>
+          <View></View>
         </View>
       </View>
     );

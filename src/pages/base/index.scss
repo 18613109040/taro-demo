@@ -3,7 +3,25 @@ page{
   background: $brand-8;
 }
 .base-card-page{
-  padding: $v-spacing-30;
+  .btn-bottom{
+    position: fixed;
+    bottom: 0px;
+    height: 60PX;
+    background: $brand-8;
+    width: 100%;
+    padding-left: $h-spacing-30;
+    padding-right: $h-spacing-30;
+    padding-top: $h-spacing-10;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid $brand-5;
+    at-button {
+      width: 100%;
+    }
+  }
+  .card-body{
+    padding: $h-spacing-16;
+  }
   .form-row{
     display: flex;
     align-items: center;

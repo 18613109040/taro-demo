@@ -5,16 +5,34 @@ page{
  
 }
 .contact-card-page{
-  
-  .card{
-    padding: $v-spacing-30 $v-spacing-30 0px $v-spacing-30;
+  .btn-bottom{
+    position: fixed;
+    bottom: 0px;
+    height: 60PX;
     background: $brand-8;
-    margin-bottom: $v-spacing-30;
+    width: 100%;
+    padding-left: $h-spacing-30;
+    padding-right: $h-spacing-30;
+    padding-top: $h-spacing-10;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid $brand-5;
+    at-button {
+      width: 100%;
+    }
+  }
+  // .card-body{
+  //   padding: $h-spacing-16;
+  // }
+  .card{
+    padding: $v-spacing-30;
+    background: $brand-8;
+    // margin-bottom: $v-spacing-30;
   }
   .title{
     font-size: $font-size-36;
     font-weight: 600;
-    margin-bottom: $h-spacing-30;
+    padding: $h-spacing-20 $h-spacing-30 $h-spacing-20 $h-spacing-30;
     display: flex;
     align-items: center;
     .at-switch__title{
@@ -29,6 +47,13 @@ page{
     .check{
       color: $brand-2;
       font-size: $font-size-26;
+      background: $brand-5;
+      .at-switch{
+        background: $brand-5;
+        .at-switch__container{
+          background: $brand-5;
+        }
+      }
     }
   }
   .form-row{

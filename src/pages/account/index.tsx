@@ -40,7 +40,6 @@ class Account extends Component<IProps, IState>{
           >
           </AtListItem>
         </AtList>
-        
       </View>
     );
   }

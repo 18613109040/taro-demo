@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps } from '../interface/form'
-import { validRepetition } from '../services/report'
+import { validRepetition, temporaryService } from '../services/report'
 export type InitStateProps = {
   formData: FormDataProps;
   current: number;
@@ -152,6 +152,11 @@ export default {
     // 校验身份证号码
     *validRepetitionAction({payload}, { call, put }){
       const res = yield call(validRepetition,payload)
+      return res;
+    },
+    // 暂时保存
+    * temporaryAction({payload}, { call, put }){
+      const res = yield call(temporaryService,payload)
       return res;
     }
   },

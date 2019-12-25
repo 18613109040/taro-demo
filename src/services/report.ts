@@ -13,3 +13,11 @@ export const getProductOptions = data =>
     method: 'POST',
     data,
   });
+
+// 保存
+export const temporaryService = data =>
+  Request({
+    url: '/clCollectClientInfoController.do?doAdd',
+    method: 'POST',
+    data,
+  });
