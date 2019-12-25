@@ -1,92 +1,25 @@
 @import '../../styles/theme';
-.steps{
+.stpes-list{
+  background: $brand-1;
   display: flex;
   align-items: center;
-  background: $brand-5;
-  padding: $v-spacing-28 $h-spacing-30;
-  .step-b-item{
+  height: 35PX;
+  // padding-top: $v-spacing-20;
+  // padding-bottom: $v-spacing-20 ;
+  .item{
+    flex: 1;
     display: flex;
     align-items: center;
-    flex: 1;
-    margin-left: $h-spacing-20;
-  }
-  .step-item{
-    display: flex;
-    align-items: center;
-  }
-  .steps-item-icon{
-    font-size: $font-size-32;
-    border-radius: 22px;
-    color: $brand-1;
-  }
-  .steps-item-b-icon{
-    font-size: $font-size-32;
-    border-radius: 22px;
-    margin-left: $h-spacing-20;
-    color: $brand-1;
-  }
-  .steps-item-text{
-    font-size: $font-size-24;
-    margin-left: $h-spacing-10;
-    word-break: keep-all;
-  }
-  .steps-item-b-text{
-    font-size: $font-size-24;
-    margin-left: $h-spacing-10;
-    word-break: keep-all;
-  }
-  .line{
-    flex: 1;
-    height: 3px;
-    background: $brand-1;
-    opacity: 0.5;
-  }
-  .line-active{
-    flex: 1;
-    height: 3px;
-    background: $brand-1;
-  }
-  .steps-bg-number{
-    width: 32px;
-    height: 32px;
-    text-align: center;
-    line-height: 32px;
-    margin-left: $h-spacing-20;
-    color: $brand-1;
-    border: 2px solid $brand-1;
-    border-radius: 100%;
-    font-size:  $font-size-22;
-    opacity: 0.5;
-    background: transparent;
-  }
-  .steps-active-d-number{
-    width: 32px;
-    height: 32px;
-    text-align: center;
-    line-height: 32px;
-    background: $brand-1;
-    color: $brand-8;
-    border-radius: 100%;
-    font-size:  $font-size-22;
-  }
-  .steps-active-number{
-    width: 32px;
-    height: 32px;
-    text-align: center;
-    line-height: 32px;
-    margin-left: $h-spacing-20;
-    background: $brand-1;
-    color: $brand-8;
-    border-radius: 100%;
-    font-size:  $font-size-22;
-  }
- 
-  .step-item-finish{
-    .steps-item-tail{
-      &::after{
-        background-color: #108ee9;
-      }
+    justify-content: center;
+    .text{
+      color: $brand-8;
+      font-size: $font-size-24;
+      margin-left: $v-spacing-10;
+    }
+    .active-text{
+      color: $brand-7;
+      font-size: $font-size-24;
+      margin-left: $v-spacing-10;
     }
   }
-
 }

@@ -59,7 +59,7 @@ type IProps = {
 }))
 class CarBase extends Component<IProps, IState>{
   config = {
-    navigationBarTitleText: '基本信息',
+    navigationBarTitleText: '车辆信息',
   }
   constructor(props) {
     super(props)

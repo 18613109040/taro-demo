@@ -127,19 +127,23 @@ const initState:InitStateProps = {
   },
   current: 0,
   steps: [{
-    title: '基本信息',
+    title: '秒批',
     desc: '',
     status: ''
   },{
-    title: '车辆信息',
+    title: '准入',
     desc: '',
     status: ''
   },{
-    title: '产品信息',
+    title: '授信',
     desc: '',
     status: ''
   },{
-    title: '材料附件',
+    title: '贷前',
+    desc: '',
+    status: ''
+  },{
+    title: '贷后',
     desc: '',
     status: ''
   }]

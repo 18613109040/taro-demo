@@ -1,24 +1,28 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text } from '@tarojs/components';
-import {  AtListItem, AtIcon, AtButton, AtSteps } from "taro-ui"
+import { View, Text, ScrollView } from '@tarojs/components';
+import { AtListItem, AtIcon, AtButton } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import IdCardInfo from '../../components/IdCardInfo'
 import BaseInfo from '../../components/BaseInfo'
 import ContactInfo from '../../components/ContactInfo'
 import GuaranteeInfo from '../../components/GuaranteeInfo'
 import CarBaseInfo from '../../components/CarBaseInfo'
-import List from '../../components/List'
+import Router from '../../components/Navigator'
+import Steps from '../../components/Steps'
 import { InitStateProps } from '../../models/report';
+import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
 type IState = {
 
 }
 type IProps = {
   report: InitStateProps;
+  systemInfo: SystemInfoProps;
   dispatch?: any;
 }
-@connect(({ report }) => ({
-  report
+@connect(({ report, common }) => ({
+  report,
+  systemInfo: common.systemInfo
 }))
 class Report extends Component<IProps, IState>{
   config = {
@@ -77,86 +81,159 @@ class Report extends Component<IProps, IState>{
     })
   }
   renderStepContent = () => {
-    const { report } = this.props;
+    const { report, systemInfo } = this.props;
+    const { windowHeight } =systemInfo;
     const { formData, current } = report;
-    const { name, phone, contactName1, clGuaranteeInfoListStr, clCarInfoListStr } = formData
+    const { name, phone, contactName1, clGuaranteeInfoListStr, clCarInfoListStr, clCollectGatheringInfoListStr, clProductTypeListStr } = formData
     if (current === 0) {
       return (
-        <View className="list">
-          <List
-            title="身份证信息(必填)"
-            arrow={true}
-            extraColor={name ? '#4fc79a' : '#ffd915'}
-            extraText={name ? '完成' : '去完成'}
-            iconInfo={{
-              prefixClass: 'iconfont',
-              size: 25,
-              color: '#1D31AA',
-              value: 'idcard'
-            }}
-            onClick={this.idCardinfo}
-          />
-          {/* {name && <IdCardInfo data={formData} />} */}
-          <List
-            title="个人信息(必填)"
-            arrow={true}
-            extraColor={phone ? '#4fc79a' : '#ffd915'}
-            extraText={phone ? '完成' : '去完成'}
-            iconInfo={{
-              size: 25,
-              color: '#1D31AA',
-              value: 'user'
-            }}
-            onClick={this.myInfo}
-          />
-          {/* {phone && <BaseInfo data={formData} />} */}
-          <List
-            title="联系人信息(必填)"
-            arrow={true}
-            extraColor={contactName1 ? '#4fc79a' : '#ffd915'}
-            extraText={contactName1 ? '完成' : '去完成'}
-            iconInfo={{
-              size: 25,
-              color: '#1D31AA',
-              value: 'phone'
-            }}
-            onClick={this.contactInfo}
-          />
-          {/* {contactName1 && <ContactInfo data={formData} />} */}
-          <List
-            title="担保人信息(必填)"
-            arrow={true}
-            extraColor={clGuaranteeInfoListStr && clGuaranteeInfoListStr.name ? '#4fc79a' : '#ffd915'}
-            extraText={clGuaranteeInfoListStr && clGuaranteeInfoListStr.name ? '完成' : '去完成'}
-            iconInfo={{
-              size: 25,
-              color: '#1D31AA',
-              value: 'user'
-            }}
-            onClick={this.guaranteeInfo}
-          />
-          {/* {clGuaranteeInfoListStr && clGuaranteeInfoListStr.name && <GuaranteeInfo data={clGuaranteeInfoListStr} />} */}
-
-        </View>
-      )
-    } else if (current === 1) {
-      return (
-        <View>
-          <View className="list">
-            <AtListItem
+          <ScrollView
+            scrollY
+            scrollWithAnimation
+            style={{ height: `${windowHeight - 79}px` }}
+          >
+          <View className="list-col">
+            <Router
+              title="身份证信息(必填)"
+              arrow={true}
+              extraColor={name ? '#4fc79a' : '#ffd915'}
+              extraText={name ? '完成' : '去完成'}
               iconInfo={{
                 prefixClass: 'iconfont',
                 size: 25,
                 color: '#1D31AA',
                 value: 'idcard'
               }}
-              hasBorder={false}
-              className="list-row-c"
-              title='基本信息(必填)'
-              extraText={clCarInfoListStr && clCarInfoListStr.useType ? '编辑' : '添加'}
-              onClick={this.toCarInfo} />
-            {clCarInfoListStr && clCarInfoListStr.useType && <CarBaseInfo data={clCarInfoListStr} />}
+              url="/pages/idcard/index"
+            />
           </View>
+
+          {/* {name && <IdCardInfo data={formData} />} */}
+          <View className="list-col">
+            <Router
+              title="个人信息(必填)"
+              arrow={true}
+              extraColor={phone ? '#4fc79a' : '#ffd915'}
+              extraText={phone ? '完成' : '去完成'}
+              iconInfo={{
+                size: 25,
+                color: '#1D31AA',
+                value: 'user'
+              }}
+              url="/pages/base/index"
+            />
+          </View>
+          {/* {phone && <BaseInfo data={formData} />} */}
+          <View className="list-col">
+            <Router
+              title="联系人信息(必填)"
+              arrow={true}
+              extraColor={contactName1 ? '#4fc79a' : '#ffd915'}
+              extraText={contactName1 ? '完成' : '去完成'}
+              iconInfo={{
+                size: 25,
+                color: '#1D31AA',
+                value: 'phone'
+              }}
+              url="/pages/contact/index"
+            />
+          </View>
+          {/* {contactName1 && <ContactInfo data={formData} />} */}
+          <View className="list-col">
+            <Router
+              title="担保人信息(必填)"
+              arrow={true}
+              extraColor={clGuaranteeInfoListStr && clGuaranteeInfoListStr.name ? '#4fc79a' : '#ffd915'}
+              extraText={clGuaranteeInfoListStr && clGuaranteeInfoListStr.name ? '完成' : '去完成'}
+              iconInfo={{
+                size: 25,
+                color: '#1D31AA',
+                value: 'user'
+              }}
+              url="/pages/guarantee/index"
+            />
+          </View>
+          <View className="list-col">
+            <Router
+              title="车辆信息(必填)"
+              arrow={true}
+              extraColor={clCarInfoListStr && clCarInfoListStr.useType ? '#4fc79a' : '#ffd915'}
+              extraText={clCarInfoListStr && clCarInfoListStr.useType ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              url="/pages/car/base"
+            />
+          </View>
+          <View className="list-col">
+            <Router
+              title="车辆信息(必填)"
+              arrow={true}
+              extraColor={clCarInfoListStr && clCarInfoListStr.useType ? '#4fc79a' : '#ffd915'}
+              extraText={clCarInfoListStr && clCarInfoListStr.useType ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              url="/pages/car/base"
+            />
+          </View>
+          <View className="list-col">
+            <Router
+              title="还款信息(必填)"
+              arrow={true}
+              extraColor={clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.repaymentAccount ? '#4fc79a' : '#ffd915'}
+              extraText={clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.repaymentAccount ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              url="/pages/bankcard/index"
+            />
+          </View>
+          <View className="list-col">
+            <Router
+              title="产品信息(必填)"
+              arrow={true}
+              extraColor={clProductTypeListStr && clProductTypeListStr.applyAmount ? '#4fc79a' : '#ffd915'}
+              extraText={clProductTypeListStr && clProductTypeListStr.applyAmount ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              url="/pages/product/index"
+            />
+          </View>
+          <View className="list-col">
+            <Router
+              title="材料附件(必填)"
+              arrow={true}
+              extraColor={clProductTypeListStr && clProductTypeListStr.applyAmount ? '#4fc79a' : '#ffd915'}
+              extraText={clProductTypeListStr && clProductTypeListStr.applyAmount ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              url="/pages/material/index"
+            />
+          </View>
+          </ScrollView>
+      )
+    } else if (current === 1) {
+      return (
+        <View>
+          
 
         </View>
       )
@@ -167,40 +244,12 @@ class Report extends Component<IProps, IState>{
     const { steps, current } = this.props.report;
     return (
       <View className="report-page">
-        <View className="stpes-list">
-          <View className="item">
-            {
-              current>0?<AtIcon  prefixClass='iconfont' value="sucess" size="16" color="#fff"/>:<AtIcon  prefixClass='iconfont' value="point" size="16" color={current==0?"#FA9B00":"#F5F5FA"}/>
-            }
-            <Text className={current==0?"active-text":"text"}>秒批</Text>
-          </View>
-          <View className="item">
-            {
-              current>1?<AtIcon  prefixClass='iconfont' value="sucess" size="16" color="#fff"/>:<AtIcon  prefixClass='iconfont' value="point" size="16" color={current==1?"#FA9B00":"#F5F5FA"}/>
-            }
-            <Text className={current==1?"active-text":"text"}>准入</Text>
-          </View>
-          <View className="item">
-            {
-              current>2?<AtIcon  prefixClass='iconfont' value="sucess" size="16" color="#fff"/>:<AtIcon  prefixClass='iconfont' value="point" size="16" color={current==2?"#FA9B00":"#F5F5FA"}/>
-            }
-            <Text className={current==2?"active-text":"text"}>授信</Text>
-          </View>
-        </View>
-        <View className="step">
-          <AtSteps
-            items={steps}
-            current={current}
-            onChange={this.onChangeStep}
-          />
-        </View>
-
+        <Steps current={current} steps={steps} />
         {
           this.renderStepContent()
         }
 
         <View className="next-btn">
-          {/* <AtButton type='primary'>存为草稿</AtButton> */}
           <AtButton type='primary' onClick={this.next}>下一步</AtButton>
         </View>
       </View>

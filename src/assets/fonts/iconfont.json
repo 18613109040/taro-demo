@@ -27,6 +27,13 @@
       "unicode_decimal": 58894
     },
     {
+      "icon_id": "1164943",
+      "name": "点",
+      "font_class": "dian",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
       "icon_id": "2150786",
       "name": "身份证",
       "font_class": "credentials_icon",
@@ -39,13 +46,6 @@
       "font_class": "wancheng",
       "unicode": "e657",
       "unicode_decimal": 58967
-    },
-    {
-      "icon_id": "4096180",
-      "name": "点",
-      "font_class": "point",
-      "unicode": "e626",
-      "unicode_decimal": 58918
     },
     {
       "icon_id": "4251739",
