@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
-import { AtList, AtListItem, AtIcon, AtButton, AtSteps } from "taro-ui"
+import {  AtListItem, AtIcon, AtButton, AtSteps } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import IdCardInfo from '../../components/IdCardInfo'
 import BaseInfo from '../../components/BaseInfo'
@@ -167,6 +167,26 @@ class Report extends Component<IProps, IState>{
     const { steps, current } = this.props.report;
     return (
       <View className="report-page">
+        <View className="stpes-list">
+          <View className="item">
+            {
+              current>0?<AtIcon  prefixClass='iconfont' value="sucess" size="16" color="#fff"/>:<AtIcon  prefixClass='iconfont' value="point" size="16" color={current==0?"#FA9B00":"#F5F5FA"}/>
+            }
+            <Text className={current==0?"active-text":"text"}>秒批</Text>
+          </View>
+          <View className="item">
+            {
+              current>1?<AtIcon  prefixClass='iconfont' value="sucess" size="16" color="#fff"/>:<AtIcon  prefixClass='iconfont' value="point" size="16" color={current==1?"#FA9B00":"#F5F5FA"}/>
+            }
+            <Text className={current==1?"active-text":"text"}>准入</Text>
+          </View>
+          <View className="item">
+            {
+              current>2?<AtIcon  prefixClass='iconfont' value="sucess" size="16" color="#fff"/>:<AtIcon  prefixClass='iconfont' value="point" size="16" color={current==2?"#FA9B00":"#F5F5FA"}/>
+            }
+            <Text className={current==2?"active-text":"text"}>授信</Text>
+          </View>
+        </View>
         <View className="step">
           <AtSteps
             items={steps}

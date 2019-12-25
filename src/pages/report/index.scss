@@ -6,6 +6,29 @@ page{
   color: $brand-1;
 }
 .report-page{
+  .stpes-list{
+    background: $brand-1;
+    display: flex;
+    align-items: center;
+    padding-top: $v-spacing-10 ;
+    padding-bottom: $v-spacing-10 ;
+    .item{
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .text{
+        color: $brand-8;
+        font-size: $font-size-24;
+        margin-left: $v-spacing-10;
+      }
+      .active-text{
+        color: $brand-7;
+        font-size: $font-size-24;
+        margin-left: $v-spacing-10;
+      }
+    }
+  }
   .step{
     background: $brand-8;
     padding-top: $v-spacing-30;
@@ -28,4 +51,11 @@ page{
 }
 .iconfont-idcard::after {
   content: "\e674";
+}
+.iconfont-point::after {
+  content: "\e626";
+}
+
+.iconfont-sucess::after {
+  content: "\e657";
 }

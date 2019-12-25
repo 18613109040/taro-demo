@@ -34,6 +34,20 @@
       "unicode_decimal": 58996
     },
     {
+      "icon_id": "3677677",
+      "name": "完成",
+      "font_class": "wancheng",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "4096180",
+      "name": "点",
+      "font_class": "point",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
       "icon_id": "4251739",
       "name": "联系人",
       "font_class": "lianxiren",
