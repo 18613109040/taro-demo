@@ -21,24 +21,35 @@ page{
       // width: calc(100% - 5px);
     }
   }
-  .card-meta{
-    display: flex;
-    align-items: center;
+  .card-detail{
     padding: $h-spacing-30;
     background: $brand-8;
     margin-bottom: $h-spacing-20;
-    .des{
-      flex: 1;
-      .user-name{
-        font-size: $font-size-34;
-        font-weight: 600;
+    .card-meta{
+      display: flex;
+      align-items: center;
+      margin-bottom: $h-spacing-10;
+      .des{
+        flex: 1;
+        .user-name{
+          font-size: $font-size-34;
+          font-weight: 600;
+        }
+        .time{
+          margin-left: $h-spacing-20;
+          font-size: $font-size-28;
+        }
       }
-      .time{
-        margin-left: $h-spacing-20;
+      .status{
+        font-size: $font-size-28;
       }
     }
-    .status{
-
+    .product-name{
+      font-size: $font-size-22;
+      color: $brand-1;
+      background: #f1f2f6;
+      padding: $v-spacing-4 $h-spacing-10;
     }
   }
+
 }

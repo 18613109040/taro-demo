@@ -28,9 +28,9 @@ class Order extends Component<IProps, IState>{
     }
   }
   componentDidMount = () => {
-   this.getData()
+    this.getData()
   }
-  getData(){
+  getData() {
     const { dispatch } = this.props;
     dispatch({
       type: 'order/getOrderListAction',
@@ -43,15 +43,16 @@ class Order extends Component<IProps, IState>{
         order: 'desc',
         name: '',
         phone: '',
-        dealerStatus: 1,
+        reportStatus: 2,
+        primaryStatus: 1,
         idCard: '',
-        productName:'', 
+        productName: '',
         id: '',
-        field: 'id,createName,updateName,updateDate,name'
+        field: 'id,createName,updateName,updateDate,name,productName'
       }
     })
   }
-  handleClick= (value)=> {
+  handleClick = (value) => {
     this.setState({
       current: value
     })
@@ -63,8 +64,8 @@ class Order extends Component<IProps, IState>{
     const { windowHeight } = this.props.systemInfo;
     const { order: { all } } = this.props;
     const { current } = this.state;
-    const tabList = [{ title: '标签1' }, { title: '标签2' }, { title: '标签3'},{ title: '标签4' }, { title: '标签5' }, { title: '标签6'}]
-
+    const tabList = [{ title: '标签1' }, { title: '标签2' }, { title: '标签3' }, { title: '标签4' }, { title: '标签5' }, { title: '标签6' }]
+    const status = ['审核中', '', '审核-已通过','','','','','审核-已拒绝']
     return (
       <View className="order-page">
         <AtTabs current={current} tabList={tabList} onClick={this.handleClick}>
@@ -77,17 +78,23 @@ class Order extends Component<IProps, IState>{
             >
               <View>
                 {
-                  all&&all.list&&all.list.map((item,index)=>(
-                    <View className="card-meta" key={index}>
-                      <View className="des">
-                        <Text className="user-name">{item.name}</Text>
-                        <Text className="time">2019.08.09 13:20</Text>
+                  all && all.list && all.list.map((item, index) => (
+                    <View className="card-detail" key={index} >
+                      <View className="card-meta" >
+                        <View className="des">
+                          <Text className="user-name">{item.name}</Text>
+                          <Text className="time">{item.updateDate}</Text>
+                        </View>
+                  <Text className="status">{item.reportStatus === 2 ? ''}</Text>
                       </View>
-                      <Text className="status">审核中</Text>
+                      <View>
+                        <Text className="product-name">{item.productName}</Text>
+                      </View>
                     </View>
+
                   ))
                 }
-               
+
               </View>
             </ScrollView>
           </AtTabsPane>
