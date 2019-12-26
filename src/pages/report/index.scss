@@ -1,25 +1,37 @@
-@import '../../styles/theme';
-page{
+@import "../../styles/theme";
+page {
   background: $brand-5;
 }
-.at-steps__single-icon--success{
+.at-steps__single-icon--success {
   color: $brand-1;
 }
-.report-page{
-
-    .list-col{
-      background: $brand-8;
-      margin-bottom: $v-spacing-20;
+.report-page {
+  .prompt {
+    background: $brand-1;
+    padding: $v-spacing-30;
+    .status {
+      display: flex;
+      align-items: center;
+      color: $brand-8;
+      .message{
+        margin-left: $v-spacing-20;
+        margin-right: $v-spacing-20;
+      }
     }
-  
-  .list-row-c{
+  }
+  .list-col {
+    background: $brand-8;
     margin-bottom: $v-spacing-20;
   }
-  .next-btn{
+
+  .list-row-c {
+    margin-bottom: $v-spacing-20;
+  }
+  .next-btn {
     width: 100%;
-    .at-button{
-      height: 44PX;
-      line-height: 44PX;
+    .at-button {
+      height: 44px;
+      line-height: 44px;
       border-radius: 0px;
     }
   }

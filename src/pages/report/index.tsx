@@ -170,21 +170,6 @@ class Report extends Component<IProps, IState>{
           </View>
           <View className="list-col">
             <Router
-              title="车辆信息(必填)"
-              arrow={true}
-              extraColor={clCarInfoListStr && clCarInfoListStr.useType ? '#4fc79a' : '#ffd915'}
-              extraText={clCarInfoListStr && clCarInfoListStr.useType ? '完成' : '去完成'}
-              iconInfo={{
-                prefixClass: 'iconfont',
-                size: 25,
-                color: '#1D31AA',
-                value: 'idcard'
-              }}
-              url="/pages/car/base"
-            />
-          </View>
-          <View className="list-col">
-            <Router
               title="还款信息(必填)"
               arrow={true}
               extraColor={clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.repaymentAccount ? '#4fc79a' : '#ffd915'}
@@ -244,11 +229,17 @@ class Report extends Component<IProps, IState>{
     const { steps, current } = this.props.report;
     return (
       <View className="report-page">
+        <View className="prompt">
+          <View className="status">
+            <AtIcon value="sucess" size="20"  prefixClass='iconfont' color="#FFD915"/>
+            <Text className="message">已经完成了</Text>
+            <AtIcon value="chevron-right" size="20"/>
+          </View>
+        </View>
         <Steps current={current} steps={steps} />
         {
           this.renderStepContent()
         }
-
         <View className="next-btn">
           <AtButton type='primary' onClick={this.next}>下一步</AtButton>
         </View>

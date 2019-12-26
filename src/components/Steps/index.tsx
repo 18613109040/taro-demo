@@ -18,7 +18,7 @@ const Steps: Taro.FC<StepsProps> = (props: StepsProps) => {
         steps.map((item, index) =>
           <View className="item">
             {
-              current > index ? <AtIcon prefixClass='iconfont' value="sucess" size="15" color="#fff" /> : <AtIcon prefixClass='iconfont' value="point" size="10" color={current === index ? "#FA9B00" : "#F5F5FA"} />
+              current > index ? <AtIcon prefixClass='iconfont' value="sucess" size="15" color="#fff" /> : <AtIcon prefixClass='iconfont' value="point" size="10" color={current === index ? "#FFD915" : "#F5F5FA"} />
             }
           <Text className={current == index ? "active-text" : "text"}>{item.title}</Text>
           </View>

@@ -1,11 +1,9 @@
 @import '../../styles/theme';
 .stpes-list{
-  background: $brand-1;
+  background: $brand-2;
   display: flex;
   align-items: center;
   height: 35PX;
-  // padding-top: $v-spacing-20;
-  // padding-bottom: $v-spacing-20 ;
   .item{
     flex: 1;
     display: flex;
@@ -17,7 +15,7 @@
       margin-left: $v-spacing-10;
     }
     .active-text{
-      color: $brand-7;
+      color: $brand-6;
       font-size: $font-size-24;
       margin-left: $v-spacing-10;
     }
