@@ -1,0 +1,54 @@
+@import '../../styles/theme';
+page{
+  background: $brand-1;
+}
+.prepare-page{
+  .content{
+    margin: $h-spacing-20;
+    background: $brand-8;
+    border-radius: $radius-16;
+    padding: $h-spacing-30;
+  }
+  .name-t{
+    display: flex;
+    align-items: center;
+    font-size: $font-size-40;
+    justify-content: center;
+    .title{
+      margin-left: $h-spacing-40;
+      margin-right: $h-spacing-40;
+    }
+    .right{
+      transform: rotate(180deg);
+    }
+  }
+  .line-header{
+    display: flex;
+    align-items: center;
+    margin-top: $h-spacing-30;
+    .title{
+      font-size: $font-size-32;
+      margin-left: $h-spacing-10;
+    }
+  }
+  .material{
+    display: flex;
+    align-items: center;
+    margin-top: $v-spacing-20;
+    justify-content: space-between;
+    .image{
+      width: 320px;
+      height: 220px;
+    }
+  }
+  .btn{
+    margin-top: $h-spacing-30;
+  }
+}
+.iconfont-diamond::after {
+  content: "\e62d";
+}
+
+.iconfont-diamond::after {
+  content: "\e61b";
+}

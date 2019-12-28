@@ -64,11 +64,12 @@ class Order extends Component<IProps, IState>{
     const { windowHeight } = this.props.systemInfo;
     const { order: { all } } = this.props;
     const { current } = this.state;
-    const tabList = [{ title: '标签1' }, { title: '标签2' }, { title: '标签3' }, { title: '标签4' }, { title: '标签5' }, { title: '标签6' }]
-    const status = ['审核中', '', '审核-已通过','','','','','审核-已拒绝']
+    const status = ['审核中', '', '审核-已通过', '', '', '', '', '审核-已拒绝']
+    const tabList = [{ title: '秒批' }, { title: '已处理' }, { title: '签约' }, { title: '待请款' }, { title: '已放款' },{ title: '已放款' },{  title: '退回' }]
+
     return (
       <View className="order-page">
-        <AtTabs current={current} tabList={tabList} onClick={this.handleClick}>
+        <AtTabs scroll current={current} tabList={tabList} onClick={this.handleClick}>
           <AtTabsPane current={current} index={0} >
             <ScrollView
               scrollY
@@ -85,7 +86,7 @@ class Order extends Component<IProps, IState>{
                           <Text className="user-name">{item.name}</Text>
                           <Text className="time">{item.updateDate}</Text>
                         </View>
-                  <Text className="status">{item.reportStatus === 2 ? ''}</Text>
+                        <Text className="status">{item.reportStatus === 2 ? '' : ""}</Text>
                       </View>
                       <View>
                         <Text className="product-name">{item.productName}</Text>

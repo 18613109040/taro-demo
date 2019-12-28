@@ -27,6 +27,7 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
         multiple={false}
         count={1}
         length={1}
+        sourceType={['album', 'camera']}
         showAddBtn={file&&file.length>0?false:true}
         onChange={onChangeImage}
       />

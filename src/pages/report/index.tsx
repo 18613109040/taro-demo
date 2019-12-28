@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text, ScrollView } from '@tarojs/components';
-import { AtListItem, AtIcon, AtButton } from "taro-ui"
+import { View, Text, ScrollView, Button, Label } from '@tarojs/components';
+import {  AtIcon, AtButton } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import IdCardInfo from '../../components/IdCardInfo'
 import BaseInfo from '../../components/BaseInfo'
@@ -46,32 +46,17 @@ class Report extends Component<IProps, IState>{
   onChangeStep = () => {
 
   }
-  idCardinfo = () => {
-    Taro.navigateTo({
-      url: '/pages/idcard/index'
-    })
-  }
-  myInfo = () => {
-    Taro.navigateTo({
-      url: '/pages/base/index'
-    })
-  }
-  contactInfo = () => {
-    Taro.navigateTo({
-      url: '/pages/contact/index'
-    })
-  }
-  guaranteeInfo = () => {
-    Taro.navigateTo({
-      url: '/pages/guarantee/index'
-    })
 
-  }
-  toCarInfo = () => {
-    Taro.navigateTo({
-      url: '/pages/car/base'
+  callPhone = () => {
+    Taro.makePhoneCall({
+      phoneNumber: '18613109040'
     })
   }
+  copy = () => [
+    Taro.setClipboardData({
+      data: '12333333333',
+    })
+  ]
   next = () => {
     const { dispatch } = this.props;
     let { current } = this.props.report;
@@ -82,16 +67,16 @@ class Report extends Component<IProps, IState>{
   }
   renderStepContent = () => {
     const { report, systemInfo } = this.props;
-    const { windowHeight } =systemInfo;
+    const { windowHeight } = systemInfo;
     const { formData, current } = report;
     const { name, phone, contactName1, clGuaranteeInfoListStr, clCarInfoListStr, clCollectGatheringInfoListStr, clProductTypeListStr } = formData
     if (current === 0) {
       return (
-          <ScrollView
-            scrollY
-            scrollWithAnimation
-            style={{ height: `${windowHeight - 79}px` }}
-          >
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={{ height: `${windowHeight - 79}px` }}
+        >
           <View className="list-col">
             <Router
               title="身份证信息(必填)"
@@ -213,30 +198,41 @@ class Report extends Component<IProps, IState>{
               url="/pages/material/index"
             />
           </View>
-          </ScrollView>
+        </ScrollView>
       )
     } else if (current === 1) {
       return (
         <View>
-          
+
 
         </View>
       )
     }
-
   }
+
   render() {
     const { steps, current } = this.props.report;
     return (
       <View className="report-page">
         <View className="prompt">
-          <View className="status">
-            <AtIcon value="sucess" size="20"  prefixClass='iconfont' color="#FFD915"/>
-            <Text className="message">已经完成了</Text>
-            <AtIcon value="chevron-right" size="20"/>
+          {/* <View className="status">
+            <AtIcon value="colose" size="20" prefixClass='iconfont' color="#FFD915" />
+            <Text className="message">退回</Text>
+            <AtIcon value="chevron-right" size="18" />
+          </View> */}
+          {/* <View className="error-des">
+            <View><Text className="reason-title">退回原因:</Text></View>
+            <View><Text className="reason">身份证填写错误啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦</Text></View>
+          </View> */}
+          <View className="link-message">
+            <Text className="name">张三</Text>
+            <AtIcon value="phone" size="16" onClick={this.callPhone} prefixClass='iconfont' color="#d0d3d9" />
+            <AtIcon value="shuxian" size="16" prefixClass='iconfont' color="#d0d3d9" />
+            <Text className="code">123339900030300330303030</Text>
+            <Label><Button className="btn" onClick={this.copy}>复制</Button></Label>
           </View>
         </View>
-        <Steps current={current} steps={steps} />
+        <Steps current={current} steps={steps} /> 
         {
           this.renderStepContent()
         }

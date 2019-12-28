@@ -59,6 +59,7 @@ class Material extends Component<IProps, IState>{
                 <ImagePicker
                   required={true}
                   label="身份证正面"
+                  
                 />
                 <ImagePicker
                   required={true}

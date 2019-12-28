@@ -1,0 +1,56 @@
+@import '../../styles/theme';
+page{
+  background: $brand-13;
+}
+.fast-approval-page{
+  .title{
+    font-size: $font-size-34;
+  }
+
+  .header{
+    padding: $h-spacing-20;
+  }
+  .card{
+    background: $brand-8;
+    padding: $h-spacing-30;
+    .name{
+      font-size: $font-size-32;
+      text-align: center;
+      color: $brand-10;
+    }
+    .id-card_image{
+      width: 320px;
+      height: 210px;
+    }
+    .preview{
+      position: relative;
+      .close{
+        position: absolute;
+        right: $h-spacing-20;
+        margin-top: -200px;
+        
+      }
+    }
+  }
+}
+
+.iconfont-verticalline::after {
+  content: "\e62b";
+}
+.iconfont-close::after {
+  content: "\e601";
+}
+.iconfont-idcardpositive::after {
+  content: "\e617";
+}
+.iconfont-idcardreverse::after {
+  content: "\e64d";
+}
+
+.iconfont-bankCardpositive::after {
+  content: "\e694";
+}
+.iconfont-bankCardreverse::after {
+  content: "\e693";
+}
+

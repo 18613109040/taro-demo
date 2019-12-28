@@ -14,11 +14,19 @@ const store = dvaApp.getStore();
 class App extends Component {
   config: Config = {
     pages: [
+      'pages/fastApproval/index',
+      'pages/material/index',
+      'pages/prepare/index',
       'pages/order/index',
       'pages/report/index',
+      'pages/login/index',
+      
+      'pages/home/index',
+      
+      
       'pages/idcard/index',
       'pages/product/index',
-      'pages/material/index',
+      
       'pages/guarantee/index',
       'pages/contact/index',
       'pages/car/base',
@@ -27,11 +35,11 @@ class App extends Component {
       'pages/base/index',
 
       
-      'pages/home/index',
+      
       'pages/userinfo/index',
       'pages/userlist/index',
       'pages/account/index',
-      'pages/login/index',
+      
     ],
     window: {
       backgroundTextStyle: 'dark',

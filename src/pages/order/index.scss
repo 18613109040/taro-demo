@@ -8,17 +8,16 @@ page{
     align-items: center;
   }
   .at-tabs__item{
-    padding: 0px;
+    // padding: 0px;
     height: 44PX;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
 
     .at-tabs__item-underline{
       height: 2PX;
       width: 50px;
       margin-left: calc(50% - 25px);
-      // width: calc(100% - 5px);
     }
   }
   .card-detail{
