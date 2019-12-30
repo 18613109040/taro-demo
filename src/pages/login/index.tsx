@@ -48,6 +48,9 @@ class Login extends PureComponent<IProps, IState> {
     const { userName, password } = this.state;
     const { dispatch } = this.props;
     if (userName && password) {
+      Taro.reLaunch({
+        url: '/pages/home/index'
+      })
       const res = await dispatch({
         type: 'common/loginAction',
         payload: {
