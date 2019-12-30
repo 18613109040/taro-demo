@@ -16,9 +16,7 @@ type IProps = {
   userInfo: any;
   common: any;
 }
-@connect(({ home, common }) => ({
-  steps: home.steps,
-  form: home.form,
+@connect(({ common }) => ({
   systemInfo: common.systemInfo,
   userInfo: common.userInfo
 }))
@@ -48,7 +46,7 @@ class Home extends PureComponent<IProps, IState> {
   }
   addApply =() => {
     Taro.navigateTo({
-      url: '/pages/report/index'
+      url: '/pages/prepare/index'
     })
   }
   render() {
@@ -58,10 +56,6 @@ class Home extends PureComponent<IProps, IState> {
         <View className="add-place" onClick={this.addApply}>
           <AtIcon value='add-circle' size='30' color='#283282' />
           <Text className="text">进件快速申请</Text>
-        </View>
-        <View className="add-place" onClick={this.addApply}>
-          <AtIcon value='add-circle' size='30' color='#283282' />
-          <Text className="text">新增进件申请</Text>
         </View>
         <View>
           <View></View>

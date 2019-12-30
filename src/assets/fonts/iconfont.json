@@ -132,6 +132,13 @@
       "unicode_decimal": 58881
     },
     {
+      "icon_id": "9400848",
+      "name": "汽车",
+      "font_class": "icon-test",
+      "unicode": "e6fe",
+      "unicode_decimal": 59134
+    },
+    {
       "icon_id": "9547584",
       "name": "关  闭 (7)-01 copy",
       "font_class": "guanbi-copy",

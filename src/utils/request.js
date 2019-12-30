@@ -15,12 +15,17 @@ export default (options = { method: 'GET', data: {} }) => {
       ...options.data,
     },
     header: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Cookie': 'Hm_lvt_098e6e84ab585bf0c2e6853604192b8b=1575814668; i18n_browser_Lang=zh-cn; JEECGINDEXSTYLE=hplus; ZINDEXNUMBER=1990; JSESSIONID=BCEDA701764EF1398B40044A9B89AED6; Hm_lpvt_098e6e84ab585bf0c2e6853604192b8b=1577504856'
+      'content-type': 'application/x-www-form-urlencoded',
+      'Cookie': Taro.getStorageSync('cookie'),
+      ...options.header
     },
-    method: options.method.toUpperCase(),
+    method: options.method.toUpperCase()
   }).then(res => {
-    const { statusCode, data } = res;
+    const { statusCode, data, header } = res;
+    const cookie = header["Set-Cookie"];
+    if (cookie != null) {
+      Taro.setStorageSync('cookie', cookie)
+    }
     if (statusCode >= 200 && statusCode < 300) {
       if (!noConsole) {
         console.log(
