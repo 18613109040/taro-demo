@@ -36,10 +36,6 @@ class App extends Component {
       
       'pages/base/index',
 
-      
-      
-      'pages/userinfo/index',
-      'pages/userlist/index',
       'pages/account/index',
       
     ],

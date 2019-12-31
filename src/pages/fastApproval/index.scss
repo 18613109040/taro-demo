@@ -1,8 +1,38 @@
 @import '../../styles/theme';
 page{
-  background: $brand-13;
+  background: $brand-8;
 }
 .fast-approval-page{
+  
+  .steps-bg{
+    background: $brand-8;
+    padding-top: $v-spacing-20;
+    padding-bottom: $v-spacing-20;
+  }
+  .sucess{
+    margin-top: $h-spacing-80;
+    text-align: center;
+    .sucess-title{
+      margin-top: $h-spacing-30;
+      font-size: $font-size-32;
+      color: $brand-2;
+    }
+    .sucess-des{
+      margin-top: $h-spacing-20;
+      font-size: $font-size-24;
+      color: $brand-10;
+    }
+    .btn-sucess-footer {
+      padding: $v-spacing-30;
+      margin-top: $h-spacing-80;
+    }
+  }
+  .submit-btn{
+    margin-left: $v-spacing-30;
+  }
+  .btn-footer{
+    padding: $v-spacing-30;
+  }
   .title{
     font-size: $font-size-34;
   }
@@ -54,6 +84,7 @@ page{
   }
   .header{
     padding: $h-spacing-20;
+    background: $brand-13;
   }
   .card{
     background: $brand-8;
@@ -98,4 +129,6 @@ page{
 .iconfont-bankCardreverse::after {
   content: "\e693";
 }
-
+.iconfont-orderSucess::after {
+  content: "\e602";
+}

@@ -30,16 +30,9 @@ class Account extends Component<IProps, IState>{
   }
   render() {
     return (
-      <View className="home-page">
-        <AtList>
-          <AtListItem
-            title='用户信息管理'
-            arrow='right'
-            iconInfo={{ prefixClass: 'iconfont' ,size: 32, color: '#283282', value: 'contact' }} 
-            onClick={this.goToUserList}
-          >
-          </AtListItem>
-        </AtList>
+      <View className="account-page">
+        <View className=""></View>
+        <View></View>
       </View>
     );
   }

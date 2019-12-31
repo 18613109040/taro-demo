@@ -1,5 +1,5 @@
 import Taro, { PureComponent, ComponentClass } from '@tarojs/taro';
-import { View, Text, ScrollView } from '@tarojs/components';
+import { View, Text, ScrollView, Label } from '@tarojs/components';
 import { AtIcon, AtButton, AtForm, AtAvatar, AtGrid } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import { StepsProps } from './model'
@@ -50,9 +50,16 @@ class Home extends PureComponent<IProps, IState> {
     })
   }
   render() {
-
     return (
       <View className="home-page">
+        <View>
+          <AtAvatar image='https://jdc.jd.com/img/200'/>
+          <View>
+            <View><Text>张三</Text></View>
+            <View><Text></Text></View>
+          </View>
+          
+        </View>
         <View className="add-place" onClick={this.addApply}>
           <AtIcon value='add-circle' size='30' color='#283282' />
           <Text className="text">进件快速申请</Text>
