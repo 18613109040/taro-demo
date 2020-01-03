@@ -1,10 +1,13 @@
 import { fromJS } from 'immutable';
-import { FormDataProps, StepsProps } from '../interface/form'
-import { validRepetition, temporaryService } from '../services/report'
+import { FormDataProps, StepsProps, OrderDetailProps } from '../interface/form'
+import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct } from '../services/report'
 export type InitStateProps = {
   formData: FormDataProps;
   current: number;
+  orderDetail: OrderDetailProps;
   steps: Array<StepsProps>;
+  productList: any;
+  productDetail: any;
 }
 const initState:InitStateProps = {
   formData: {
@@ -24,7 +27,6 @@ const initState:InitStateProps = {
     censusRegisterCity: '',
     censusRegisterCounty: '',
     censusRegisterAddress: '',  // 户籍所在省市区及地址详细
-
 
     email: '', // 常用邮箱
     isDriverLicense: false, //驾照情况
@@ -123,7 +125,21 @@ const initState:InitStateProps = {
       accountOpeningBranch: '', //开户支行
       bankNo: '', //联行号
       repaymentAccount: '' //还款账号
+    },
+    //资料信息
+    clFileInfoListStr: {
+      bankNo: '[]', 
+      driveCard: '[]', 
+      idCardPhoto: '[]',
+      idCardPhoto2: '[]'
+    },
+    clCollectClientInfoBigDataStr: {
+
     }
+  },
+  orderDetail: {
+    batchContent: '',
+    batchStatus: ''
   },
   current: 0,
   steps: [{
@@ -146,7 +162,11 @@ const initState:InitStateProps = {
     title: '贷后',
     desc: '',
     status: ''
-  }]
+  }],
+  productList: [],
+  productDetail: {
+
+  }
 }
 export default {
   namespace: 'report',
@@ -155,17 +175,81 @@ export default {
   effects: {
     // 校验身份证号码
     *validRepetitionAction({payload}, { call, put }){
-      const res = yield call(validRepetition,payload)
-      return res;
+      return yield call(validRepetition,payload)
     },
     // 暂时保存
     * temporaryAction({payload}, { call, put }){
-      const res = yield call(temporaryService,payload)
-      return res;
+      return yield call(temporaryService,payload)
+    },
+    *getOrderDetailAction({payload}, { call, put }) {
+      const res = yield call(getOrderDetail,payload)
+      if(res.success)
+        yield put({ type: "setOrderDetail", payload: res.obj })
+    },
+    *getProductListAction({payload}, { call, put }) {
+      const res = yield call(getProductList,payload)
+      if(res.success){
+        yield put({ type: "setProductList", payload: res })
+      }
+    },
+    *getProductAction({payload}, { call, put }){
+      const res = yield call(getProduct,payload)
+      if(res.success){
+        yield put({ type: "setProduct", payload: res })
+      }
     }
   },
 
   reducers: {
+    setProduct(state, {payload}) {
+      state.productDetail = payload.obj
+      return fromJS(state).toJS()
+    },
+    setProductList(state, {payload}) {
+      const productList = [];
+      payload.obj.map(item=>{
+        if(item.typecode){
+          productList.push(Object.assign(item, {name: item.typename}))
+        }
+      })
+      state.productList = productList;
+      return fromJS(state).toJS()
+    },
+    setOrderDetail(state, {payload} ) {
+      state.orderDetail = payload
+      const { clCarInfoListStr, clGuaranteeInfoListStr, clProductTypeListStr, clCollectGatheringInfoListStr, clFileInfoListStr,  clCollectClientInfoBigDataStr, clCollectClientInfoStr, primaryStatus  } = payload
+      state.formData.clCarInfoListStr = JSON.parse(clCarInfoListStr)
+      state.formData.clGuaranteeInfoListStr = JSON.parse(clGuaranteeInfoListStr)
+      state.formData.clProductTypeListStr = JSON.parse(clProductTypeListStr)
+      state.formData.clCollectGatheringInfoListStr = JSON.parse(clCollectGatheringInfoListStr)
+      state.formData.clFileInfoListStr =  JSON.parse(clFileInfoListStr)
+      state.formData.clCollectClientInfoBigDataStr = JSON.parse(clCollectClientInfoBigDataStr)
+      const concat = JSON.parse(clCollectClientInfoStr)
+      if(concat && concat.contactIdCard1){
+        state.formData.clGuaranteeInfoListStr.name = state.formData.clGuaranteeInfoListStr.name || concat.contactName1;
+        state.formData.clGuaranteeInfoListStr.phone = state.formData.clGuaranteeInfoListStr.phone ||  concat.contactPhone1;
+        state.formData.clGuaranteeInfoListStr.cardId = state.formData.clGuaranteeInfoListStr.cardId || concat.contactIdCard1;
+        state.formData.clGuaranteeInfoListStr.relationship = state.formData.clGuaranteeInfoListStr.relationship ||  concat.contactRelationship1; 
+      }else if(concat && concat.contactIdCard2){
+        state.formData.clGuaranteeInfoListStr.name = state.formData.clGuaranteeInfoListStr.name || concat.contactName2;
+        state.formData.clGuaranteeInfoListStr.phone = state.formData.clGuaranteeInfoListStr.phone || concat.contactPhone2;
+        state.formData.clGuaranteeInfoListStr.cardId =  state.formData.clGuaranteeInfoListStr.cardId || concat.contactIdCard2;
+        state.formData.clGuaranteeInfoListStr.relationship = state.formData.clGuaranteeInfoListStr.relationship ||  concat.contactRelationship2;
+      }else if(concat && concat.contactIdCard3){
+        state.formData.clGuaranteeInfoListStr.name = state.formData.clGuaranteeInfoListStr.name || concat.contactName3;
+        state.formData.clGuaranteeInfoListStr.phone = state.formData.clGuaranteeInfoListStr.phone || concat.contactPhone3;
+        state.formData.clGuaranteeInfoListStr.cardId = state.formData.clGuaranteeInfoListStr.cardId || concat.contactIdCard3;
+        state.formData.clGuaranteeInfoListStr.relationship = state.formData.clGuaranteeInfoListStr.relationship ||  concat.contactRelationship3;
+      }
+      state.formData = Object.assign({}, state.formData, JSON.parse(clCollectClientInfoStr))
+      if(primaryStatus === '-1'){
+        state.current = 0
+      }else if(primaryStatus === '0') {
+        state.current = 1;
+        state.steps[0].status = 'success'
+      }
+      return fromJS(state).toJS()
+    },
     setFormData(state, {payload}) {
       const { formData }= state
       state.formData = { ...formData, ...payload }

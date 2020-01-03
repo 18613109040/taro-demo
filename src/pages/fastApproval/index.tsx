@@ -1,19 +1,27 @@
 // 材料准备
 import Taro, { Component, Config } from '@tarojs/taro';
-import { View, Text, Image, Radio, RadioGroup } from '@tarojs/components';
-import { AtIcon, AtButton, AtImagePicker, AtLoading, AtSteps } from "taro-ui"
+import { View, Text, Image, Radio, RadioGroup, ScrollView } from '@tarojs/components';
+import { AtIcon, AtButton, AtMessage, AtSteps } from "taro-ui"
 import moment from 'moment'
 import CInput from '../../components/Input';
 import Addr from '../../components/Addr';
 import Gender from '../../components/Gender';
 import DatePicker from '../../components/DatePicker'
+import { SystemInfoProps } from '../../interface/common'
 import { connect } from '@tarojs/redux';
+import { baseUrl } from '../../config/index';
 import './index.scss';
 type IState = {
-  idCardPositiveUrl: string;
-  idCardReverseUrl: string;
-  bankCardPositiveUrl: string;
-  bankCardReverseUrl: string;
+  idCardPhoto: string;
+  idCardPhotoStr: string,
+  idCardPhoto2: string;
+  idCardPhoto2Str: string,
+  driveCard: string;
+  driveCardStr: string,
+  authFile: string;
+  authFileStr: string;
+  bankNo: string;
+  bankNoStr: string;
   name: string; // 姓名
   nameError: boolean;
   idCard: string; // 身份证号
@@ -39,17 +47,20 @@ type IState = {
   isDriverLicense: boolean;
   phone: string; //手机号
   phoneError: boolean;
-  bankNo: string; //联行号
+  repaymentAccount: string;
+  repaymentAccountError: boolean;
   bankNoError: boolean;
   items: Array<any>;
   current: number;
+  loading: boolean;
   [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
   dispatch: any;
+  systemInfo: SystemInfoProps;
 }
-@connect(({ }) => ({
-
+@connect(({ common }) => ({
+  systemInfo: common.systemInfo,
 }))
 class FastApproval extends Component<IProps, IState>{
   config: Config = {
@@ -60,12 +71,8 @@ class FastApproval extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     this.state = {
-      items: [{ title: '填写信息', status: '' }, { title: '核对资料', status: '' }, { title: '完成', status: '' }],
+      items: [{ title: '上传资料', status: '' }, { title: '核对信息', status: '' }, { title: '完成', status: '' }],
       current: 0,
-      idCardPositiveUrl: '',
-      idCardReverseUrl: '',
-      bankCardPositiveUrl: '',
-      bankCardReverseUrl: '',
       name: '', // 姓名
       nameError: false,
       idCard: '', // 身份证号
@@ -92,8 +99,29 @@ class FastApproval extends Component<IProps, IState>{
       isDriverLicense: true,
       phone: '', //手机号
       phoneError: false,
-      bankNo: '', //联行号
+      repaymentAccount: '', //联行号
+      repaymentAccountError: false,
       bankNoError: false,
+      idCardPhoto: '',
+      idCardPhotoStr: '',
+      idCardPhoto2: '',
+      idCardPhoto2Str: '',
+      bankNo: '',
+      bankNoStr: '',
+      driveCard: '',
+      driveCardStr: '',
+      authFile: '',
+      authFileStr: '',
+      idCardPhotoId: '',
+      idCardPhoto2Id: '',
+      bankNoId: '',
+      driveCardId: '',
+      authFileId: '',
+      submitDisable: false,
+      orderId: '',
+      incomingProvince: '',
+      incomingCity: '',
+      loading: false
     }
   }
   componentDidMount = () => {
@@ -112,50 +140,31 @@ class FastApproval extends Component<IProps, IState>{
       sourceType: ['album', 'camera'],
       count: 1,
       success: (res) => {
-        this.setState({
-          [`${key}`]: res.tempFiles[0].path
+        Taro.uploadFile({
+          url: `${baseUrl}/clCollectClientInfoBigDataController/filedeal.do?id=${this.state[`${key}Id`]}`,
+          filePath: res.tempFiles[0].path,
+          name: key,
+          success: (res) => {
+            const data = JSON.parse(res.data)
+            if (data.success) {
+              const value = JSON.parse(data.attributes.value)
+              this.setState({
+                [`${key}Id`]: data.obj,
+                [`${key}Str`]: data.attributes.value,
+                [`${key}`]: `${baseUrl}/${value[0].url}`
+              })
+            }
+          }
         })
       }
     })
   }
   onChange = async (obj) => {
     const { error, value, valueKey, errorKey } = obj;
-    if (valueKey === 'idCard') {
-      if (!error && value) {
-        this.setState({
-          validateStatus: 'validating',
-          idCard: value
-        })
-        const { dispatch } = this.props;
-        const res = await dispatch({
-          type: 'report/validRepetitionAction',
-          payload: {
-            idCard: value,
-            id: ''
-          }
-        })
-        const { success, obj } = res
-        if (success && obj && obj.length === 0) {
-          this.setState({
-            validateStatus: 'success',
-            idCardError: false,
-            idCardMsg: '请输入正确的身份证号!'
-          })
-        } else {
-          this.setState({
-            validateStatus: '',
-            idCardError: true,
-            idCardMsg: '该身份证号已经存在系统中'
-          })
-        }
-      }
-    } else {
-      this.setState({
-        [`${errorKey}`]: error,
-        [`${valueKey}`]: value
-      })
-    }
-
+    this.setState({
+      [`${errorKey}`]: error,
+      [`${valueKey}`]: value
+    })
   }
   effectivenessChange = (e) => {
     const { value } = e.target;
@@ -170,6 +179,8 @@ class FastApproval extends Component<IProps, IState>{
       idAddrProvince: value[0].name,
       idAddrCity: value[1].name,
       idAddrArea: value[2].name,
+      incomingProvince: value[0].id,
+      incomingCity: value[1].id,
     })
   }
   driverLicenseChange = (e) => {
@@ -183,42 +194,48 @@ class FastApproval extends Component<IProps, IState>{
       [`${key}`]: ''
     })
   }
-  submit = () => {
-    const { items } = this.state;
-    items[1].status = 'success';
+  submit = async () => {
+    if(this.state.loading)
+      return ;
     this.setState({
-      current: 2,
-      items: items
+      loading: true
     })
-    // const keys: Array<string> = ['name', 'idCard', 'sex', 'birthday', 'placeOfissue',
-    //   'effectiveness', 'idCardStartDate', 'idCardEndDate', 'idAddrProvince', 'idAddrCity', 'idAddrArea',
-    //   'idAddrDetails', 'phone', 'bankNo']
-    // const { name, nameError, idCard, idCardError, sex, sexError, birthday, birthdayError, placeOfissue, placeOfissueError,
-    //   effectiveness, idCardStartDate, idCardStartDateError, idCardEndDate, idCardEndDateError, idAddrProvince,
-    //   idAddrCity, idAddrArea, idAddrError, idAddrDetails, idAddrDetailsError, isDriverLicense, phone, phoneError,
-    //   bankNo, bankNoError } = this.state;
-    // let temp: IState = this.state;
-    // keys.map(key => {
-    //   if (!this.state[key]) {
-    //     if ((key === 'idAddrProvince' || key === 'idAddrCity' || key === 'idAddrArea') && (!idAddrProvince && !idAddrCity && !idAddrArea)) {
-    //       temp.idAddrError = true
-    //     } else {
-    //       temp[`${key}Error`] = true
-    //     }
-    //   }
-    // })
-    // this.setState({
-    //   ...temp
-    // }, () => {
-    //   if (!nameError && !idCardError && !sexError && !birthdayError && !placeOfissueError && !idCardStartDateError && !idCardEndDateError && !idAddrError && !idAddrDetailsError && !phoneError
-    //     && !bankNoError) {
-    //   }
-    // })
+    const { dispatch } = this.props;
+    const { name, idCard, sex, birthday, placeOfissue,
+      effectiveness, idCardStartDate, idCardEndDate, idAddrProvince,
+      idAddrCity, idAddrArea, idAddrDetails, isDriverLicense, phone, repaymentAccount,
+      idCardPhotoStr, idCardPhoto2Str, bankNoStr, driveCardStr, authFileStr, items, incomingProvince, incomingCity } = this.state;
+    const res = await dispatch({
+      type: 'approval/approvalAction',
+      payload: {
+        name,
+        idCard,
+        incomingProvince,
+        incomingCity,
+        sex, birthday, placeOfissue, effectiveness: effectiveness ? 1 : 0, idCardStartDate, idCardEndDate, idAddrProvince,
+        idAddrCity, idAddrArea, idAddrDetails, isDriverLicense: isDriverLicense ? 1 : 0, phone, repaymentAccount,
+        idCardPhoto: idCardPhotoStr, idCardPhoto2: idCardPhoto2Str, bankNo: bankNoStr, driveCard: driveCardStr, authFile: authFileStr
+      }
+    })
+    this.setState({
+      loading: false
+    })
+    if (res.success) {
+      items[1].status = 'success';
+      this.setState({
+        current: 2,
+        items: items,
+        orderId: res.obj
+      })
+    } else {
+      Taro.atMessage({
+        message: res.msg,
+        type: "error",
+      })
+    }
   }
-  onChangeSteps = (current) => {
-    // this.setState({
-    //   current
-    // })
+  onChangeSteps = () => {
+
   }
   next = () => {
     const { items } = this.state;
@@ -227,6 +244,7 @@ class FastApproval extends Component<IProps, IState>{
       current: 1,
       items: items
     })
+
   }
   previous = () => {
     const { items } = this.state;
@@ -241,94 +259,155 @@ class FastApproval extends Component<IProps, IState>{
       url: '/pages/home/index'
     })
   }
+  order = () => {
+    const { orderId } = this.state;
+    Taro.reLaunch({
+      url: `/pages/report/index?orderId=${orderId}`
+    })
+  }
   stepContent() {
-    const { idCardPositiveUrl, idCardReverseUrl, bankCardPositiveUrl, bankCardReverseUrl,
+    const { idCardPhoto, idCardPhoto2, bankNo, driveCard, authFile,
       name, nameError, idCard, idCardError, sex, sexError, birthday, birthdayError, placeOfissue, placeOfissueError,
       effectiveness, idCardStartDate, idCardStartDateError, idCardEndDate, idCardEndDateError, idAddrProvince,
-      idAddrCity, idAddrArea, idAddrError, idAddrDetails, idAddrDetailsError, validateStatus, idCardMsg, isDriverLicense, phone, phoneError,
-      bankNo, bankNoError, current
+      idAddrCity, idAddrArea, idAddrError, idAddrDetails, idAddrDetailsError, isDriverLicense, phone, phoneError,
+      repaymentAccount, repaymentAccountError, current, loading
     } = this.state;
+    const nextDisable: any = (idCardPhoto && idCardPhoto2 && bankNo && driveCard && authFile) ? false : true;
+    const submitDisable: any = (name && !nameError && idCard && !idCardError && sex && !sexError && birthday && !birthdayError && placeOfissue && !placeOfissueError && idCardStartDate && !idCardStartDateError && idCardEndDate && !idCardEndDateError && idAddrProvince && idAddrCity && idAddrArea && !idAddrError && idAddrDetails && !idAddrDetailsError && phone && !phoneError && repaymentAccount && !repaymentAccountError) ? false : true
+    const { systemInfo } = this.props;
+    const { windowHeight } = systemInfo;
     if (current === 0) {
-      return (<View>
-        <View className='header at-row at-row__align--center'>
-          <AtIcon value="verticalline" size="20" prefixClass='iconfont' color="#4984FD" />
-          <View className="title">身份证识别</View>
-        </View>
-        <View className='card at-row at-row__align--center at-row__justify--between'>
-          <View>
-            {
-              idCardPositiveUrl ?
-                <View className="preview">
-                  <Image className="id-card_image" src={idCardPositiveUrl} />
-                  <View className="close" onClick={() => this.close('idCardPositiveUrl')}>
-                    <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
-                  </View>
+      return (
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={{ height: `${windowHeight - 140}px` }}
+        >
+          <View className="step-one">
+            <View className="content-upload at-row at-row__align--center">
+              <View className="at-col">
+                <View className="name-title">
+                  <Text>身份证</Text>
+                  <Text className="color-red">人像</Text>
+                  <Text>面</Text>
+                </View>
+                <View className="des"><Text>上传您身份证人像面</Text></View>
+              </View>
+              <View>
+                {
+                  idCardPhoto ?
+                    <View className="preview">
+                      <Image className="id-card_image" src={idCardPhoto} />
+                      <View className="close" onClick={() => this.close('idCardPhoto')}>
+                        <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
+                      </View>
+                    </View> :
+                    <Image onClick={() => this.onChangeImge('idCardPhoto')} className="thumbnail" src={require('../../images/home/idcard02.png')} />
+                }
 
-                </View> :
-                <AtIcon onClick={() => this.onChangeImge('idCardPositiveUrl')} value="idcardpositive" size="100" prefixClass='iconfont' color="#d0d3d9" />
+              </View>
+            </View>
+            <View className="content-upload divider at-row at-row__align--center">
+              <View className="at-col">
+                <View className="name-title">
+                  <Text>身份证</Text>
+                  <Text className="color-red">国徽</Text>
+                  <Text>面</Text>
+                </View>
+                <View className="des"><Text>上传您身份证国徽面</Text></View>
+              </View>
 
-            }
-            <View className="name">上传身份证正面</View>
+              <View>
+                {
+                  idCardPhoto2 ?
+                    <View className="preview">
+                      <Image className="id-card_image" src={idCardPhoto2} />
+                      <View className="close" onClick={() => this.close('idCardPhoto2')}>
+                        <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
+                      </View>
+                    </View> :
+                    <Image onClick={() => this.onChangeImge('idCardPhoto2')} className="thumbnail" src={require('../../images/home/idcard01.png')} />
+                }
+              </View>
+            </View>
+            <View className="content-upload divider at-row at-row__align--center">
+              <View className="at-col">
+                <View className="name-title">
+                  <Text>银行卡</Text>
+                  <Text className="color-red">正</Text>
+                  <Text>面</Text>
+                </View>
+                <View className="des"><Text>上传您银行卡正面</Text></View>
+              </View>
+              <View>
+              {
+                  bankNo ?
+                    <View className="preview">
+                      <Image className="id-card_image" src={bankNo} />
+                      <View className="close" onClick={() => this.close('bankNo')}>
+                        <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
+                      </View>
+                    </View> :
+                    <Image onClick={() => this.onChangeImge('bankNo')} className="thumbnail" src={require('../../images/home/bank.png')} />
+                }
+              </View>
+            </View>
+            <View className="content-upload divider at-row at-row__align--center">
+              <View className="at-col">
+                <View className="name-title">
+                  <Text>驾驶证</Text>
+                </View>
+                <View className="des"><Text>上传您驾驶证</Text></View>
+              </View>
+              <View>
+                {
+                  driveCard ?
+                    <View className="preview">
+                      <Image className="id-card_image" src={driveCard} />
+                      <View className="close" onClick={() => this.close('driveCard')}>
+                        <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
+                      </View>
+                    </View> :
+                    <Image onClick={() => this.onChangeImge('driveCard')} className="thumbnail" src={require('../../images/home/driver.png')} />
+                }
+              </View>
+            </View>
+            <View className="content-upload divider at-row at-row__align--center">
+              <View className="at-col">
+                <View className="name-title">
+                  <Text>签署授权书</Text>
+                </View>
+                <View className="des"><Text>上传您签署授权书</Text></View>
+              </View>
+              <View>
+              {
+                  authFile ?
+                    <View className="preview">
+                      <Image className="id-card_image" src={authFile} />
+                      <View className="close" onClick={() => this.close('authFile')}>
+                        <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
+                      </View>
+                    </View> :
+                    <Image onClick={() => this.onChangeImge('authFile')} className="thumbnail" src={require('../../images/home/book.png')} />
+                }
+              </View>
+            </View>
           </View>
-          <View>
-            {
-              idCardReverseUrl ?
-                <View className="preview">
-                  <Image className="id-card_image" src={idCardReverseUrl} />
-                  <View className="close" onClick={() => this.close('idCardReverseUrl')}>
-                    <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
-                  </View>
-
-                </View> :
-                <AtIcon onClick={() => this.onChangeImge('idCardReverseUrl')} value="idcardreverse" size="100" prefixClass='iconfont' color="#d0d3d9" />
-
-            }
-            <View className="name">上传身份证反面</View>
+          <View className="btn-footer">
+            <AtButton
+              disabled={nextDisable}
+              type='primary'
+              onClick={this.next}>下一步</AtButton>
           </View>
-        </View>
-
-        <View className='header at-row at-row__align--center'>
-          <AtIcon value="verticalline" size="20" prefixClass='iconfont' color="#4984FD" />
-          <View className="title">银行卡识别</View>
-        </View>
-        <View className='card at-row at-row__align--center at-row__justify--between'>
-          <View>
-
-            {
-              bankCardPositiveUrl ?
-                <View className="preview">
-                  <Image className="id-card_image" src={bankCardPositiveUrl} />
-                  <View className="close" onClick={() => this.close('bankCardPositiveUrl')}>
-                    <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
-                  </View>
-
-                </View> :
-                <AtIcon onClick={() => this.onChangeImge('bankCardPositiveUrl')} value="bankCardpositive" size="90" prefixClass='iconfont' color="#d0d3d9" />
-
-            }
-            <View className="name">上传银行卡正面</View>
-          </View>
-          <View>
-            {
-              bankCardReverseUrl ?
-                <View className="preview">
-                  <Image className="id-card_image" src={bankCardReverseUrl} />
-                  <View className="close" onClick={() => this.close('bankCardReverseUrl')}>
-                    <AtIcon value="close" size="20" prefixClass='iconfont' color="#d0d3d9" />
-                  </View>
-                </View> :
-                <AtIcon onClick={() => this.onChangeImge('bankCardReverseUrl')} value="bankCardreverse" size="90" prefixClass='iconfont' color="#d0d3d9" />
-            }
-            <View className="name">上传银行卡反面</View>
-          </View>
-        </View>
-        <View className="btn-footer">
-          <AtButton type='primary' onClick={this.next}>下一步</AtButton>
-        </View>
-      </View>)
+        
+        </ScrollView>)
     } else if (current === 1) {
       return (
-        <View>
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={{ height: `${windowHeight - 140}px` }}
+        >
           <View className='header at-row at-row__align--center'>
             <AtIcon value="verticalline" size="20" prefixClass='iconfont' color="#4984FD" />
             <View className="title">基本信息</View>
@@ -356,21 +435,13 @@ class FastApproval extends Component<IProps, IState>{
                 rules={[{
                   required: true,
                   pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-                  message: idCardMsg//'请输入正确的身份证号!'
+                  message: '请输入正确的身份证号!'
                 }]}
                 type="idcard"
                 trigger='onChange'
                 error={idCardError}
                 onChange={(obj) => this.onChange({ ...obj, errorKey: 'idCardError', valueKey: 'idCard' })}
               />
-              {/* <AtIcon value='loading' size='30' color='#F00' /> */}
-              {
-                validateStatus === 'validating' ?
-                  <View className="loading">
-                    <AtLoading />
-                  </View> : validateStatus === 'success' ? <View className="loading"> <AtIcon value='check' size='20' color="#283282" /> </View> : ''
-              }
-
             </View>
 
             <View className="flex-row">
@@ -513,47 +584,52 @@ class FastApproval extends Component<IProps, IState>{
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'phoneError', valueKey: 'phone' })}
             />
             <CInput
-              name='bankNo'
-              defaultValue={bankNo}
+              name='repaymentAccount'
+              defaultValue={repaymentAccount}
               label="银行卡号"
               rules={[{
                 required: true,
                 pattern: /^([1-9]{1})(\d{15}|\d{18})$/,
                 message: '请输入银行卡号!'
               }]}
-              trigger='onBlur'
+              // trigger='onBlur'
               type="idcard"
-              error={bankNoError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'bankNoError', valueKey: 'bankNo' })}
+              error={repaymentAccountError}
+              onChange={(obj) => this.onChange({ ...obj, errorKey: 'repaymentAccountError', valueKey: 'repaymentAccount' })}
             />
           </View>
 
           <View className="btn-footer at-row at-row__align--center">
-            <View className="at-col"><AtButton onClick={this.previous} >上一步</AtButton></View>
-            <View className="at-col submit-btn"><AtButton type='primary' onClick={this.submit}>提交</AtButton></View>
+            <View className="at-col"><AtButton onClick={this.previous}  >上一步</AtButton></View>
+            <View className="at-col submit-btn"><AtButton type='primary' loading={loading} disabled={submitDisable} onClick={this.submit}>{loading?"提交中":"提交"}</AtButton></View>
           </View>
-        </View>
+        </ScrollView>
       )
     } else if (current === 2) {
       return (
-        <View className="sucess">
-          <View><AtIcon value="orderSucess" size="100" prefixClass='iconfont' color="#4984FD" /></View>
-          <View><Text className="sucess-title">提交成功</Text></View>
-          <View><Text className="sucess-des">您的申请已经提交成功,我们会在第一时间审核。</Text></View>
-          
-          <View className="btn-sucess-footer at-row at-row__align--center">
-            <View className="at-col"><AtButton onClick={this.home} >返回首页</AtButton></View>
-            <View className="at-col submit-btn"><AtButton type='primary' onClick={this.submit}>查看订单</AtButton></View>
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={{ height: `${windowHeight - 80}px` }}
+        >
+          <View className="sucess">
+            <View><AtIcon value="orderSucess" size="100" prefixClass='iconfont' color="#4984FD" /></View>
+            <View><Text className="sucess-title">提交成功</Text></View>
+            <View><Text className="sucess-des">您的申请已经提交成功,我们会在第一时间审核。</Text></View>
+            <View className="btn-sucess-footer at-row at-row__align--center">
+              <View className="at-col"><AtButton onClick={this.home} >返回首页</AtButton></View>
+              <View className="at-col submit-btn"><AtButton type='primary' onClick={this.order}>查看订单</AtButton></View>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       )
     }
   }
   render() {
     const { items, current } = this.state;
-    console.dir(items)
     return (
       <View className="fast-approval-page">
+        <AtMessage />
         <View className="steps-bg">
           <AtSteps
             items={items}

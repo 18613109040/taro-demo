@@ -19,3 +19,6 @@ page{
 view {
   box-sizing: border-box;
 }
+.iconfont-down::after {
+  content: "\e64a";
+}

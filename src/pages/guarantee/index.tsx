@@ -36,7 +36,7 @@ type IState = {
   area: string; //区
   companyAddrError: boolean;
   companyAddress: string; //详细地址
-  companyAddrDetailsError: boolean;
+  companyAddressError: boolean;
 }
 type IProps = {
   report: InitStateProps;
@@ -84,7 +84,7 @@ class Guarantee extends Component<IProps, IState>{
       area: area || '', //区
       companyAddrError: false,
       companyAddress: companyAddress || '', //详细地址
-      companyAddrDetailsError: false
+      companyAddressError: false
     }
   }
   componentDidMount = () => {
@@ -98,18 +98,34 @@ class Guarantee extends Component<IProps, IState>{
     })
   }
   save = () => {
+    const { orderId } = this.$router.params
     const { name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress,
-      nameError, relationshipError, phoneError, cardIdError, emailError, liveAddrError, addressError, companyNameError, companyPhoneError, annualIncomeError, companyAddrError, companyAddrDetailsError } = this.state;
-    if (!nameError && !relationshipError && !phoneError && !cardIdError && !emailError && !liveAddrError && !addressError && !companyNameError && !companyPhoneError && !annualIncomeError && !companyAddrError && !companyAddrDetailsError) {
-      Taro.navigateBack()
+      nameError, relationshipError, phoneError, cardIdError, emailError, liveAddrError, addressError, companyNameError, companyPhoneError, annualIncomeError, companyAddrError, companyAddressError } = this.state;
+    if (!nameError && !relationshipError && !phoneError && !cardIdError && !emailError && !liveAddrError && !addressError && !companyNameError && !companyPhoneError && !annualIncomeError && !companyAddrError && !companyAddressError) {
       const { dispatch } = this.props;
       dispatch({
-        type: 'report/setFormData',
+        type: 'report/temporaryAction',
         payload: {
-          clGuaranteeInfoListStr: { name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress }
+          id: orderId,
+          updateStep: 1,
+          clGuaranteeInfoListStr: JSON.stringify({ name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress })
         }
+      }).then(res => {
+        if (res.success) {
+          Taro.navigateBack()
+          dispatch({
+            type: 'report/setFormData',
+            payload: {
+              clGuaranteeInfoListStr: { name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress }
+            }
+          })
+        }
+
       })
+
     }
+
+
   }
   onChangeAddr = (obj) => {
     const { error, value } = obj;
@@ -145,7 +161,7 @@ class Guarantee extends Component<IProps, IState>{
   render() {
     const { marriage } = this.props.report.formData
     const { name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress,
-      nameError, relationshipError, phoneError, cardIdError, emailError, liveAddrError, addressError, companyNameError, companyPhoneError, annualIncomeError, companyAddrError, companyAddrDetailsError } = this.state;
+      nameError, relationshipError, phoneError, cardIdError, emailError, liveAddrError, addressError, companyNameError, companyPhoneError, annualIncomeError, companyAddrError, companyAddressError } = this.state;
 
     const relationshipOptions = marriage ? [{ name: '配偶' }, { name: '父母' }, { name: '子女' }, { name: '亲戚' }, { name: '朋友' }] : [{ name: '父母' }, { name: '子女' }, { name: '亲戚' }, { name: '朋友' }]
     const { windowHeight } = this.props.systemInfo;
@@ -310,8 +326,8 @@ class Guarantee extends Component<IProps, IState>{
                 message: '请输入详细地址!'
               }]}
               trigger='onBlur'
-              error={companyAddrDetailsError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'companyAddrDetailsError', valueKey: 'companyAddress' })}
+              error={companyAddressError}
+              onChange={(obj) => this.onChange({ ...obj, errorKey: 'companyAddressError', valueKey: 'companyAddress' })}
             />
           </View>
         </ScrollView>

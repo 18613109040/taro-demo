@@ -4,4 +4,4 @@ export type OrderItemProps = {
 }
 export type OrderProps = {
   all?: OrderItemProps
-} 
+}

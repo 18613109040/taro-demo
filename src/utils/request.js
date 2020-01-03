@@ -17,6 +17,7 @@ export default (options = { method: 'GET', data: {} }) => {
     header: {
       'content-type': 'application/x-www-form-urlencoded',
       'Cookie': Taro.getStorageSync('cookie'),
+      'X-Requested-With': 'XMLHttpRequest',
       ...options.header
     },
     method: options.method.toUpperCase()
@@ -42,6 +43,11 @@ export default (options = { method: 'GET', data: {} }) => {
       // }
       return data;
     } else {
+      Taro.showToast({
+        title: '网络请求错误',
+        icon: 'none',
+        mask: true,
+      });
       throw new Error(`网络请求错误，状态码${statusCode}`);
     }
   });

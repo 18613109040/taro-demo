@@ -141,5 +141,12 @@ export type FormDataProps = {
   clGuaranteeInfoListStr?: GuaranteeInfoProps; // 担保人信息
   clCarInfoListStr?: CarInfoProps; //车辆信息
   clProductTypeListStr?: ProductTypeProps; //产品信息
-  clCollectGatheringInfoListStr?: GatheringInfoProps
+  clCollectGatheringInfoListStr?: GatheringInfoProps;
+  clFileInfoListStr?: any;
+  clCollectClientInfoBigDataStr?: any;
+}
+
+export type OrderDetailProps = {
+  batchContent: any;
+  batchStatus: any;
 }

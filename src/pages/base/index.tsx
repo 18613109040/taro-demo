@@ -112,7 +112,7 @@ class IdCard extends Component<IProps, IState>{
     }
   }
   componentDidMount = () => {
-
+    // console.dir()
   }
   onChange = (obj) => {
     const { error, value, valueKey, errorKey } = obj;
@@ -164,6 +164,7 @@ class IdCard extends Component<IProps, IState>{
     })
   }
   save = () => {
+    const { orderId } = this.$router.params
     const keys: Array<string> = ['email', 'phone', 'realEstateCategory', 'education', 'marriage', 'childrenSum', 'childrenStatus', 'livesProvince', 'livesCity', 'livesCountry', 'livesAddress',
       'companyName', 'yearsWorking', 'jobYears', 'entryUnitTime', 'annualIncome', 'unitPhoneNumber', 'companyProvince', 'companyCity', 'companyCounty', 'companyAddress']
     const { isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
@@ -187,13 +188,26 @@ class IdCard extends Component<IProps, IState>{
         companyNameError, yearsWorkingError, jobYearsError, annualIncomeError, entryUnitTimeError, unitPhoneNumberError, companyAddrError, companyAddrDetailsError } = this.state;
       if (!emailError && !phoneError && !realEstateCategoryError && !educationError && !marriageError && !childrenSumError && !childrenStatusError && !liveAddrError && !livesAddrDetailsError && !companyNameError
         && !yearsWorkingError && !jobYearsError && !annualIncomeError && !entryUnitTimeError && !unitPhoneNumberError && !companyAddrError && !companyAddrDetailsError) {
-        Taro.navigateBack()
+
         const { dispatch } = this.props;
         dispatch({
-          type: 'report/setFormData',
+          type: 'report/temporaryAction',
           payload: {
-            isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
+            id: orderId,
+            updateStep: 0,
+            isDriverLicense: isDriverLicense ? 1 : 0, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
             companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress
+          }
+        }).then((res) => {
+          if (res.success) {
+            Taro.navigateBack()
+            dispatch({
+              type: 'report/setFormData',
+              payload: {
+                isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
+                companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress
+              }
+            })
           }
         })
       }

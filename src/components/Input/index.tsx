@@ -10,7 +10,7 @@ type InputProps = {
   trigger?: string;
   type?: any;
   defaultValue?: any;
-  error?: boolean;
+  error?: boolean|any;
   disabled?: boolean;
   onChange?: (obj:object)=>void;
 }

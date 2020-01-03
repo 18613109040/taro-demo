@@ -17,14 +17,15 @@ type IProps = {
   onClick?: (any)=>void;
   url?: string;
   hasBorder?: boolean;
+  orderId?: string;
 }
 const Navigator: Taro.FC<IProps> = (props: IProps) => {
-  const { title, onClick, arrow, extraText, iconInfo, extraColor, url } = props;
+  const { title, onClick, arrow, extraText, iconInfo, extraColor, url, orderId } = props;
   const listClick =(e) => {
       if(onClick){ onClick(e) }
       else{
         Taro.navigateTo({
-          url:`${url}`
+          url:`${url}?orderId=${orderId}`
         })
       }
     

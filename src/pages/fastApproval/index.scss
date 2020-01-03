@@ -1,13 +1,51 @@
 @import '../../styles/theme';
 page{
-  background: $brand-8;
+  background: $brand-5;
 }
 .fast-approval-page{
   
   .steps-bg{
     background: $brand-8;
-    padding-top: $v-spacing-20;
-    padding-bottom: $v-spacing-20;
+    height: 72PX;
+  }
+  .step-one{
+    background: $brand-8;
+    margin: $v-spacing-30;
+    border-radius: $radius-16;
+    .thumbnail{
+      width: 200px;
+      height: 140px;
+    }
+    .name-title{
+      font-size: $font-size-34;
+      color: $brand-9;
+      .color-red{
+        color: $brand-12;
+      }
+    }
+    .id-card_image{
+      width: 200px;
+      height: 140px;
+    }
+    .preview{
+      position: relative;
+      .close{
+        position: absolute;
+        right: -10px;
+        margin-top: -170px;
+      }
+    }
+    .divider{
+      border-top: 1px solid $brand-5;
+    }
+    .des{
+      margin-top: $h-spacing-20;
+      font-size: $font-size-24;
+      color: $brand-10;
+    }
+    .content-upload {
+      padding: $v-spacing-30;
+    }
   }
   .sucess{
     margin-top: $h-spacing-80;
@@ -31,7 +69,16 @@ page{
     margin-left: $v-spacing-30;
   }
   .btn-footer{
-    padding: $v-spacing-30;
+    padding: 0px $v-spacing-30;
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+    
+    .at-button {
+      margin-bottom: 6PX;
+      height: 48PX;
+      line-height: 48PX;
+    }
   }
   .title{
     font-size: $font-size-34;
@@ -94,19 +141,7 @@ page{
       text-align: center;
       color: $brand-10;
     }
-    .id-card_image{
-      width: 320px;
-      height: 210px;
-    }
-    .preview{
-      position: relative;
-      .close{
-        position: absolute;
-        right: $h-spacing-20;
-        margin-top: -200px;
-        
-      }
-    }
+
   }
 }
 
@@ -122,13 +157,18 @@ page{
 .iconfont-idcardreverse::after {
   content: "\e64d";
 }
-
+.iconfont-orderSucess::after {
+  content: "\e602";
+}
 .iconfont-bankCardpositive::after {
   content: "\e694";
 }
 .iconfont-bankCardreverse::after {
   content: "\e693";
 }
-.iconfont-orderSucess::after {
-  content: "\e602";
+.iconfont-driver::after {
+  content: "\e69f";
+}
+.iconfont-power::after {
+  content: "\e95d";
 }

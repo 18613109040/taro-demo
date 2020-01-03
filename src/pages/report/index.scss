@@ -6,6 +6,30 @@ page {
   color: $brand-1;
 }
 .report-page {
+  .header{
+    padding: $h-spacing-20 $h-spacing-30 $h-spacing-20 $h-spacing-30;
+    .title{
+      margin-left: $v-spacing-20;
+      color: $brand-2;
+    }
+  }
+  .content{
+    background: $brand-8;
+    flex-flow: wrap;
+    padding: $v-spacing-30 $v-spacing-30 0px $v-spacing-30;
+    .image{
+      width: 200px;
+      height: 200px;
+      margin-bottom: $v-spacing-30;
+      border: 1px solid #ddd;
+    }
+  }
+  .row-info{
+    padding: $h-spacing-10;
+    .value{
+      margin-left: $v-spacing-30;
+    }
+  }
   .prompt {
     background: $brand-2;
     padding: $v-spacing-30;
@@ -16,6 +40,7 @@ page {
       .message{
         margin-left: $v-spacing-20;
         margin-right: $v-spacing-20;
+        font-size: $font-size-34;
       }
     }
     .error-des{
@@ -86,4 +111,11 @@ page {
 }
 .iconfont-shuxian::after {
   content: "\e684";
+}
+.iconfont-underReview::after {
+  content: "\e653";
+}
+
+.iconfont-image::after {
+  content: "\e625";
 }

@@ -11,9 +11,10 @@ type DatePickerProps = {
   rules?: Array<RulesProps>;
   end?: string;
   start?: string;
+  disabled?: boolean;
 }
 const DatePicker: Taro.FC<DatePickerProps> = (props: DatePickerProps) => {
-  const { label, defaultValue, error, rules, onChange, end, start } = props;
+  const { label, defaultValue, error, rules, onChange, end, start, disabled } = props;
   const [title, setTitle] = useState(defaultValue)
   const errorMsg = rules && rules[0].message
   const onGengerChange = (e) => {
@@ -25,6 +26,7 @@ const DatePicker: Taro.FC<DatePickerProps> = (props: DatePickerProps) => {
       <Picker 
         mode='date'
         end={end}
+        disabled={disabled}
         start={start}
         onChange={onGengerChange}>
         <ListItem

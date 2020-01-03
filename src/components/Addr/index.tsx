@@ -10,18 +10,19 @@ type AddrProps = {
   defaultValue?: string;
   error?: boolean;
   rules?: Array<RulesProps>;
+  disabled?: boolean;
   // errorMsg: string;
 }
 const Addr: Taro.FC<AddrProps> = (props: AddrProps) => {
-  const { label, error, rules, defaultValue, onChange } = props;
+  const { label, error, rules, defaultValue, onChange, disabled } = props;
   const errorMsg = rules && rules[0].message
   const provinces = getProvinceData();
   const [provinceIndex, setProvinceIndex] = useState<number>(0)
   const [extraText, setExtraText] = useState<any>(defaultValue)
   const [cityIndex, setCityIndex] = useState<number>(0)
   const [show, setShow] = useState<boolean>(false)
-  const citys = getCity({ provinceIndex: provinceIndex, provinces });
-  const countys = getCounty({ provinceIndex: provinceIndex, provinces, cityIndex: cityIndex, citys });
+  const citys = getCity({ provinceIndex: provinceIndex });
+  const countys = getCounty({ provinceIndex: provinceIndex, cityIndex: cityIndex });
   const [values, setValues] = useState<Array<number>>([0, 0, 0])
   const onPickerChange = (e) => {
     const { value } = e.detail;
@@ -37,6 +38,12 @@ const Addr: Taro.FC<AddrProps> = (props: AddrProps) => {
     setExtraText(`${provinces[values[0]].name}/${citys[values[1]].name}/${countys[values[2]].name}`)
     if(onChange) onChange({value: [provinces[values[0]], citys[values[1]], countys[values[2]]], error: false})
   }
+  const showPickerView = () => {
+    if(disabled){
+      return;
+    }
+    setShow(true)
+  }
   useEffect(()=>{
     if(props.defaultValue)
     setExtraText(props.defaultValue)
@@ -48,7 +55,7 @@ const Addr: Taro.FC<AddrProps> = (props: AddrProps) => {
         value={extraText}
         error={error}
         errorMsg={errorMsg}
-        onClick={()=>setShow(true)}
+        onClick={showPickerView }
       />
       {
         show&&(

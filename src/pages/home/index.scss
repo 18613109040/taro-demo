@@ -1,16 +1,55 @@
 @import '../../styles/theme';
+page{
+  background: $brand-13;
+}
 .home-page{
   .add-place{
-    background: $brand-5;
+    background: $brand-1;
     height: 300px;
     color: $brand-1;
     border-radius: $radius-16;
-    margin: $v-spacing-30;
+    margin: 120px $v-spacing-30;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0px 10px 10px rgba(211, 210, 210, 0.70);
     .text{
+      color: $brand-8;
       margin-left: $h-spacing-30;
     }
   }
+  .bg{
+    height: 300px;
+    background: $brand-1;
+    border-bottom-left-radius: 100px;
+    border-bottom-right-radius: 100px;
+    .avatar{
+      display: flex;
+      justify-content: center;
+      padding-top: $h-spacing-20;
+    }
+    .account{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .real-name{
+      display: flex;
+      justify-content: center;
+      margin-top: $h-spacing-10;
+      color:  $brand-8;
+    }
+  }
+  // .account{
+  //   padding: $v-spacing-30;
+  //   border-radius: $radius-16;
+  //   margin: -100px $v-spacing-30;
+  //   width: auto;
+  //   box-shadow: 0px 10px 10px rgba(211, 210, 210, 0.70);
+  //   background: $brand-8;
+  //   .account-message{
+  //     margin-left: $v-spacing-30;
+  //   }
+  // }
+  
 }

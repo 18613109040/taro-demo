@@ -108,6 +108,7 @@ class CarBase extends Component<IProps, IState>{
 
   }
   save = () => {
+    const { orderId } =  this.$router.params
     const keys: Array<string> = ['licenseOwner', 'carType', 'useType', 'carBrand', 'carSystem', 'carColour', 'factoryDay', 'carFristLoginDay', 'carNo', 'frameNumber', 'powerCteType', 'drivenDistance', 'advanceOffer', 'licenseProvince', 'valuationCity', 'licenseCounty', 'newCarPrice', 'engineNo']
     const { licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo } = this.state;
     let temp: IState = this.state;
@@ -125,12 +126,23 @@ class CarBase extends Component<IProps, IState>{
     }, () => {
       const { carTypeError, useTypeError, carBrandError, carSystemError, carColourError, factoryDayError, carFristLoginDayError, carNoError, carDisplacementError, frameNumberError, powerCteTypeError, drivenDistanceError, advanceOfferError, addrError, newCarPriceError, engineNoError } = this.state;
       if (!carTypeError && !useTypeError && !carBrandError && !carSystemError && !carColourError && !factoryDayError && !carFristLoginDayError && !carNoError && !carDisplacementError && !frameNumberError && !powerCteTypeError && !drivenDistanceError && !advanceOfferError && !addrError && !newCarPriceError && !engineNoError) {
-        Taro.navigateBack()
         const { dispatch } = this.props;
         dispatch({
-          type: 'report/setCarInfo',
+          type: 'report/temporaryAction',
           payload: {
-            licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo
+            id:orderId, 
+            updateStep: 2,
+            clCarInfoListStr: JSON.stringify({ licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo})
+          }
+        }).then(res=>{
+          if(res.success){
+            Taro.navigateBack()
+            dispatch({
+              type: 'report/setCarInfo',
+              payload: {
+                licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo
+              }
+            })
           }
         })
       }

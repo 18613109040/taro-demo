@@ -20,11 +20,16 @@ export default {
   effects: {
     *loginAction({payload}, { call, put }){
       const res = yield call(login,payload)
+      if(res.success)
+        yield put({ type: "setAccount", payload: res.obj })
       return res;
     }
   },
 
   reducers: {
-    // set
+    setAccount(state, {payload}) {
+      state.userInfo = payload
+      return fromJS(state).toJS()
+    }
   },
 };

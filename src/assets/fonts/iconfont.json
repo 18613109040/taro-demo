@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "368581",
+      "name": "图片",
+      "font_class": "tupian",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
       "icon_id": "566360",
       "name": "箭头",
       "font_class": "jiantou",
@@ -55,6 +62,20 @@
       "unicode_decimal": 58923
     },
     {
+      "icon_id": "3158645",
+      "name": "驾驶证",
+      "font_class": "jiashizheng",
+      "unicode": "e69f",
+      "unicode_decimal": 59039
+    },
+    {
+      "icon_id": "3408330",
+      "name": "审核中",
+      "font_class": "shenhezhong",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
       "icon_id": "3545013",
       "name": "电话号码",
       "font_class": "dianhuahaoma",
@@ -95,6 +116,13 @@
       "font_class": "leftside",
       "unicode": "e61b",
       "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "4593952",
+      "name": "授权书",
+      "font_class": "shouquanhetong",
+      "unicode": "e95d",
+      "unicode_decimal": 59741
     },
     {
       "icon_id": "4800923",

@@ -61,7 +61,11 @@ class Product extends Component<IProps, IState>{
     }
   }
   componentDidMount = () => {
-
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'report/getProductListAction',
+      payload: {}
+    })
   }
   onChange = (obj) => {
     const { error, value, valueKey, errorKey } = obj;
@@ -69,8 +73,16 @@ class Product extends Component<IProps, IState>{
       [`${errorKey}`]: error,
       [`${valueKey}`]: value
     })
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'report/getProductAction',
+      payload: {
+        productName: value
+      }
+    })
   }
   save = () => {
+    const { orderId } =  this.$router.params
     const keys: Array<string> = ['name', 'applyAmount', 'loanAmount', 'repaymentCount', 'repaymentTotalAmount', 'bond', 'gpsCost']
     const { name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription } = this.state;
     let temp: IState = this.state;
@@ -84,14 +96,28 @@ class Product extends Component<IProps, IState>{
     }, () => {
       const { nameError, applyAmountError, loanAmountError, repaymentCountError, repaymentTotalAmountError, bondError, gpsCostError } = this.state;
       if (!nameError && !applyAmountError && !loanAmountError && !repaymentCountError && !repaymentTotalAmountError && !bondError && !gpsCostError) {
-        Taro.navigateBack()
+        
         const { dispatch } = this.props;
         dispatch({
-          type: 'report/setProductInfo',
+          type: 'report/temporaryAction',
           payload: {
-            name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription
+            id:orderId, 
+            updateStep: 3,
+            clProductTypeListStr: JSON.stringify({name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription})
           }
+        }).then(res=>{
+          if(res.success){
+            Taro.navigateBack()
+            dispatch({
+              type: 'report/setProductInfo',
+              payload: {
+                name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription
+              }
+            })
+          }
+          
         })
+       
       }
     })
   }
@@ -99,9 +125,10 @@ class Product extends Component<IProps, IState>{
   render() {
     const { name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription,
       nameError, applyAmountError, loanAmountError, repaymentCountError, repaymentTotalAmountError, bondError, gpsCostError } = this.state;
-    const productsOptions = [{ name: '产品1' }]
     const repaymentCountOptions = [{ name: '24' }]
     const { windowHeight } = this.props.systemInfo;
+    const { productList, productDetail } = this.props.report;
+    console.dir(productDetail)
     return (
       <View className="product-card-page">
         <ScrollView
@@ -118,7 +145,7 @@ class Product extends Component<IProps, IState>{
                 required: true,
                 message: '请选择产品名称!'
               }]}
-              range={productsOptions}
+              range={productList}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'nameError', valueKey: 'name' })}
             />
             <CInput
@@ -168,6 +195,18 @@ class Product extends Component<IProps, IState>{
               error={repaymentTotalAmountError}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'repaymentTotalAmountError', valueKey: 'repaymentTotalAmount' })}
             />
+            {/* <CInput
+              name='serviceCharge'
+              defaultValue={serviceCharge}
+              label="租赁服务费"
+              type="number"
+              rules={[{
+                required: true,
+                message: '请填写租赁服务费!'
+              }]}
+              error={bondError}
+              onChange={() => {}}
+            /> */}
             <CInput
               name='bond'
               defaultValue={bond}

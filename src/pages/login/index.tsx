@@ -18,7 +18,7 @@ type IProps = {
 }))
 class Login extends PureComponent<IProps, IState> {
   config: Config = {
-    navigationBarTitleText: '登录',
+    navigationBarTitleText: '威武融创',
     navigationBarBackgroundColor: "#4984FD",
     navigationBarTextStyle: 'white'
   }
@@ -27,7 +27,7 @@ class Login extends PureComponent<IProps, IState> {
     super(props)
     this.state = {
       userName: '',
-      password: 'weiu123'
+      password: ''
     }
   }
   componentDidMount = () => {
@@ -48,9 +48,6 @@ class Login extends PureComponent<IProps, IState> {
     const { userName, password } = this.state;
     const { dispatch } = this.props;
     if (userName && password) {
-      Taro.reLaunch({
-        url: '/pages/home/index'
-      })
       const res = await dispatch({
         type: 'common/loginAction',
         payload: {
@@ -71,7 +68,6 @@ class Login extends PureComponent<IProps, IState> {
           url: '/pages/home/index'
         })
       }
-
     }
   }
   onChangeName = (e) => {

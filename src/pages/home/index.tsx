@@ -1,16 +1,12 @@
-import Taro, { PureComponent, ComponentClass } from '@tarojs/taro';
+import Taro, { PureComponent, ComponentClass, Config } from '@tarojs/taro';
 import { View, Text, ScrollView, Label } from '@tarojs/components';
 import { AtIcon, AtButton, AtForm, AtAvatar, AtGrid } from 'taro-ui';
 import { connect } from '@tarojs/redux';
-import { StepsProps } from './model'
-import { FormProps } from '../../interface/form'
 import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
 
 type IState = {}
 type IProps = {
-  steps: Array<StepsProps>;
-  form: Array<FormProps>;
   dispatch: any;
   systemInfo: SystemInfoProps;
   userInfo: any;
@@ -21,8 +17,10 @@ type IProps = {
   userInfo: common.userInfo
 }))
 class Home extends PureComponent<IProps, IState> {
-  config = {
-    navigationBarTitleText: '',
+  config: Config= {
+    navigationBarTitleText: '威武金融',
+    navigationBarBackgroundColor: "#4984FD",
+    navigationBarTextStyle: 'white'
   };
   constructor(props) {
     super(props)
@@ -50,20 +48,38 @@ class Home extends PureComponent<IProps, IState> {
     })
   }
   render() {
+    const { userInfo } = this.props;
+    const { realName, userName } = userInfo;
     return (
       <View className="home-page">
-        <View>
-          <AtAvatar image='https://jdc.jd.com/img/200'/>
-          <View>
-            <View><Text>张三</Text></View>
-            <View><Text></Text></View>
+        <View className="bg">
+          <View className="avatar">
+            <AtAvatar circle text={realName} />
           </View>
-          
+          <View className="real-name">
+            <Text>{userName}</Text>
+          </View>
         </View>
+
+        <View className="at-row at-row__align--center">
+          <View className="">
+            <View>
+              <Text></Text>
+            </View>
+            <View>
+              <Text></Text>
+            </View>
+            <View>
+              <Text></Text>
+            </View>
+          </View>
+        </View>
+
         <View className="add-place" onClick={this.addApply}>
-          <AtIcon value='add-circle' size='30' color='#283282' />
+          <AtIcon value='add-circle' size='30' color='#fff' />
           <Text className="text">进件快速申请</Text>
         </View>
+
         <View>
           <View></View>
           <View></View>

@@ -85,6 +85,7 @@ class Contact extends Component<IProps, IState>{
 
   }
   save = () => {
+    const { orderId } =  this.$router.params
     const keys: Array<string> = ['contactName1', 'contactRelationship1', 'contactPhone1', 'contactIdCard1',
       'contactName2', 'contactRelationship2', 'contactPhone2', 'contactIdCard2',
       'contactName3', 'contactRelationship3', 'contactPhone3', 'contactIdCard3',]
@@ -110,44 +111,57 @@ class Contact extends Component<IProps, IState>{
         contactName3Error, contactRelationship3Error, contactPhone3Error, contactIdCard3Error } = this.state;
       if (!contactName1Error && !contactRelationship1Error && !contactPhone1Error && !contactName2Error && !contactRelationship2Error && !contactPhone2Error &&
         !contactName3Error && !contactRelationship3Error && !contactPhone3Error && !contactIdCard1Error && !contactIdCard2Error && !contactIdCard3Error) {
-        Taro.navigateBack()
         const { dispatch } = this.props;
         dispatch({
-          type: 'report/setFormData',
+          type: 'report/temporaryAction',
           payload: {
+            id:orderId, 
+            updateStep: 0,
             contactName1, contactRelationship1, contactPhone1, contactIdCard1, contactName2, contactRelationship2, contactPhone2, contactIdCard2,
             contactName3, contactRelationship3, contactPhone3, contactIdCard3
           }
-        })
-        const { clGuaranteeInfoListStr } = this.props.report.formData
-        if (check && check !== '0' && clGuaranteeInfoListStr && !clGuaranteeInfoListStr.name) {
-          dispatch({
-            type: 'report/setGuarantee',
-            payload: {
-              name: this.state[`contactName${check}`],
-              relationship: this.state[`contactRelationship${check}`],
-              phone: this.state[`contactPhone${check}`],
-              cardId: this.state[`contactIdCard${check}`],
+        }).then((res)=>{
+          if(res.success){
+            Taro.navigateBack()
+            dispatch({
+              type: 'report/setFormData',
+              payload: {
+                contactName1, contactRelationship1, contactPhone1, contactIdCard1, contactName2, contactRelationship2, contactPhone2, contactIdCard2,
+                contactName3, contactRelationship3, contactPhone3, contactIdCard3
+              }
+            })
+            const { clGuaranteeInfoListStr } = this.props.report.formData
+            if (check && check !== '0' && clGuaranteeInfoListStr && !clGuaranteeInfoListStr.name) {
+              dispatch({
+                type: 'report/setGuarantee',
+                payload: {
+                  name: this.state[`contactName${check}`],
+                  relationship: this.state[`contactRelationship${check}`],
+                  phone: this.state[`contactPhone${check}`],
+                  cardId: this.state[`contactIdCard${check}`],
+                }
+              })
             }
-          })
-        }
+          }
+        })
+       
       }
     })
   }
   onChange = (obj) => {
     const { error, value, valueKey, errorKey } = obj;
     const { contactPhone1, contactPhone2, contactPhone3 } = this.state;
-    if (value === 'contactPhone1' && (value === contactPhone2 || value === contactPhone3)) {
+    if (valueKey === 'contactPhone1' && (value === contactPhone2 || value === contactPhone3)) {
       this.setState({
         contactPhone1Error: true,
         [`${valueKey}`]: value
       })
-    } else if (value === 'contactPhone2' && (value === contactPhone1 || value === contactPhone3)) {
+    } else if (valueKey === 'contactPhone2' && (value === contactPhone1 || value === contactPhone3)) {
       this.setState({
         contactPhone2Error: true,
         [`${valueKey}`]: value
       })
-    } else if (value === 'contactPhone3' && (value === contactPhone1 || value === contactPhone2)) {
+    } else if (valueKey === 'contactPhone3' && (value === contactPhone1 || value === contactPhone2)) {
       this.setState({
         contactPhone3Error: true,
         [`${valueKey}`]: value

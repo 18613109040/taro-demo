@@ -11,8 +11,6 @@ import './index.scss';
 type IState = {
   bankNoType: string; //银行卡类型
   bankNoTypeError: boolean;
-  bankType: string; //收款账户类型
-  bankTypeError: boolean;
   accountName: string; //开户名
   accountNameError: boolean;
   bankPhone: string;//银行预留手机号
@@ -42,12 +40,10 @@ class BankCard extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     const { clCollectGatheringInfoListStr } = props.report.formData;
-    const { bankNoType, bankType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount } = clCollectGatheringInfoListStr
+    const { bankNoType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount } = clCollectGatheringInfoListStr
     this.state = {
       bankNoType: bankNoType || '',//银行卡类型
       bankNoTypeError: false,
-      bankType: bankType || '', //收款账户类型
-      bankTypeError: false,
       accountName: accountName || '', //开户名
       accountNameError: false,
       bankPhone: bankPhone || '', //银行预留手机号
@@ -73,8 +69,9 @@ class BankCard extends Component<IProps, IState>{
     })
   }
   save = () => {
-    const keys: Array<string> = ['bankNoType', 'bankType', 'accountName', 'bankPhone', 'openingBank', 'accountOpeningBranch', 'bankNo', 'repaymentAccount']
-    const { bankNoType, bankType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount } = this.state;
+    const { orderId } =  this.$router.params
+    const keys: Array<string> = ['bankNoType', 'accountName', 'bankPhone', 'openingBank', 'accountOpeningBranch', 'bankNo', 'repaymentAccount']
+    const { bankNoType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount } = this.state;
     let temp: IState = this.state;
     keys.map(key => {
       if (!this.state[key]) {
@@ -84,27 +81,38 @@ class BankCard extends Component<IProps, IState>{
     this.setState({
       ...temp
     }, () => {
-      const { bankNoTypeError, bankTypeError, accountNameError, bankPhoneError, openingBankError, accountOpeningBranchError, bankNoError, repaymentAccountError } = this.state;
-      if (!bankNoTypeError && !bankTypeError && !accountNameError && !bankPhoneError && !openingBankError && !accountOpeningBranchError && !bankNoError && !repaymentAccountError) {
-        Taro.navigateBack()
+      const { bankNoTypeError, accountNameError, bankPhoneError, openingBankError, accountOpeningBranchError, repaymentAccountError } = this.state;
+      if (!bankNoTypeError && !accountNameError && !bankPhoneError && !openingBankError && !accountOpeningBranchError && !repaymentAccountError) {
         const { dispatch } = this.props;
         dispatch({
-          type: 'report/setBankInfo',
+          type: 'report/temporaryAction',
           payload: {
-            bankNoType, bankType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount,
+            id:orderId, 
+            updateStep: 4,
+            clCollectGatheringInfoListStr: JSON.stringify({bankNoType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount})
+          }
+        }).then(res=>{
+          Taro.navigateBack()
+          if(res.success){
+            dispatch({
+              type: 'report/setBankInfo',
+              payload: {
+                bankNoType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount,
+              }
+            })
           }
         })
+      
       }
     })
   }
 
   render() {
     const {
-      bankNoType, bankType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount,
-      bankNoTypeError, bankTypeError, accountNameError, bankPhoneError, openingBankError, accountOpeningBranchError, bankNoError, repaymentAccountError
+      bankNoType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount,
+      bankNoTypeError, accountNameError, bankPhoneError, openingBankError, accountOpeningBranchError, bankNoError, repaymentAccountError
     } = this.state;
-    const productsOptions = [{ name: '产品1' }]
-    const bankTypeOptions = [{ name: '1类卡' }]
+    const productsOptions = [{ name: '1类卡' }]
     const { windowHeight } = this.props.systemInfo;
     return (
       <View className="product-card-page">
@@ -125,7 +133,7 @@ class BankCard extends Component<IProps, IState>{
               range={productsOptions}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'bankNoTypeError', valueKey: 'bankNoType' })}
             />
-            <BasePicker
+            {/* <BasePicker
               label="收款账户类型"
               defaultValue={bankType}
               error={bankTypeError}
@@ -135,7 +143,7 @@ class BankCard extends Component<IProps, IState>{
               }]}
               range={bankTypeOptions}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'bankTypeError', valueKey: 'bankType' })}
-            />
+            /> */}
             <CInput
               name='accountName'
               defaultValue={accountName}
@@ -206,7 +214,7 @@ class BankCard extends Component<IProps, IState>{
             <CInput
               name='repaymentAccount'
               defaultValue={repaymentAccount}
-              label="还款账号"
+              label="收款还款账号"
               rules={[{
                 required: true,
                 pattern: /^([1-9]{1})(\d{15}|\d{18})$/,
