@@ -13,17 +13,15 @@ type IState = {
   nameError: boolean;
   applyAmount: string | number;//申请金额
   applyAmountError: boolean;
-  loanAmount: string | number; //放款金额
-  loanAmountError: boolean;
   repaymentCount: string | number; //期数
   repaymentCountError: boolean;
-  repaymentTotalAmount: string | number; //总还款金额
-  repaymentTotalAmountError: boolean;
-  bond: string | number;//租赁保证金
-  bondError: boolean;
-  gpsCost: string | number;//GPS费用
-  gpsCostError: boolean;
-  productDescription: string; //产品说明
+  periods: Array<any>;
+  serviceCharge: string;
+  gpsCost: string; 
+  productMessage: string; 
+  repayment: string; 
+  bond: string; 
+  [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
   report: InitStateProps;
@@ -41,50 +39,114 @@ class Product extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     const { clProductTypeListStr } = props.report.formData;
-    const { name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription } = clProductTypeListStr
+    const { name, applyAmount, repaymentCount, serviceCharge,gpsCost,productDescription, repaymentTotalAmount, bond } = clProductTypeListStr
     this.state = {
       name: name || '',// 产品名称
       nameError: false,
       applyAmount: applyAmount || '',//申请金额
       applyAmountError: false,
-      loanAmount: loanAmount || '', //放款金额
-      loanAmountError: false,
       repaymentCount: repaymentCount || '', //期数
       repaymentCountError: false,
-      repaymentTotalAmount: repaymentTotalAmount || '', //总还款金额
-      repaymentTotalAmountError: false,
-      bond: bond || '',//租赁保证金
-      bondError: false,
-      gpsCost: gpsCost || '',//GPS费用
-      gpsCostError: false,
-      productDescription: productDescription || '' //产品说明
+      periods: [],
+      serviceCharge: serviceCharge || '', 
+      gpsCost: gpsCost || '', 
+      productMessage: productDescription || '', 
+      repayment: repaymentTotalAmount || '', 
+      bond: bond || ''
     }
   }
-  componentDidMount = () => {
+  componentDidMount = async () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'report/getProductListAction',
       payload: {}
     })
+    const { name } = this.state;
+    if(name){
+      const res = await dispatch({
+        type: 'report/getProductAction',
+        payload: {
+          productName: name
+        }
+      })
+      const repaymentTimes = res.repaymentTimes.split('.')||[];
+      const periods:any = []
+      repaymentTimes.map(item=>periods.push({ name: item}))
+      this.setState({
+        periods: periods,
+        productMessage: res.productMessage
+      })
+    }
+    
   }
-  onChange = (obj) => {
+  onChange = async (obj) => {
     const { error, value, valueKey, errorKey } = obj;
     this.setState({
       [`${errorKey}`]: error,
       [`${valueKey}`]: value
     })
     const { dispatch } = this.props;
-    dispatch({
-      type: 'report/getProductAction',
-      payload: {
-        productName: value
-      }
-    })
+    const { repaymentCount, name, applyAmount } = this.state;
+    if(valueKey === 'name'){
+      if(value === name) return;
+      const res = await dispatch({
+        type: 'report/getProductAction',
+        payload: {
+          productName: value
+        }
+      })
+      const repaymentTimes = res.repaymentTimes.split('.')||[];
+      const periods:any = []
+      repaymentTimes.map(item=>periods.push({ name: item}))
+      this.setState({
+        periods: periods,
+        repaymentCount: '',
+        productMessage: res.productMessage,
+        gpsCost: '',
+        repayment: '',
+        serviceCharge: ''
+      })
+    }else if(valueKey === 'applyAmount' && repaymentCount) {
+      const res =  await dispatch({
+        type: 'report/getProductComputeAction',
+        payload: {
+          applyAmount: value,
+          phase: repaymentCount,
+          name:  name,
+          loanAmoun: value
+        }
+      })
+      const { gpsCost, repayment, serviceCharge} = res;
+      this.setState({
+        gpsCost,
+        repayment,
+        serviceCharge
+      })
+    }else if(valueKey === 'repaymentCount' && applyAmount) {
+      const res =  await dispatch({
+        type: 'report/getProductComputeAction',
+        payload: {
+          applyAmount: applyAmount,
+          phase: value,
+          name:  name,
+          loanAmoun: applyAmount
+        }
+      })
+      const { gpsCost, repayment, serviceCharge} = res;
+      this.setState({
+        gpsCost,
+        repayment,
+        serviceCharge
+      })
+    }
+    
   }
   save = () => {
     const { orderId } =  this.$router.params
-    const keys: Array<string> = ['name', 'applyAmount', 'loanAmount', 'repaymentCount', 'repaymentTotalAmount', 'bond', 'gpsCost']
-    const { name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription } = this.state;
+    const keys: Array<string> = ['name', 'applyAmount', 'repaymentCount']
+    const { name, applyAmount, repaymentCount, bond, nameError, applyAmountError, repaymentCountError } = this.state;
+    const { productDetail } = this.props.report;
+    const { serviceCharge, gpsCost, productMessage, repayment } = productDetail
     let temp: IState = this.state;
     keys.map(key => {
       if (!this.state[key]) {
@@ -94,41 +156,35 @@ class Product extends Component<IProps, IState>{
     this.setState({
       ...temp
     }, () => {
-      const { nameError, applyAmountError, loanAmountError, repaymentCountError, repaymentTotalAmountError, bondError, gpsCostError } = this.state;
-      if (!nameError && !applyAmountError && !loanAmountError && !repaymentCountError && !repaymentTotalAmountError && !bondError && !gpsCostError) {
-        
+      if (!nameError && !applyAmountError &&  !repaymentCountError ) {
         const { dispatch } = this.props;
         dispatch({
           type: 'report/temporaryAction',
           payload: {
             id:orderId, 
             updateStep: 3,
-            clProductTypeListStr: JSON.stringify({name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription})
+            clProductTypeListStr: JSON.stringify({name, applyAmount, repaymentCount,loanAmount:applyAmount,repaymentTotalAmount: repayment,serviceCharge,gpsCost, productDescription: productMessage, bond })
           }
         }).then(res=>{
           if(res.success){
             Taro.navigateBack()
-            dispatch({
-              type: 'report/setProductInfo',
-              payload: {
-                name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription
-              }
-            })
+            // dispatch({
+            //   type: 'report/setProductInfo',
+            //   payload: {
+            //     bond, name, applyAmount, repaymentCount,loanAmount:applyAmount,repaymentTotalAmount: repayment,serviceCharge,gpsCost, productDescription: productMessage
+            //   }
+            // })
           }
-          
         })
-       
       }
     })
   }
 
   render() {
-    const { name, applyAmount, loanAmount, repaymentCount, repaymentTotalAmount, bond, gpsCost, productDescription,
-      nameError, applyAmountError, loanAmountError, repaymentCountError, repaymentTotalAmountError, bondError, gpsCostError } = this.state;
-    const repaymentCountOptions = [{ name: '24' }]
+    const { name, applyAmount, repaymentCount,
+      nameError, applyAmountError, repaymentCountError, periods,serviceCharge, gpsCost, productMessage, repayment, bond  } = this.state;
     const { windowHeight } = this.props.systemInfo;
-    const { productList, productDetail } = this.props.report;
-    console.dir(productDetail)
+    const { productList } = this.props.report;
     return (
       <View className="product-card-page">
         <ScrollView
@@ -153,6 +209,7 @@ class Product extends Component<IProps, IState>{
               defaultValue={applyAmount}
               label="申请金额"
               type="number"
+              trigger="onBlur"
               rules={[{
                 required: true,
                 message: '请输入申请金额!'
@@ -160,7 +217,7 @@ class Product extends Component<IProps, IState>{
               error={applyAmountError}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'applyAmountError', valueKey: 'applyAmount' })}
             />
-            <CInput
+            {/* <CInput
               name='loanAmount'
               defaultValue={loanAmount}
               label="放款金额"
@@ -171,7 +228,7 @@ class Product extends Component<IProps, IState>{
               }]}
               error={loanAmountError}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'loanAmountError', valueKey: 'loanAmount' })}
-            />
+            /> */}
             <BasePicker
               label="期数"
               defaultValue={repaymentCount}
@@ -180,65 +237,61 @@ class Product extends Component<IProps, IState>{
                 required: true,
                 message: '请选择期数!'
               }]}
-              range={repaymentCountOptions}
+              range={periods}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'repaymentCountError', valueKey: 'repaymentCount' })}
             />
             <CInput
-              name='repaymentTotalAmount'
-              defaultValue={repaymentTotalAmount}
-              label="总还款金额"
-              type="number"
-              rules={[{
-                required: true,
-                message: '请填写总还款金额!'
-              }]}
-              error={repaymentTotalAmountError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'repaymentTotalAmountError', valueKey: 'repaymentTotalAmount' })}
-            />
-            {/* <CInput
               name='serviceCharge'
               defaultValue={serviceCharge}
               label="租赁服务费"
+              disabled={true}
               type="number"
               rules={[{
                 required: true,
                 message: '请填写租赁服务费!'
               }]}
-              error={bondError}
-              onChange={() => {}}
-            /> */}
+            />
             <CInput
               name='bond'
               defaultValue={bond}
               label="租赁保证金"
               type="number"
+              disabled={true}
               rules={[{
                 required: true,
                 message: '请填写租赁保证金!'
               }]}
-              error={bondError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'bondError', valueKey: 'bond' })}
             />
             <CInput
               name='gpsCost'
               defaultValue={gpsCost}
               label="GPS费用"
+              disabled={true}
               type="number"
               rules={[{
                 required: true,
                 message: '请填写GPS费用!'
               }]}
-              error={gpsCostError}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'gpsCostError', valueKey: 'gpsCost' })}
             />
-            <View className="product-description">
+            <CInput
+              name='repayment'
+              defaultValue={repayment}
+              label="总还款金额"
+              type="number"
+              disabled={true}
+              rules={[{
+                required: true,
+                message: '请填写总还款金额!'
+              }]}
+            />
+            {productMessage&&<View className="product-description">
               <View>
                 <Text>产品说明</Text>
               </View>
               <View className="description">
-                <Text>{productDescription}</Text>
+                <Text>{productMessage}</Text>
               </View>
-            </View>
+            </View>}
           </View>
         </ScrollView>
         <View className="btn-bottom">

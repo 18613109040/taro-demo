@@ -23,6 +23,7 @@ type IState = {
   bankNoError: boolean;
   repaymentAccount: string; //还款账号
   repaymentAccountError: boolean;
+  [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
   report: InitStateProps;

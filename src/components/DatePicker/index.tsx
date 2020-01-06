@@ -4,7 +4,7 @@ import { RulesProps } from '../../interface/form'
 import ListItem from '../ListItem'
 import './index.scss'
 type DatePickerProps = {
-  onChange:(value)=>void;
+  onChange?:(value)=>void;
   label?: string;
   defaultValue?: string;
   error?: boolean;

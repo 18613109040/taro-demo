@@ -47,6 +47,7 @@ type IState = {
   valuationCity: string;
   licenseCounty: string;
   addrError: boolean;
+  [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
   report: InitStateProps;

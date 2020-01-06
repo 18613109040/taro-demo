@@ -37,6 +37,7 @@ type IState = {
   companyAddrError: boolean;
   companyAddress: string; //详细地址
   companyAddressError: boolean;
+  [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
   report: InitStateProps;

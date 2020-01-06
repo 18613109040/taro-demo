@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps, OrderDetailProps } from '../interface/form'
-import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct } from '../services/report'
+import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile } from '../services/report'
 export type InitStateProps = {
   formData: FormDataProps;
   current: number;
@@ -141,7 +141,7 @@ const initState:InitStateProps = {
     batchContent: '',
     batchStatus: ''
   },
-  current: 0,
+  current: -1,
   steps: [{
     title: '秒批',
     desc: '',
@@ -165,7 +165,7 @@ const initState:InitStateProps = {
   }],
   productList: [],
   productDetail: {
-
+    periods: []
   }
 }
 export default {
@@ -194,17 +194,18 @@ export default {
     },
     *getProductAction({payload}, { call, put }){
       const res = yield call(getProduct,payload)
-      if(res.success){
-        yield put({ type: "setProduct", payload: res })
-      }
+      return res.obj
+    },
+    *getProductComputeAction({payload}, { call, put }){
+      const res = yield call(getProductCompute,payload)
+      return  res.obj
+    },
+    *deteleFileAction({payload}, { call, put }){
+      const res = yield call(deteleFile,payload)
+      return res
     }
   },
-
   reducers: {
-    setProduct(state, {payload}) {
-      state.productDetail = payload.obj
-      return fromJS(state).toJS()
-    },
     setProductList(state, {payload}) {
       const productList = [];
       payload.obj.map(item=>{
@@ -218,13 +219,15 @@ export default {
     setOrderDetail(state, {payload} ) {
       state.orderDetail = payload
       const { clCarInfoListStr, clGuaranteeInfoListStr, clProductTypeListStr, clCollectGatheringInfoListStr, clFileInfoListStr,  clCollectClientInfoBigDataStr, clCollectClientInfoStr, primaryStatus  } = payload
-      state.formData.clCarInfoListStr = JSON.parse(clCarInfoListStr)
-      state.formData.clGuaranteeInfoListStr = JSON.parse(clGuaranteeInfoListStr)
-      state.formData.clProductTypeListStr = JSON.parse(clProductTypeListStr)
-      state.formData.clCollectGatheringInfoListStr = JSON.parse(clCollectGatheringInfoListStr)
-      state.formData.clFileInfoListStr =  JSON.parse(clFileInfoListStr)
-      state.formData.clCollectClientInfoBigDataStr = JSON.parse(clCollectClientInfoBigDataStr)
-      const concat = JSON.parse(clCollectClientInfoStr)
+      state.formData.clCarInfoListStr = JSON.parse(clCarInfoListStr||'{}')
+      state.formData.clGuaranteeInfoListStr = JSON.parse(clGuaranteeInfoListStr||'{}')
+      state.formData.clProductTypeListStr = JSON.parse(clProductTypeListStr||'{}')
+      state.productDetail = JSON.parse(clProductTypeListStr||'{}')
+      state.productDetail.repayment = state.productDetail.repaymentTotalAmount
+      state.formData.clCollectGatheringInfoListStr = JSON.parse(clCollectGatheringInfoListStr||'{}')
+      state.formData.clFileInfoListStr =  JSON.parse(clFileInfoListStr||'{}')
+      state.formData.clCollectClientInfoBigDataStr = JSON.parse(clCollectClientInfoBigDataStr||'{}')
+      const concat = JSON.parse(clCollectClientInfoStr||'{}')
       if(concat && concat.contactIdCard1){
         state.formData.clGuaranteeInfoListStr.name = state.formData.clGuaranteeInfoListStr.name || concat.contactName1;
         state.formData.clGuaranteeInfoListStr.phone = state.formData.clGuaranteeInfoListStr.phone ||  concat.contactPhone1;
@@ -241,7 +244,7 @@ export default {
         state.formData.clGuaranteeInfoListStr.cardId = state.formData.clGuaranteeInfoListStr.cardId || concat.contactIdCard3;
         state.formData.clGuaranteeInfoListStr.relationship = state.formData.clGuaranteeInfoListStr.relationship ||  concat.contactRelationship3;
       }
-      state.formData = Object.assign({}, state.formData, JSON.parse(clCollectClientInfoStr))
+      state.formData = Object.assign({}, state.formData, JSON.parse(clCollectClientInfoStr||'{}'))
       if(primaryStatus === '-1'){
         state.current = 0
       }else if(primaryStatus === '0') {

@@ -143,11 +143,16 @@ class FastApproval extends Component<IProps, IState>{
         Taro.uploadFile({
           url: `${baseUrl}/clCollectClientInfoBigDataController/filedeal.do?id=${this.state[`${key}Id`]}`,
           filePath: res.tempFiles[0].path,
+          header:{
+            Cookie: Taro.getStorageSync('cookie'),
+          },
           name: key,
           success: (res) => {
             const data = JSON.parse(res.data)
+            console.dir(data)
             if (data.success) {
               const value = JSON.parse(data.attributes.value)
+              console.dir(value)
               this.setState({
                 [`${key}Id`]: data.obj,
                 [`${key}Str`]: data.attributes.value,

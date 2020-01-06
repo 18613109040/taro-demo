@@ -11,46 +11,48 @@ import { InitStateProps } from '../../models/report';
 import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
 type IState = {
-  isDriverLicense?: boolean;
-  email?: string; // 常用邮箱
-  emailError?: boolean;
-  phone?: string; //手机号
-  phoneError?: boolean;
-  education?: string; //申请人学历
-  educationError?: boolean;
-  marriage?: string; // 婚姻状况
-  marriageError?: boolean;
-  childrenSum?: number | string; // 家庭人口数量
-  childrenSumError?: boolean;
-  childrenStatus?: number | string; // 子女个数
-  childrenStatusError?: boolean;
-  realEstateCategory?: string; // 微信号
+  isDriverLicense: boolean;
+  email: string; // 常用邮箱
+  emailError: boolean;
+  phone: string; //手机号
+  phoneError: boolean;
+  education: string; //申请人学历
+  educationError: boolean;
+  marriage: string; // 婚姻状况
+  marriageError: boolean;
+  childrenSum: number | string; // 家庭人口数量
+  childrenSumError: boolean;
+  childrenStatus: number | string; // 子女个数
+  childrenStatusError: boolean;
+  realEstateCategory: string; // 微信号
   realEstateCategoryError: boolean;
-  livesProvince?: string;  //省
-  livesCity?: string; //市
-  livesCountry?: string; // 区
-  liveAddrError?: boolean;
-  livesAddress?: string; // 现居住省市区及详细地
-  livesAddrDetailsError?: boolean;
-  companyName?: string; // 公司名称
-  companyNameError?: boolean;
-  yearsWorking?: number | string; // 工龄（年）
-  jobYears?: string;// 现公司工作年限
-  yearsWorkingError?: boolean;
-  jobYearsError?: boolean;
-  entryUnitTime?: number | string; //进入单位时间
-  entryUnitTimeError?: boolean;
-  annualIncome?: number | string; //个人税后月收入(元)
-  annualIncomeError?: boolean;
-  unitPhoneNumber?: string; //单位电话
-  unitPhoneNumberError?: boolean;
-  companyProvince?: string; // 户籍所在省
-  companyCity?: string; // 户籍所在市
-  companyCounty?: string; //区
-  companyAddrError?: boolean;
-  companyAddress?: string; //公司所在省市区及地址
-  companyAddrDetailsError?: boolean;
-
+  livesProvince: string;  //省
+  livesCity: string; //市
+  livesCountry: string; // 区
+  liveAddrError: boolean;
+  livesAddress: string; // 现居住省市区及详细地
+  livesAddrDetailsError: boolean;
+  companyName: string; // 公司名称
+  companyNameError: boolean;
+  yearsWorking: number | string; // 工龄（年）
+  jobYears: string;// 现公司工作年限
+  yearsWorkingError: boolean;
+  jobYearsError: boolean;
+  entryUnitTime: number | string; //进入单位时间
+  entryUnitTimeError: boolean;
+  annualIncome: number | string; //个人税后月收入(元)
+  annualIncomeError: boolean;
+  unitPhoneNumber: string; //单位电话
+  unitPhoneNumberError: boolean;
+  companyProvince: string; // 户籍所在省
+  companyCity: string; // 户籍所在市
+  companyCounty: string; //区
+  companyAddrError: boolean;
+  companyAddress: string; //公司所在省市区及地址
+  companyAddrDetailsError: boolean;
+  [key: string]: string | boolean | Array<any> | number;
+  
+  
 }
 type IProps = {
   report: InitStateProps;

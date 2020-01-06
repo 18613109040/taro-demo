@@ -3,11 +3,6 @@ import { View, Text, ScrollView, Button, Label, Image } from '@tarojs/components
 import { AtIcon, AtButton } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import { baseUrl } from '../../config/index';
-import IdCardInfo from '../../components/IdCardInfo'
-import BaseInfo from '../../components/BaseInfo'
-import ContactInfo from '../../components/ContactInfo'
-import GuaranteeInfo from '../../components/GuaranteeInfo'
-import CarBaseInfo from '../../components/CarBaseInfo'
 import Router from '../../components/Navigator'
 import Steps from '../../components/Steps'
 import { InitStateProps } from '../../models/report';
@@ -32,7 +27,7 @@ class Report extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     this.state = {
-      orderId: '20200103153710500'
+      orderId: '20200106111618154'
     }
   }
   componentDidMount = () => {
@@ -41,7 +36,7 @@ class Report extends Component<IProps, IState>{
     dispatch({
       type: 'report/getOrderDetailAction',
       payload: {
-        id: '20200103153710500'
+        id: '20200106111618154'
       }
     })
     // this.setState({
@@ -86,10 +81,10 @@ class Report extends Component<IProps, IState>{
     const { orderId } = this.state;
     const { email, contactName1, clGuaranteeInfoListStr, clCarInfoListStr, clCollectGatheringInfoListStr, clCollectClientInfoBigDataStr, clProductTypeListStr, clFileInfoListStr } = formData
     const { bankNo, driveCard, idCardPhoto, idCardPhoto2 } = clFileInfoListStr
-    const bankNos = JSON.parse(bankNo) || [];
-    const driveCards = JSON.parse(driveCard) || [];
-    const idCardPhotos = JSON.parse(idCardPhoto) || [];
-    const idCardPhoto2s = JSON.parse(idCardPhoto2) || [];
+    const bankNos = JSON.parse(bankNo||'[]');
+    const driveCards = JSON.parse(driveCard||'[]') ;
+    const idCardPhotos = JSON.parse(idCardPhoto||'[]') ;
+    const idCardPhoto2s = JSON.parse(idCardPhoto2||'[]') ;
     const imageList = [...bankNos, ...driveCards, ...idCardPhotos, ...idCardPhoto2s]
     const { name, idCard, sex, birthday, idCardStartDate, idCardEndDate, isDriverLicense, placeOfissue, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails, phone, repaymentAccount } = clCollectClientInfoBigDataStr
     if (current === 0) {

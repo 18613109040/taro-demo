@@ -41,3 +41,19 @@ export const getProduct = data =>
     method: 'GET',
     data,
   });
+
+// 获取产品计算属性
+export const getProductCompute = data =>
+  Request({
+    url: '/clCollectClientInfoController.do?applyAmount',
+    method: 'GET',
+    data,
+  });
+
+export const deteleFile = data => 
+  Request({
+    url: '/clCollectClientInfoController.do?deteleFile',
+    method: 'POST',
+    data,
+  });
+

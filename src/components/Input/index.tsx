@@ -24,9 +24,9 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
     if(props.error){
       setErrorIndex(0)
     }
-    if(props.defaultValue){
-      setValue(props.defaultValue)
-    }
+    // if(props.defaultValue){
+    setValue(props.defaultValue)
+    // }
   },[props.error,props.defaultValue])
   const fillClass = classnames({
     'material-design-fill': true,
@@ -88,11 +88,7 @@ const Cinput: Taro.FC<InputProps> = (props: InputProps) => {
         <Icon size='12' type='warn' color='#FF7800' />
         <Text className="error-des">{rules&&rules[errorIndex].message}</Text>
       </View>
-      }
-      {/* <View className="error-des">
-        <Text className={error?"error-msg":"error-msg-disable"}>{rules&&rules[errorIndex].message}</Text>
-      </View> */}
-      
+      }      
     </View>
   )
 };

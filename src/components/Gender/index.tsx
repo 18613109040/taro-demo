@@ -8,10 +8,11 @@ type GenderProps = {
   label?: string;
   defaultValue?: any;
   error?: boolean;
+  disabled?: boolean;
   rules?: Array<RulesProps>;
 }
 const Gender: Taro.FC<GenderProps> = (props: GenderProps) => {
-  const { label, defaultValue, error, rules, onChange } = props;
+  const { label, defaultValue, error, rules, onChange, disabled } = props;
   const errorMsg = rules && rules[0].message
   const gender = [{name: '男'},{name: '女'}]
   const [title, setTitle] = useState(defaultValue)
@@ -26,6 +27,7 @@ const Gender: Taro.FC<GenderProps> = (props: GenderProps) => {
         mode='selector' 
         range={gender} 
         rangeKey="name"
+        disabled={disabled}
         onChange={onGengerChange}>
         <ListItem
           label={label}

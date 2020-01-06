@@ -7,12 +7,15 @@ import ImagePicker from '../../components/ImagePicker'
 import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
 type IState = {
-
+  idCardAndBodyUrl: Array<any>;
+  runCard: Array<any>;
+  [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
   dispatch?: any;
+
 }
 @connect(({ report, common }) => ({
   report: report,
@@ -24,8 +27,11 @@ class Material extends Component<IProps, IState>{
   }
   constructor(props) {
     super(props)
+    const {idCardAndBodyUrl, runCard} = props.report.formData.clFileInfoListStr
+    console.dir(props.report.formData.clFileInfoListStr)
     this.state = {
-
+      idCardAndBodyUrl: idCardAndBodyUrl&&JSON.parse(idCardAndBodyUrl) ||[],
+      runCard: runCard&&JSON.parse(runCard)||[]
     }
   }
   componentDidMount = () => {
@@ -42,8 +48,14 @@ class Material extends Component<IProps, IState>{
 
 
   }
-
+  changeImage=({key,value})=>{
+    this.setState({
+      [`${key}`]: value
+    })
+  }
   render() {
+    const { idCardAndBodyUrl, runCard } = this.state;
+    const { orderId } =  this.$router.params
     const { windowHeight } = this.props.systemInfo;
     return (
       <View className="material-card-page">
@@ -52,32 +64,25 @@ class Material extends Component<IProps, IState>{
           scrollWithAnimation
           style={{ height: `${windowHeight - 60}px` }}
         >
-          <View >
+          <View>
             <View className="title">主借贷人</View>
             <View className="card-list">
               <View className="list-row">
                 <ImagePicker
                   required={true}
-                  label="身份证正面"
-                  
-                />
-                <ImagePicker
-                  required={true}
-                  label="身份证反面"
-                />
-                <ImagePicker
-                  required={true}
                   label="手持身份证"
-                />
-              </View>
-              <View className="list-row">
-                <ImagePicker
-                  required={true}
-                  label="银行卡正反面"
+                  files={idCardAndBodyUrl}
+                  name="idCardAndBodyUrl"
+                  orderId={orderId}
+                  onChange={this.changeImage}
                 />
                 <ImagePicker
                   required={true}
                   label="行驶证主页"
+                  files={runCard}
+                  name="runCard"
+                  orderId={orderId}
+                  onChange={this.changeImage}
                 />
                 <ImagePicker
                   required={true}
@@ -85,10 +90,7 @@ class Material extends Component<IProps, IState>{
                 />
               </View>
               <View className="list-row">
-                <ImagePicker
-                  required={true}
-                  label="驾驶证"
-                />
+             
                 <ImagePicker
                   required={true}
                   label="进件银行卡复印件"
@@ -189,6 +191,7 @@ class Material extends Component<IProps, IState>{
               </View>
             </View>
           </View>
+        
         </ScrollView>
         <View className="btn-bottom">
           <AtButton type='primary' onClick={this.save}>保存</AtButton>
