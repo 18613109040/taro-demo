@@ -122,11 +122,6 @@ class IdCard extends Component<IProps, IState>{
       [`${errorKey}`]: error,
       [`${valueKey}`]: value
     })
-    // if(valueKey === 'livesAddress'&& !error && !this.state.companyAddress){
-    //   this.setState({
-    //     companyAddress: value
-    //   })
-    // }
   }
   onChangeAddr = (obj) => {
     const { error, value } = obj;
@@ -203,13 +198,13 @@ class IdCard extends Component<IProps, IState>{
         }).then((res) => {
           if (res.success) {
             Taro.navigateBack()
-            dispatch({
-              type: 'report/setFormData',
-              payload: {
-                isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
-                companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress
-              }
-            })
+            // dispatch({
+            //   type: 'report/setFormData',
+            //   payload: {
+            //     isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
+            //     companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress
+            //   }
+            // })
           }
         })
       }
@@ -250,7 +245,7 @@ class IdCard extends Component<IProps, IState>{
               label="微信号"
               rules={[{
                 required: true,
-                pattern: /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/,
+                pattern: /^([a-zA-Z0-9]{5,19})+$/,
                 message: '请输入正确的微信号!'
               }]}
               error={realEstateCategoryError}

@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps, OrderDetailProps } from '../interface/form'
-import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile } from '../services/report'
+import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile, updateInfo, repayDetail } from '../services/report'
 export type InitStateProps = {
   formData: FormDataProps;
   current: number;
@@ -203,6 +203,14 @@ export default {
     *deteleFileAction({payload}, { call, put }){
       const res = yield call(deteleFile,payload)
       return res
+    },
+    *updateInfoAction({payload}, { call, put }){
+      const res = yield call(updateInfo,payload)
+      return res
+    },
+    *getRepayDetailAction({payload}, { call, put}){
+      const res = yield call(repayDetail,payload)
+      return res
     }
   },
   reducers: {
@@ -251,6 +259,10 @@ export default {
         state.current = 1;
         state.steps[0].status = 'success'
       }
+      return fromJS(state).toJS()
+    },
+    reset(state, {}){
+      state = initState
       return fromJS(state).toJS()
     },
     setFormData(state, {payload}) {

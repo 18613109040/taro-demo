@@ -123,13 +123,13 @@ class Contact extends Component<IProps, IState>{
         }).then((res)=>{
           if(res.success){
             Taro.navigateBack()
-            dispatch({
-              type: 'report/setFormData',
-              payload: {
-                contactName1, contactRelationship1, contactPhone1, contactIdCard1, contactName2, contactRelationship2, contactPhone2, contactIdCard2,
-                contactName3, contactRelationship3, contactPhone3, contactIdCard3
-              }
-            })
+            // dispatch({
+            //   type: 'report/setFormData',
+            //   payload: {
+            //     contactName1, contactRelationship1, contactPhone1, contactIdCard1, contactName2, contactRelationship2, contactPhone2, contactIdCard2,
+            //     contactName3, contactRelationship3, contactPhone3, contactIdCard3
+            //   }
+            // })
             const { clGuaranteeInfoListStr } = this.props.report.formData
             if (check && check !== '0' && clGuaranteeInfoListStr && !clGuaranteeInfoListStr.name) {
               dispatch({

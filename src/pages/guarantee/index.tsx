@@ -114,12 +114,12 @@ class Guarantee extends Component<IProps, IState>{
       }).then(res => {
         if (res.success) {
           Taro.navigateBack()
-          dispatch({
-            type: 'report/setFormData',
-            payload: {
-              clGuaranteeInfoListStr: { name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress }
-            }
-          })
+          // dispatch({
+          //   type: 'report/setFormData',
+          //   payload: {
+          //     clGuaranteeInfoListStr: { name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress }
+          //   }
+          // })
         }
 
       })

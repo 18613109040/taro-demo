@@ -24,7 +24,8 @@ page{
    display: flex;
    align-items: center;
    justify-content: space-between;
-   padding: $h-spacing-20;
+   flex-wrap: wrap;
+   padding: $h-spacing-30;
  }
  .card-list{
   background: $brand-8;
@@ -34,4 +35,7 @@ page{
     font-size: $font-size-30;
     padding: $h-spacing-30;
  }
+}
+.iconfont-upload::after {
+  content: "\e603";
 }

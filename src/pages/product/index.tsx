@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Text, ScrollView } from '@tarojs/components';
-import { AtButton } from "taro-ui"
-import { connect } from '@tarojs/redux';
+import { AtButton, AtModal, AtModalContent, AtModalHeader, AtModalAction } from "taro-ui"
+import { connect } from '@tarojs/redux'; 
 import CInput from '../../components/Input';
 import BasePicker from '../../components/BasePicker'
 import { InitStateProps } from '../../models/report';
@@ -21,6 +21,8 @@ type IState = {
   productMessage: string; 
   repayment: string; 
   bond: string; 
+  isOpened: boolean;
+  list:  Array<any>;
   [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
@@ -52,7 +54,9 @@ class Product extends Component<IProps, IState>{
       gpsCost: gpsCost || '', 
       productMessage: productDescription || '', 
       repayment: repaymentTotalAmount || '', 
-      bond: bond || ''
+      bond: bond || '',
+      isOpened: false,
+      list: []
     }
   }
   componentDidMount = async () => {
@@ -179,10 +183,32 @@ class Product extends Component<IProps, IState>{
       }
     })
   }
-
+  showDetail = async () => {
+    const { dispatch } = this.props;
+    const { repaymentCount, name, applyAmount } = this.state;
+    const res =  await dispatch({
+      type: 'report/getRepayDetailAction',
+      payload: {
+        phase: repaymentCount,
+        name, 
+        loanAmoun: applyAmount
+      }
+    })
+    if(res.success){
+      this.setState({
+        list: res.obj,
+        isOpened: true
+      })
+    }
+  }
+  enter = () => {
+    this.setState({
+      isOpened: false
+    })
+  }
   render() {
     const { name, applyAmount, repaymentCount,
-      nameError, applyAmountError, repaymentCountError, periods,serviceCharge, gpsCost, productMessage, repayment, bond  } = this.state;
+      nameError, applyAmountError, repaymentCountError, periods,serviceCharge, gpsCost, productMessage, repayment, bond, isOpened, list  } = this.state;
     const { windowHeight } = this.props.systemInfo;
     const { productList } = this.props.report;
     return (
@@ -284,6 +310,11 @@ class Product extends Component<IProps, IState>{
                 message: '请填写总还款金额!'
               }]}
             />
+            {
+              repayment &&<View className="text-detail" onClick={this.showDetail}>
+              <Text>还款明细</Text>
+            </View>
+            }
             {productMessage&&<View className="product-description">
               <View>
                 <Text>产品说明</Text>
@@ -297,6 +328,32 @@ class Product extends Component<IProps, IState>{
         <View className="btn-bottom">
           <AtButton type='primary' onClick={this.save}>保存</AtButton>
         </View>
+        <AtModal isOpened={isOpened} onClose={this.enter}>
+          <AtModalHeader>还款明细</AtModalHeader>
+          <AtModalContent>
+         
+            <View className="at-row at-row__align--center at-row__justify--between">
+              <View className="at-col header-title"><Text>期数</Text></View>
+              <View className="at-col header-title"><Text>月组金(元)</Text></View>
+              <View className="at-col header-title"><Text>管理费</Text></View>
+            </View>
+            <ScrollView
+              scrollY
+              scrollWithAnimation
+              style={{ height: '300px' }}
+            >
+            {
+              list.map(item=>
+                <View className="at-row at-row__align--center at-row__justify--between" key={item.period}>
+                  <View className="at-col content-title"><Text>{item.period}</Text></View>
+                  <View className="at-col content-title "><Text>{item.monthlyRent}</Text></View>
+                  <View className="at-col content-title"><Text>{item.managementExpense}</Text></View>
+                </View>
+              ) 
+            }
+            </ScrollView>
+          </AtModalContent>
+        </AtModal>
       </View>
     );
   }

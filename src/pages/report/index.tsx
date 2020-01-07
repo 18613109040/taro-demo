@@ -30,7 +30,7 @@ class Report extends Component<IProps, IState>{
       orderId: '20200106111618154'
     }
   }
-  componentDidMount = () => {
+  componentDidShow = () => {
     const { orderId } = this.$router.params
     const { dispatch } = this.props;
     dispatch({
@@ -43,7 +43,15 @@ class Report extends Component<IProps, IState>{
     //   orderId
     // })
   }
-
+  componentWillUnmount(){
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'report/reset',
+      payload: {
+      }
+    })
+    
+  }
   // 小程序上拉加载
   onReachBottom() {
 
@@ -74,19 +82,57 @@ class Report extends Component<IProps, IState>{
       current
     })
   }
+  reportForm = async ()=>{
+    const { dispatch } = this.props;
+    const { orderId } = this.state;
+    const res = await dispatch({
+      type: 'report/updateInfoAction',
+      payload: {
+        id: orderId
+      }
+    })
+    console.dir(res)
+    
+  }
   renderStepContent = () => {
     const { report, systemInfo } = this.props;
     const { windowHeight } = systemInfo;
     const { formData, current } = report;
     const { orderId } = this.state;
     const { email, contactName1, clGuaranteeInfoListStr, clCarInfoListStr, clCollectGatheringInfoListStr, clCollectClientInfoBigDataStr, clProductTypeListStr, clFileInfoListStr } = formData
-    const { bankNo, driveCard, idCardPhoto, idCardPhoto2 } = clFileInfoListStr
+    const { bankNo, driveCard, idCardPhoto, idCardPhoto2, idCardAndBodyUrl, runCard, runCard2, workIncomeProve, carRegisterCard,
+      carPhoto, framePhotos, trunkPhotos, dashboardPhotos, factoryNameplatePhoto, internalSeatPhotos, pleaseBak2,
+      applicationForm, otherProve, peopleCredit, car300, carReceipts  } = clFileInfoListStr
     const bankNos = JSON.parse(bankNo||'[]');
     const driveCards = JSON.parse(driveCard||'[]') ;
     const idCardPhotos = JSON.parse(idCardPhoto||'[]') ;
     const idCardPhoto2s = JSON.parse(idCardPhoto2||'[]') ;
+    const idCardAndBodyUrls = JSON.parse(idCardAndBodyUrl||'[]') ;
+    const runCards = JSON.parse(runCard||'[]') ;
+    const runCard2s = JSON.parse(runCard2||'[]') ;
+    const workIncomeProves = JSON.parse(workIncomeProve||'[]') ;
+    const carRegisterCards = JSON.parse(carRegisterCard||'[]') ;
+    const carPhotos = JSON.parse(carPhoto||'[]') ;
+    const framePhotoss = JSON.parse(framePhotos||'[]') ;
+    const trunkPhotoss = JSON.parse(trunkPhotos||'[]') ;
+    const dashboardPhotoss = JSON.parse(dashboardPhotos||'[]') ;
+    const factoryNameplatePhotos = JSON.parse(factoryNameplatePhoto||'[]') ;
+    const internalSeatPhotoss = JSON.parse(internalSeatPhotos||'[]') ;
+    const pleaseBak2s = JSON.parse(pleaseBak2||'[]') ;
+    const applicationForms = JSON.parse(applicationForm||'[]') ;
+    const otherProves = JSON.parse(otherProve||'[]') ;
+    const peopleCredits = JSON.parse(peopleCredit||'[]') ;
+    const car300s = JSON.parse(car300||'[]') ;
+    const carReceiptss = JSON.parse(carReceipts||'[]') ;
     const imageList = [...bankNos, ...driveCards, ...idCardPhotos, ...idCardPhoto2s]
     const { name, idCard, sex, birthday, idCardStartDate, idCardEndDate, isDriverLicense, placeOfissue, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails, phone, repaymentAccount } = clCollectClientInfoBigDataStr
+    const isShowMaterial: boolean = (idCardAndBodyUrls.length>0 && runCards.length>0 && runCard2s.length>0 &&  workIncomeProves.length>0&&
+      carRegisterCards.length>0&&carPhotos.length>0&&framePhotoss.length>0&&trunkPhotoss.length>0&&dashboardPhotoss.length>0&&
+      factoryNameplatePhotos.length>0&&internalSeatPhotoss.length>0&&pleaseBak2s.length>0&&applicationForms.length>0&&
+      otherProves.length>0&&peopleCredits.length>0&&car300s.length>0&&carReceiptss.length>0 )
+    const isShowReport: any = isShowMaterial && name != '' && email!='' && contactName1!=''&&
+    clGuaranteeInfoListStr&&clGuaranteeInfoListStr.email!='' && clCarInfoListStr && clCarInfoListStr.useType!='' && clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo!='' &&
+    clProductTypeListStr && clProductTypeListStr.applyAmount!=''
     if (current === 0) {
       return (
         <ScrollView
@@ -162,8 +208,7 @@ class Report extends Component<IProps, IState>{
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 79}px` }}
-        >
+          style={{ height: `${windowHeight - 179}px`}}>
           <View className="list-col">
             <Router
               title="身份证信息(必填)"
@@ -278,8 +323,8 @@ class Report extends Component<IProps, IState>{
               title="材料附件(必填)"
               arrow={true}
               orderId={orderId}
-              extraColor={clProductTypeListStr && clProductTypeListStr.applyAmount ? '#4fc79a' : '#ffd915'}
-              extraText={clProductTypeListStr && clProductTypeListStr.applyAmount ? '完成' : '去完成'}
+              extraColor={isShowMaterial ? '#4fc79a' : '#ffd915'}
+              extraText={isShowMaterial ? '完成' : '去完成'}
               iconInfo={{
                 prefixClass: 'iconfont',
                 size: 25,
@@ -289,15 +334,21 @@ class Report extends Component<IProps, IState>{
               url="/pages/material/index"
             />
           </View>
+          <View className="spacing"></View>
+          <View className="btn-footer">
+            <AtButton type='primary' disabled={!isShowReport} onClick={this.reportForm}>提报表单</AtButton>
+          </View>
         </ScrollView>
       )
+    } else if (current === 2) {
+      
     }
   }
 
   render() {
     const { steps, current, orderDetail, formData } = this.props.report;
     const { batchContent, batchStatus } = orderDetail;
-    const { name, idCard, sex, birthday, idCardStartDate, idCardEndDate, isDriverLicense, placeOfissue, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails, phone, repaymentAccount } = formData.clCollectClientInfoBigDataStr
+    const { name, idCard, sex, phone } = formData.clCollectClientInfoBigDataStr
     return (
       <View className="report-page">
         <View className="prompt">
@@ -325,9 +376,6 @@ class Report extends Component<IProps, IState>{
         {
           this.renderStepContent()
         }
-        {/* <View className="next-btn">
-          <AtButton type='primary' onClick={this.next}>下一步</AtButton>
-        </View> */}
       </View>
     );
   }

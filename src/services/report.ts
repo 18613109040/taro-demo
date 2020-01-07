@@ -49,7 +49,7 @@ export const getProductCompute = data =>
     method: 'GET',
     data,
   });
-
+// 删除图片
 export const deteleFile = data => 
   Request({
     url: '/clCollectClientInfoController.do?deteleFile',
@@ -57,3 +57,17 @@ export const deteleFile = data =>
     data,
   });
 
+// 获取还款明细 
+export const repayDetail = data => 
+  Request({
+    url: '/clRepaymentRecordController.do?repaymentInfo',
+    method: 'GET',
+    data,
+  });
+
+export const updateInfo = data => 
+  Request({
+    url: '/clCollectClientInfoController?updateInfo.do',
+    method: 'POST',
+    data,
+  });

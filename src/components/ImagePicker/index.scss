@@ -1,18 +1,57 @@
 @import '../../styles/theme';
 .image-picker{
-  width: 190px;
-  height: 180px;
-  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  .add-image{
+    width: 190px;
+    height: 190px;
+    border: 1px solid $brand-5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .preview{
+    position: relative;
+    .close{
+      position: absolute;
+      right: 10px;
+      margin-top: -180px;
+    }
+  }
+  .image{
+    width: 190px;
+    height: 190px;
+  }
   .lable{
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: $font-size-24;
+    margin-top: $h-spacing-10;
+    width: 190px;
+    word-wrap: break-word;
     .required-icon{
       color: $brand-12;
     }
   }
 }
-.error-image-picker{
-  color: $brand-6;
-}
+// .image-picker{
+//   width: 190px;
+//   height: 180px;
+//   text-align: center;
+//   .lable{
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     font-size: $font-size-24;
+//     .required-icon{
+//       color: $brand-12;
+//     }
+//   }
+// }
+// .error-image-picker{
+//   color: $brand-6;
+// }

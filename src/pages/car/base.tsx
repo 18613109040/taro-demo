@@ -320,7 +320,7 @@ class CarBase extends Component<IProps, IState>{
                   label="排量(L)(选填)"
                   rules={[{
                     required: true,
-                    pattern: /^\s*\S{2,}\s*$/,
+                    pattern: /^\s*\S{1,}\s*$/,
                     message: '请输入排量!'
                   }]}
                   type="digit"

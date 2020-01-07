@@ -55,6 +55,13 @@
       "unicode_decimal": 58996
     },
     {
+      "icon_id": "2315032",
+      "name": "银行卡流程",
+      "font_class": "yinhangqialiucheng",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
       "icon_id": "3058034",
       "name": "竖线",
       "font_class": "shuxian",
@@ -132,6 +139,13 @@
       "unicode_decimal": 58903
     },
     {
+      "icon_id": "5532450",
+      "name": "上传图片",
+      "font_class": "shangchuantupian",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
       "icon_id": "6429415",
       "name": "联系人",
       "font_class": "lianxiren1",
@@ -153,6 +167,13 @@
       "unicode_decimal": 59163
     },
     {
+      "icon_id": "8048452",
+      "name": "上传图片 (1)",
+      "font_class": "shangchuantupian1",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
       "icon_id": "8262828",
       "name": "订单提交成功",
       "font_class": "dingdantijiaochenggong",
@@ -165,6 +186,27 @@
       "font_class": "guanbi",
       "unicode": "e601",
       "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "8946013",
+      "name": "授权书",
+      "font_class": "shouquanshu",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "9058964",
+      "name": "身份证正面",
+      "font_class": "shenfenzhengzhengmian2",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "9058966",
+      "name": "身份证反面",
+      "font_class": "shenfenzhengfanmian2",
+      "unicode": "e658",
+      "unicode_decimal": 58968
     },
     {
       "icon_id": "9400848",
@@ -195,6 +237,13 @@
       "unicode_decimal": 58880
     },
     {
+      "icon_id": "12222526",
+      "name": "驾驶证正面",
+      "font_class": "jiashizhengzhengmian",
+      "unicode": "e651",
+      "unicode_decimal": 58961
+    },
+    {
       "icon_id": "12392901",
       "name": "身份证正面",
       "font_class": "shenfenzhengzhengmian",
@@ -207,6 +256,34 @@
       "font_class": "shenfenzhengfanmian",
       "unicode": "e636",
       "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "12646093",
+      "name": "身份证反面",
+      "font_class": "shenfenzhengfanmian2-copy",
+      "unicode": "e95e",
+      "unicode_decimal": 59742
+    },
+    {
+      "icon_id": "12646126",
+      "name": "银行卡流程",
+      "font_class": "yinhangqialiucheng-copy",
+      "unicode": "e95f",
+      "unicode_decimal": 59743
+    },
+    {
+      "icon_id": "12646153",
+      "name": "身份证正面",
+      "font_class": "shenfenzhengzhengmian2-copy",
+      "unicode": "e960",
+      "unicode_decimal": 59744
+    },
+    {
+      "icon_id": "12646980",
+      "name": "驾驶证正面",
+      "font_class": "jiashizhengzhengmian-copy",
+      "unicode": "e961",
+      "unicode_decimal": 59745
     }
   ]
 }

@@ -19,8 +19,28 @@ page{
       width: 100%;
     }
   }
+  .header-title{
+    font-size: $font-size-32;
+    color: $brand-9;
+    text-align: center;
+  }
+  .content-title{
+    font-size: $font-size-28;
+    color: $brand-3;
+    text-align: center;
+    padding:$h-spacing-10;
+  }
+  .text-detail{
+    color: $brand-1;
+    font-size: $font-size-28;
+    position: absolute;
+    margin-top: -80px;
+    right: 50px;
+    z-index: 10;
+  }
   .card-body{
     padding: $h-spacing-16;
+    position: relative;
   }
   .form-row{
     display: flex;
