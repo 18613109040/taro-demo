@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text, ScrollView, Button, Label, Image } from '@tarojs/components';
+import { View, Text, ScrollView, Image } from '@tarojs/components';
 import { AtIcon, AtButton } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import { baseUrl } from '../../config/index';
@@ -32,25 +32,27 @@ class Report extends Component<IProps, IState>{
   }
   componentDidShow = () => {
     const { orderId } = this.$router.params
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'report/getOrderDetailAction',
-      payload: {
-        id: '20200106111618154'
-      }
-    })
+    this.getData('20200106111618154')
     // this.setState({
     //   orderId
     // })
   }
-  componentWillUnmount(){
+  getData(orderId) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'report/getOrderDetailAction',
+      payload: {
+        id: orderId
+      }
+    })
+  }
+  componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'report/reset',
       payload: {
       }
     })
-    
   }
   // 小程序上拉加载
   onReachBottom() {
@@ -82,17 +84,27 @@ class Report extends Component<IProps, IState>{
       current
     })
   }
-  reportForm = async ()=>{
+  reportForm = () => {
     const { dispatch } = this.props;
     const { orderId } = this.state;
-    const res = await dispatch({
-      type: 'report/updateInfoAction',
-      payload: {
-        id: orderId
+    Taro.showModal({
+      title: '订单提交',
+      content: '确定要提交本单吗?',
+      success: () => {
+        dispatch({
+          type: 'report/updateInfoAction',
+          payload: {
+            id: orderId
+          }
+        }).then(res => {
+          if (res.success) {
+            this.getData(this.state.orderId)
+          }
+        })
       }
     })
-    console.dir(res)
-    
+
+
   }
   renderStepContent = () => {
     const { report, systemInfo } = this.props;
@@ -102,37 +114,37 @@ class Report extends Component<IProps, IState>{
     const { email, contactName1, clGuaranteeInfoListStr, clCarInfoListStr, clCollectGatheringInfoListStr, clCollectClientInfoBigDataStr, clProductTypeListStr, clFileInfoListStr } = formData
     const { bankNo, driveCard, idCardPhoto, idCardPhoto2, idCardAndBodyUrl, runCard, runCard2, workIncomeProve, carRegisterCard,
       carPhoto, framePhotos, trunkPhotos, dashboardPhotos, factoryNameplatePhoto, internalSeatPhotos, pleaseBak2,
-      applicationForm, otherProve, peopleCredit, car300, carReceipts  } = clFileInfoListStr
-    const bankNos = JSON.parse(bankNo||'[]');
-    const driveCards = JSON.parse(driveCard||'[]') ;
-    const idCardPhotos = JSON.parse(idCardPhoto||'[]') ;
-    const idCardPhoto2s = JSON.parse(idCardPhoto2||'[]') ;
-    const idCardAndBodyUrls = JSON.parse(idCardAndBodyUrl||'[]') ;
-    const runCards = JSON.parse(runCard||'[]') ;
-    const runCard2s = JSON.parse(runCard2||'[]') ;
-    const workIncomeProves = JSON.parse(workIncomeProve||'[]') ;
-    const carRegisterCards = JSON.parse(carRegisterCard||'[]') ;
-    const carPhotos = JSON.parse(carPhoto||'[]') ;
-    const framePhotoss = JSON.parse(framePhotos||'[]') ;
-    const trunkPhotoss = JSON.parse(trunkPhotos||'[]') ;
-    const dashboardPhotoss = JSON.parse(dashboardPhotos||'[]') ;
-    const factoryNameplatePhotos = JSON.parse(factoryNameplatePhoto||'[]') ;
-    const internalSeatPhotoss = JSON.parse(internalSeatPhotos||'[]') ;
-    const pleaseBak2s = JSON.parse(pleaseBak2||'[]') ;
-    const applicationForms = JSON.parse(applicationForm||'[]') ;
-    const otherProves = JSON.parse(otherProve||'[]') ;
-    const peopleCredits = JSON.parse(peopleCredit||'[]') ;
-    const car300s = JSON.parse(car300||'[]') ;
-    const carReceiptss = JSON.parse(carReceipts||'[]') ;
+      applicationForm, otherProve, peopleCredit, car300, carReceipts } = clFileInfoListStr
+    const bankNos = JSON.parse(bankNo || '[]');
+    const driveCards = JSON.parse(driveCard || '[]');
+    const idCardPhotos = JSON.parse(idCardPhoto || '[]');
+    const idCardPhoto2s = JSON.parse(idCardPhoto2 || '[]');
+    const idCardAndBodyUrls = JSON.parse(idCardAndBodyUrl || '[]');
+    const runCards = JSON.parse(runCard || '[]');
+    const runCard2s = JSON.parse(runCard2 || '[]');
+    const workIncomeProves = JSON.parse(workIncomeProve || '[]');
+    const carRegisterCards = JSON.parse(carRegisterCard || '[]');
+    const carPhotos = JSON.parse(carPhoto || '[]');
+    const framePhotoss = JSON.parse(framePhotos || '[]');
+    const trunkPhotoss = JSON.parse(trunkPhotos || '[]');
+    const dashboardPhotoss = JSON.parse(dashboardPhotos || '[]');
+    const factoryNameplatePhotos = JSON.parse(factoryNameplatePhoto || '[]');
+    const internalSeatPhotoss = JSON.parse(internalSeatPhotos || '[]');
+    const pleaseBak2s = JSON.parse(pleaseBak2 || '[]');
+    const applicationForms = JSON.parse(applicationForm || '[]');
+    const otherProves = JSON.parse(otherProve || '[]');
+    const peopleCredits = JSON.parse(peopleCredit || '[]');
+    const car300s = JSON.parse(car300 || '[]');
+    const carReceiptss = JSON.parse(carReceipts || '[]');
     const imageList = [...bankNos, ...driveCards, ...idCardPhotos, ...idCardPhoto2s]
     const { name, idCard, sex, birthday, idCardStartDate, idCardEndDate, isDriverLicense, placeOfissue, idAddrProvince, idAddrCity, idAddrArea, idAddrDetails, phone, repaymentAccount } = clCollectClientInfoBigDataStr
-    const isShowMaterial: boolean = (idCardAndBodyUrls.length>0 && runCards.length>0 && runCard2s.length>0 &&  workIncomeProves.length>0&&
-      carRegisterCards.length>0&&carPhotos.length>0&&framePhotoss.length>0&&trunkPhotoss.length>0&&dashboardPhotoss.length>0&&
-      factoryNameplatePhotos.length>0&&internalSeatPhotoss.length>0&&pleaseBak2s.length>0&&applicationForms.length>0&&
-      otherProves.length>0&&peopleCredits.length>0&&car300s.length>0&&carReceiptss.length>0 )
-    const isShowReport: any = isShowMaterial && name != '' && email!='' && contactName1!=''&&
-    clGuaranteeInfoListStr&&clGuaranteeInfoListStr.email!='' && clCarInfoListStr && clCarInfoListStr.useType!='' && clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo!='' &&
-    clProductTypeListStr && clProductTypeListStr.applyAmount!=''
+    const isShowMaterial: boolean = (idCardAndBodyUrls.length > 0 && runCards.length > 0 && runCard2s.length > 0 && workIncomeProves.length > 0 &&
+      carRegisterCards.length > 0 && carPhotos.length > 0 && framePhotoss.length > 0 && trunkPhotoss.length > 0 && dashboardPhotoss.length > 0 &&
+      factoryNameplatePhotos.length > 0 && internalSeatPhotoss.length > 0 && pleaseBak2s.length > 0 && applicationForms.length > 0 &&
+      otherProves.length > 0 && peopleCredits.length > 0 && car300s.length > 0 && carReceiptss.length > 0)
+    const isShowReport: any = isShowMaterial && name != '' && email != '' && contactName1 != '' &&
+      clGuaranteeInfoListStr && clGuaranteeInfoListStr.email != '' && clCarInfoListStr && clCarInfoListStr.useType != '' && clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo != '' &&
+      clProductTypeListStr && clProductTypeListStr.applyAmount != ''
     if (current === 0) {
       return (
         <ScrollView
@@ -164,39 +176,39 @@ class Report extends Component<IProps, IState>{
                 </View>
                 <View className="row-info">
                   <Text>身份证号:</Text>
-                  <Text  className="value">{idCard}</Text>
+                  <Text className="value">{idCard}</Text>
                 </View>
                 <View className="row-info">
                   <Text>性别:</Text>
-                  <Text  className="value">{sex}</Text>
+                  <Text className="value">{sex}</Text>
                 </View>
                 <View className="row-info">
                   <Text>出生日期:</Text>
-                  <Text  className="value">{birthday}</Text>
+                  <Text className="value">{birthday}</Text>
                 </View>
                 <View className="row-info">
                   <Text>证件有效期:</Text>
-                  <Text  className="value">{`${idCardStartDate} 至 ${idCardEndDate}`}</Text>
+                  <Text className="value">{`${idCardStartDate} 至 ${idCardEndDate}`}</Text>
                 </View>
                 <View className="row-info">
                   <Text>证件签发地:</Text>
-                  <Text  className="value">{placeOfissue}</Text>
+                  <Text className="value">{placeOfissue}</Text>
                 </View>
                 <View className="row-info">
                   <Text>地址:</Text>
-                  <Text  className="value">{`${idAddrProvince}${idAddrCity}${idAddrArea}${idAddrDetails}`}</Text>
+                  <Text className="value">{`${idAddrProvince}${idAddrCity}${idAddrArea}${idAddrDetails}`}</Text>
                 </View>
                 <View className="row-info">
                   <Text>是否有驾照:</Text>
-                  <Text  className="value">{isDriverLicense == 1 ? '有' : '无'}</Text>
+                  <Text className="value">{isDriverLicense == 1 ? '有' : '无'}</Text>
                 </View>
                 <View className="row-info">
                   <Text>手机号:</Text>
-                  <Text  className="value">{phone}</Text>
+                  <Text className="value">{phone}</Text>
                 </View>
                 <View className="row-info">
                   <Text>银行卡号:</Text>
-                  <Text  className="value">{repaymentAccount}</Text>
+                  <Text className="value">{repaymentAccount}</Text>
                 </View>
               </View>
             </View>
@@ -208,7 +220,7 @@ class Report extends Component<IProps, IState>{
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 179}px`}}>
+          style={{ height: `${windowHeight - 179}px` }}>
           <View className="list-col">
             <Router
               title="身份证信息(必填)"
@@ -341,7 +353,45 @@ class Report extends Component<IProps, IState>{
         </ScrollView>
       )
     } else if (current === 2) {
-      
+      return (
+      <ScrollView
+        scrollY
+        scrollWithAnimation
+        style={{ height: `${windowHeight - 79}px` }}
+      >
+        <View className="list-col">
+          <Router
+            title="GPS安装提报"
+            arrow={true}
+            extraColor={name ? '#4fc79a' : '#ffd915'}
+            extraText={name ? '完成' : '去完成'}
+            iconInfo={{
+              prefixClass: 'iconfont',
+              size: 25,
+              color: '#1D31AA',
+              value: 'idcard'
+            }}
+            orderId={orderId}
+            url="/pages/gpsInstall/index"
+          />
+          <Router
+            title="合同下载"
+            arrow={true}
+            extraColor={name ? '#4fc79a' : '#ffd915'}
+            extraText={name ? '完成' : '去完成'}
+            iconInfo={{
+              prefixClass: 'iconfont',
+              size: 25,
+              color: '#1D31AA',
+              value: 'idcard'
+            }}
+            orderId={orderId}
+            url="/pages/contractDownload/index"
+          />
+        </View>
+
+      </ScrollView>
+      )
     }
   }
 
@@ -366,7 +416,7 @@ class Report extends Component<IProps, IState>{
           }
           <View className="link-message">
             <Text className="name">{name}</Text>
-            <AtIcon value="phone" size="16" onClick={()=>this.callPhone(phone)} prefixClass='iconfont' color="#d0d3d9" />
+            <AtIcon value="phone" size="16" onClick={() => this.callPhone(phone)} prefixClass='iconfont' color="#d0d3d9" />
             <AtIcon value="shuxian" size="16" prefixClass='iconfont' color="#d0d3d9" />
             <Text className="code">{sex}</Text>
             <Text className="code">{idCard}</Text>

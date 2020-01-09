@@ -1,0 +1,13 @@
+@import '../../styles/theme';
+page{
+  background: $brand-13;
+}
+.contract-download{
+  background: $brand-8;
+  border-radius: $radius-16;
+  margin:$h-spacing-30;
+  .line{
+    padding: $h-spacing-30;
+    border-bottom: 1px solid $brand-5;
+  }
+}

@@ -1,0 +1,40 @@
+@import '../../styles/theme';
+.gps-install{
+ 
+  .content{
+    padding: $v-spacing-30;
+  }
+  .flex-row{
+    display: flex;
+    align-items: center;
+    .col{
+      flex: 1;
+    }
+    .col-right{
+      flex: 1;
+      margin-left: $h-spacing-30;
+    }
+  }
+  .textarea{
+    min-height:150px;
+    padding: 20px 30px;
+    border: 1px solid $brand-3;
+    border-radius: $radius-8;
+  }
+  .btn-bottom{
+    position: fixed;
+    bottom: 0px;
+    height: 60PX;
+    background: $brand-8;
+    width: 100%;
+    padding-left: $h-spacing-30;
+    padding-right: $h-spacing-30;
+    padding-top: $h-spacing-10;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid $brand-5;
+    at-button {
+      width: 100%;
+    }
+  }
+}

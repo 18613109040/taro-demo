@@ -1,6 +1,12 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps, OrderDetailProps } from '../interface/form'
-import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile, updateInfo, repayDetail } from '../services/report'
+import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile, updateInfo, repayDetail,
+  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, downLoadFile } from '../services/report'
+type IAddr = {
+  provinces: Array<any>;
+  citys: Array<any>;
+  areas: Array<any>;
+}
 export type InitStateProps = {
   formData: FormDataProps;
   current: number;
@@ -8,6 +14,9 @@ export type InitStateProps = {
   steps: Array<StepsProps>;
   productList: any;
   productDetail: any;
+  addr: IAddr;
+  gpsInstallInfo: any;
+  carMortgageInfo: any;
 }
 const initState:InitStateProps = {
   formData: {
@@ -166,6 +175,17 @@ const initState:InitStateProps = {
   productList: [],
   productDetail: {
     periods: []
+  },
+  addr: {
+    provinces: [],
+    citys: [],
+    areas: []
+  },
+  gpsInstallInfo: {
+
+  },
+  carMortgageInfo: {
+
   }
 }
 export default {
@@ -189,7 +209,7 @@ export default {
     *getProductListAction({payload}, { call, put }) {
       const res = yield call(getProductList,payload)
       if(res.success){
-        yield put({ type: "setProductList", payload: res })
+        yield put({ type: "setProductList", payload: res.obj })
       }
     },
     *getProductAction({payload}, { call, put }){
@@ -211,14 +231,72 @@ export default {
     *getRepayDetailAction({payload}, { call, put}){
       const res = yield call(repayDetail,payload)
       return res
+    },
+    *getProvinceAction({payload}, { call, put}){
+      const res = yield call(getProvince,payload)
+      if(res.success){
+        yield put({ type: "setProvince", payload: res.obj })
+        return res.obj;
+      }
+    },
+    *getCitysAction({payload}, { call, put}) {
+      const res = yield call(getCitysById,payload)
+      if(res.success){
+        yield put({ type: "setCitys", payload: res.obj })
+        return res.obj;
+      }
+    },
+    *getAreasAction({payload}, { call, put}) {
+      const res = yield call(getAreasById,payload)
+      if(res.success){
+        yield put({ type: "setAreas", payload: res.obj })
+        return res.obj;
+      }
+    },
+    *getGpsInstallInfoAction({payload}, { call, put}) {
+      const res = yield call(getGpsInstallInfo,payload)
+      if(res.success){
+        yield put({ type: "setGpsInstallInfo", payload: res.obj })
+      }
+    },
+    *getCarMortgageInfoAction({payload}, { call, put}){
+      const res = yield call(getCarMortgageInfo,payload)
+      if(res.success){
+        yield put({ type: "setCarMortgageInfo", payload: res.obj })
+      }
+    },
+    *downLoadFileAction({payload}, { call, put}) {
+      const res = yield call(downLoadFile,payload)
+      return res
     }
+    
   },
   reducers: {
+    setCarMortgageInfo(state, {payload}) {
+      state.carMortgageInfo = payload
+      return fromJS(state).toJS()
+    },
+    setGpsInstallInfo(state, {payload}) {
+      state.gpsInstallInfo = payload
+      return fromJS(state).toJS()
+    },
+    setProvince(state, {payload}) {
+      state.addr.provinces = payload
+      return fromJS(state).toJS()
+    },
+    setCitys(state, {payload}) {
+      state.addr.citys = payload
+      return fromJS(state).toJS()
+    },
+    setAreas(state, {payload} ){
+      state.addr.areas = payload
+      return fromJS(state).toJS()
+    },
     setProductList(state, {payload}) {
       const productList = [];
-      payload.obj.map(item=>{
+      payload.map((item)=>{
         if(item.typecode){
-          productList.push(Object.assign(item, {name: item.typename}))
+          productList.push(Object.assign({},item, { name: item.typename }))
         }
       })
       state.productList = productList;
@@ -256,7 +334,7 @@ export default {
       if(primaryStatus === '-1'){
         state.current = 0
       }else if(primaryStatus === '0') {
-        state.current = 1;
+        state.current = 2;
         state.steps[0].status = 'success'
       }
       return fromJS(state).toJS()

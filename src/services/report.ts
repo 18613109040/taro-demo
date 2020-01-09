@@ -67,7 +67,51 @@ export const repayDetail = data =>
 
 export const updateInfo = data => 
   Request({
-    url: '/clCollectClientInfoController?updateInfo.do',
+    url: '/clCollectClientInfoController.do?updateInfo',
+    method: 'POST',
+    data,
+  });
+
+// 获取省
+export const getProvince = data => 
+  Request({
+    url: '/byProvinceController.do?getAll',
+    method: 'GET',
+    data,
+  });
+
+// 通过省获取市
+export const getCitysById = data => 
+  Request({
+    url: '/byCityController.do?getByPid',
+    method: 'GET',
+    data,
+  });
+// 获取县
+export const getAreasById = data => 
+  Request({
+    url: '/byAreaController.do?getByPid',
+    method: 'GET',
+    data,
+  });
+// 获取GPS
+export const getGpsInstallInfo = data =>
+  Request({
+    url: '/clGpsInstallInfoController.do?getById',
+    method: 'GET',
+    data,
+  });
+// 获取车辆抵押信息
+export const getCarMortgageInfo = data =>
+  Request({
+    url: '/clCollectClientInfoController.do?clCarInfoList',
+    method: 'GET',
+    data,
+  });
+// 下载
+export const downLoadFile = data =>
+  Request({
+    url: '/clContractManageController.do?offlineContract',
     method: 'POST',
     data,
   });

@@ -34,6 +34,7 @@ type IState = {
   contactIdCard3Error: boolean;
   contactIdCard3: string;  // 联系人身份证号3
   check: string;
+  [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
   report: InitStateProps;

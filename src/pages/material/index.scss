@@ -19,7 +19,9 @@ page{
       width: 100%;
     }
   }
-
+  .at-modal__container {
+    width: 700px !important;
+  }
  .list-row{
    display: flex;
    align-items: center;

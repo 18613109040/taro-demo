@@ -1,10 +1,6 @@
 @import '../../styles/theme';
 .image-picker{
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
+
   .add-image{
     width: 190px;
     height: 190px;
@@ -13,6 +9,7 @@
     justify-content: center;
     align-items: center;
   }
+ 
   .preview{
     position: relative;
     .close{
@@ -20,6 +17,48 @@
       right: 10px;
       margin-top: -180px;
     }
+  }
+  .close-modal{
+    position: absolute;
+    right: -10px;
+    margin-top: -10px;
+    z-index: 10;
+  }
+  .colose-footer{
+    padding: $h-spacing-20;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .add-mul-image{
+    width: 190px;
+    height: 190px;
+    border: 1px solid $brand-5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .modal-content{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: $h-spacing-30;
+  }
+  .upload-btn{
+    width: 60px;
+    height: 60px;
+    border: 1px solid $brand-5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .mut-image{
+    width: 60px;
+    height: 60px;
+
   }
   .image{
     width: 190px;
@@ -38,20 +77,4 @@
     }
   }
 }
-// .image-picker{
-//   width: 190px;
-//   height: 180px;
-//   text-align: center;
-//   .lable{
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     font-size: $font-size-24;
-//     .required-icon{
-//       color: $brand-12;
-//     }
-//   }
-// }
-// .error-image-picker{
-//   color: $brand-6;
-// }
+

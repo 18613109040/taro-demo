@@ -1,6 +1,6 @@
 import Taro, { useState } from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
-import { AtIcon, AtActivityIndicator } from 'taro-ui'
+import { AtIcon, AtActivityIndicator, AtModal, AtModalContent, AtModalAction, AtButton } from 'taro-ui'
 import { baseUrl } from '../../config/index';
 import Request from '../../utils/request';
 import './index.scss'
@@ -23,8 +23,9 @@ type IProps = {
   disabled?: boolean;
 }
 const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
-  let { label, required, count=1, files=[], orderId, name, onChange, disabled=false } = props;
+  let { label = '', required, count = 1, files = [], orderId, name, onChange, disabled = false } = props;
   const [loadding, setLoadding] = useState(false)
+  const [isShow, setIsShow] = useState(false)
   const onChangeImage = () => {
     Taro.chooseImage({
       count: count - files.length,
@@ -57,55 +58,38 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
     })
   }
   const colose = (index) => {
-      Request({
-        url: '/clCollectClientInfoController.do?deteleFile',
-        method: 'POST',
-        data:{
-          id: orderId,
-          name: files&&files[index].name,
-          filedName: name
-        }
-      }).then(res=>{
-        if(res.success && onChange){
-          onChange({
-            key: name,
-            value: res.attributes.value
-          })
-        }
-      });
+    Request({
+      url: '/clCollectClientInfoController.do?deteleFile',
+      method: 'POST',
+      data: {
+        id: orderId,
+        name: files && files[index].name,
+        filedName: name
+      }
+    }).then(res => {
+      if (res.success && onChange) {
+        onChange({
+          key: name,
+          value: res.attributes.value
+        })
+      }
+    });
+  }
+  const showImageModal = () => {
+    setIsShow(true)
+  }
+  const coloseModal = () => {
+    setIsShow(false)
   }
   return (
     <View className="image-picker">
       {
-        files && files.map((item, index) => (
-          <View key={item.url} className="col-line">
-            {
-              item.url?
-              <View className="preview">
-                <Image src={`${baseUrl}/${item.url}`} className="image" />
-                {!disabled&&<View className="close" onClick={()=>colose(index)}>
-                  <AtIcon value="close" size="20" prefixClass='iconfont' color="#38558E" />
-                </View>}
-              </View>
-              :
-              <View className="add-image">
-                <AtActivityIndicator size={32} />
-              </View>
-            }
-            <View className="lable">
-              {
-                required && <Text className="required-icon">*</Text>
-              }
-              <Text>{files&&files.length==1?label: `${label}${index+1}`}</Text>
-            </View>
-          </View>
-        ))
-      }
-      {
-        files && files.length >= count ? '' : loadding ?
+        files.length == 0 ?
           <View className="col-line">
-            <View className="add-image">
-              <AtActivityIndicator size={32} />
+            <View className="add-image" onClick={onChangeImage}>
+              {
+                loadding ? <AtActivityIndicator size={32} /> : <AtIcon value='upload' prefixClass='iconfont' size='30' color='#d0d3d9'></AtIcon>
+              }
             </View>
             <View className="lable">
               {
@@ -114,18 +98,65 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
               <Text>{label}</Text>
             </View>
           </View> :
-          <View className="col-line">
-            <View className="add-image" onClick={onChangeImage}>
-              <AtIcon value='upload' prefixClass='iconfont' size='30' color='#d0d3d9'></AtIcon>
+          count == 1 && files.length == 1 ?
+            <View className="col-line">
+              <View className="preview">
+                <Image src={`${baseUrl}/${files[0].url}`} className="image" />
+                {!disabled && <View className="close" onClick={() => colose(0)}>
+                  <AtIcon value="close" size="20" prefixClass='iconfont' color="#38558E" />
+                </View>}
+              </View>
+              <View className="lable">
+                {
+                  required && <Text className="required-icon">*</Text>
+                }
+                <Text>{label}</Text>
+              </View>
+            </View> :
+            <View className="col-line">
+              <View className="add-mul-image" onClick={showImageModal}>
+                {files.map((item) => (
+                  <Image key={item.url} src={`${baseUrl}/${item.url}`} className="mut-image" />
+                ))}
+                {
+                  count >= files.length ? <View className="upload-btn">
+                    <AtIcon value='upload' prefixClass='iconfont' size='15' color='#d0d3d9'></AtIcon>
+                  </View> : ''
+                }
+              </View>
+              <View className="lable">
+                {
+                  required && <Text className="required-icon">*</Text>
+                }
+                <Text>{label}</Text>
+              </View>
             </View>
-            <View className="lable">
+      }
+      <AtModal isOpened={isShow}>
+        <AtModalContent>
+          <View className="modal-content">
+
+            {files.map((item) => (
+              <View className="preview">
+                <Image src={`${baseUrl}/${item.url}`} className="image" />
+                {!disabled && <View className="close" onClick={() => colose(0)}>
+                  <AtIcon value="close" size="20" prefixClass='iconfont' color="#38558E" />
+                </View>}
+              </View>
+            ))}
+            <View className="add-image" onClick={onChangeImage}>
               {
-                required && <Text className="required-icon">*</Text>
+                loadding ? <AtActivityIndicator size={32} /> : <AtIcon value='upload' prefixClass='iconfont' size='30' color='#d0d3d9'></AtIcon>
               }
-              <Text>{label}</Text>
             </View>
           </View>
-      }
+        </AtModalContent>
+        <AtModalAction>
+          <View className="colose-footer">
+            <AtButton onClick={coloseModal} type='primary' >关闭</AtButton> 
+          </View> 
+        </AtModalAction>
+      </AtModal>
     </View>
   )
 
