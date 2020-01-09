@@ -108,8 +108,8 @@ export const getCarMortgageInfo = data =>
     method: 'GET',
     data,
   });
-// 下载
-export const downLoadFile = data =>
+// 生成下载模板
+export const generateTemplate = data =>
   Request({
     url: '/clContractManageController.do?offlineContract',
     method: 'POST',

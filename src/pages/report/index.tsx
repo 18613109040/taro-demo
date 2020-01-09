@@ -27,15 +27,15 @@ class Report extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     this.state = {
-      orderId: '20200106111618154'
+      orderId: ''
     }
   }
   componentDidShow = () => {
     const { orderId } = this.$router.params
-    this.getData('20200106111618154')
-    // this.setState({
-    //   orderId
-    // })
+    this.getData(orderId)
+    this.setState({
+      orderId
+    })
   }
   getData(orderId) {
     const { dispatch } = this.props;

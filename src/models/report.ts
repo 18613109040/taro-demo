@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps, OrderDetailProps } from '../interface/form'
 import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile, updateInfo, repayDetail,
-  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, downLoadFile } from '../services/report'
+  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, generateTemplate } from '../services/report'
 type IAddr = {
   provinces: Array<any>;
   citys: Array<any>;
@@ -265,8 +265,8 @@ export default {
         yield put({ type: "setCarMortgageInfo", payload: res.obj })
       }
     },
-    *downLoadFileAction({payload}, { call, put}) {
-      const res = yield call(downLoadFile,payload)
+    *generateTemplateAction({payload}, { call, put}) {
+      const res = yield call(generateTemplate,payload)
       return res
     }
     
@@ -373,5 +373,5 @@ export default {
       state.current = state.current+1
       return fromJS(state).toJS()
     }
-  },
+  }
 };

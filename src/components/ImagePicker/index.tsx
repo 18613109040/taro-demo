@@ -1,5 +1,5 @@
 import Taro, { useState } from '@tarojs/taro';
-import { View, Text, Image } from '@tarojs/components';
+import { View, Text, Image, Video } from '@tarojs/components';
 import { AtIcon, AtActivityIndicator, AtModal, AtModalContent, AtModalAction, AtButton } from 'taro-ui'
 import { baseUrl } from '../../config/index';
 import Request from '../../utils/request';
@@ -8,6 +8,9 @@ type IFiles = {
   url?: string;
   name?: string;
   value?: string;
+  image?: boolean;
+  file?: boolean;
+  video?: boolean;
 }
 type IProps = {
   onChange?: (value) => void;
@@ -26,6 +29,16 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
   let { label = '', required, count = 1, files = [], orderId, name, onChange, disabled = false } = props;
   const [loadding, setLoadding] = useState(false)
   const [isShow, setIsShow] = useState(false)
+  files.map(item=>{
+    const name = item.url.split('.').pop().toLowerCase() 
+    if (name === 'pdf' || name === 'doc' || name==='docx' ||  name==='xls' ||  name==='xlsx'  ||  name==='ppt'  ||  name==='pptx'  ||  name==='pptx' ){
+      item.file = true
+    } else if (name === 'mp4' || name === 'mov' || name === 'm4v' || name === '3gp' || name === 'avi' || name === 'm3u8' || name === 'webm'  ){
+      item.video = true
+    } else {
+      item.image = true
+    }
+  })
   const onChangeImage = () => {
     Taro.chooseImage({
       count: count - files.length,
@@ -46,8 +59,7 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
               if (data.success && onChange) {
                 onChange({
                   key: name,
-                  value: data.attributes.value,
-                  size: tempFilePaths.length
+                  value: data.attributes.value
                 })
               }
               setLoadding(false)
@@ -81,6 +93,11 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
   const coloseModal = () => {
     setIsShow(false)
   }
+  const preViewFile = (file) => {
+    Taro.openDocument({
+      filePath: file
+    })
+  }
   return (
     <View className="image-picker">
       {
@@ -101,7 +118,12 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
           count == 1 && files.length == 1 ?
             <View className="col-line">
               <View className="preview">
-                <Image src={`${baseUrl}/${files[0].url}`} className="image" />
+                {
+                 files[0].image?  <Image src={`${baseUrl}/${files[0].url}`} className="image" />: 
+                 files[0].file?   <View className="file-bm" onClick={()=> preViewFile(`${baseUrl}/${files[0].url}`)}> <AtIcon value="file-generic" size="20" /></View>: 
+                 files[0].video?  <Video className="file-video" src={`${baseUrl}/${files[0].url}`} />: ''
+                }
+               
                 {!disabled && <View className="close" onClick={() => colose(0)}>
                   <AtIcon value="close" size="20" prefixClass='iconfont' color="#38558E" />
                 </View>}
@@ -115,9 +137,12 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
             </View> :
             <View className="col-line">
               <View className="add-mul-image" onClick={showImageModal}>
-                {files.map((item) => (
-                  <Image key={item.url} src={`${baseUrl}/${item.url}`} className="mut-image" />
-                ))}
+                {files.map((item) => 
+                    item.image?  <Image src={`${baseUrl}/${item.url}`} className="mut-image" />: 
+                    item.file?   <View className="mut-file-bm"> <AtIcon value="file-generic" size="20" /></View>: 
+                    item.video?  <View className="mut-file-bm"> <AtIcon value="file-video" size="20" /></View> : ''
+                
+                )}
                 {
                   count >= files.length ? <View className="upload-btn">
                     <AtIcon value='upload' prefixClass='iconfont' size='15' color='#d0d3d9'></AtIcon>
@@ -138,7 +163,12 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
 
             {files.map((item) => (
               <View className="preview">
-                <Image src={`${baseUrl}/${item.url}`} className="image" />
+                {
+                 item.image?  <Image src={`${baseUrl}/${item.url}`} className="image" />: 
+                 item.file?   <View className="file-bm" onClick={()=> preViewFile(`${baseUrl}/${item.url}`)}> <AtIcon value="file-generic" size="20" /></View>: 
+                 item.video?  <Video className="file-video" src={`${baseUrl}/${item.url}`} />: ''
+                }
+                {/* <Image src={`${baseUrl}/${item.url}`} className="image" /> */}
                 {!disabled && <View className="close" onClick={() => colose(0)}>
                   <AtIcon value="close" size="20" prefixClass='iconfont' color="#38558E" />
                 </View>}

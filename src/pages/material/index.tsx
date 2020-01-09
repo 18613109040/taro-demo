@@ -85,13 +85,9 @@ class Material extends Component<IProps, IState>{
   save = () => {
     Taro.navigateBack()
   }
-  changeImage=({key,value,size})=>{
-    let temp:any = []
-    if(size&&value.length<size){
-      temp = new Array(size-value.length).fill({url: ''})
-    }
+  changeImage=({key,value})=>{
     this.setState({
-      [`${key}`]: [...value, ...temp ]
+      [`${key}`]: value 
     })
   }
   render() {
