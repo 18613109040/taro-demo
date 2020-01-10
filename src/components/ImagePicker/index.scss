@@ -1,6 +1,6 @@
 @import '../../styles/theme';
 .image-picker{
-
+  width: 192px;
   .add-image{
     width: 190px;
     height: 190px;
@@ -9,7 +9,6 @@
     justify-content: center;
     align-items: center;
   }
- 
   .preview{
     position: relative;
     .close{
@@ -36,10 +35,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex: 1;
   }
   .file-video{
     width: 190px;
     height: 190px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .add-mul-image{
     width: 190px;
@@ -55,7 +59,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    // justify-content: space-between;
     flex-wrap: wrap;
     padding: $h-spacing-30;
   }
@@ -82,6 +86,22 @@
   .image{
     width: 190px;
     height: 190px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .other{
+    width: 190px;
+    height: 190px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .other-name{
+    font-size: $font-size-24;
+    color: $brand-3;
   }
   .lable{
     display: flex;

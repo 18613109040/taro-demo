@@ -152,12 +152,40 @@ class FastApproval extends Component<IProps, IState>{
             console.dir(data)
             if (data.success) {
               const value = JSON.parse(data.attributes.value)
-              console.dir(value)
+              const { name, sex, idCard, idAddrProvince, idAddrArea, idAddrCity, idAddrDetails, birthday, placeOfissue, idCardStartDate, idCardEndDate, effectiveness, repaymentAccount, isDriverLicense } = data.attributes.obj
               this.setState({
                 [`${key}Id`]: data.obj,
                 [`${key}Str`]: data.attributes.value,
                 [`${key}`]: `${baseUrl}/${value[0].url}`
               })
+              if(key === 'idCardPhoto'){
+                this.setState({
+                  name,
+                  sex: sex==='M'? '男': '女',
+                  idCard,
+                  idAddrProvince,
+                  idAddrArea,
+                  idAddrCity,
+                  idAddrDetails,
+                  birthday
+                })
+              }else if(key === 'idCardPhoto2') {
+                  this.setState({
+                    placeOfissue,
+                    idCardStartDate,
+                    idCardEndDate,
+                    effectiveness: effectiveness==="否"?false:true,
+                  })
+              } else if(key === 'bankNo') {
+                this.setState({
+                  repaymentAccount
+                })
+              } else if(key === 'driveCard' ) {
+                this.setState({
+                  isDriverLicense: isDriverLicense === '有'? true: false
+                })
+                
+              }
             }
           }
         })
@@ -540,7 +568,7 @@ class FastApproval extends Component<IProps, IState>{
             />
             <Addr
               label="地址"
-              defaultValue={(idAddrProvince || idAddrCity || idAddrArea) ? `${idAddrProvince}/${idAddrCity}/${idAddrArea}` : ''}
+              defaultValue={(idAddrProvince && idAddrCity && idAddrArea) ? `${idAddrProvince}/${idAddrCity}/${idAddrArea}` : ''}
               error={idAddrError}
               rules={[{
                 required: true,

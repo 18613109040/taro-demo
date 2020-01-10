@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Textarea, ScrollView } from '@tarojs/components';
-import { AtButton } from "taro-ui"
+import { AtButton, AtMessage } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import CInput from '../../components/Input';
 import Addr from '../../components/Addr';
@@ -43,12 +43,51 @@ class CarMortgage extends Component<IProps, IState>{
     }
   }
   componentDidMount = async () => {
-    const { dispatch } = this.props;
+    const { dispatch } = this.props; 
+    const { orderId } = this.$router.params
+    dispatch({
+      type: 'report/getCarMortgageInfoAction',
+      payload: {
+        id: orderId
+      }
+    })
+    
     
   }
 
   save = () => {
- 
+    const { dispatch, report } = this.props; 
+    const { orderId } = this.$router.params
+    const { contactName, contactPhone, acceptAddress,  bak3 } = this.state;
+    const { licenseOwner, carNo, frameNumber, licenseProvince, valuationCity, licenseCounty, contactCompany } = report.carMortgageInfo
+    
+    dispatch({
+      type: 'report/carMortgageAction',
+      payload: {
+        id: orderId,
+        name: licenseOwner,
+        carNo,
+        frameNumber,
+        licenseProvince,
+        valuationCity,
+        licenseCounty,
+        contactCompany,
+        contactName,
+        contactPhone,
+        acceptAddress,
+        bak3
+      }
+    }).then(res=>{
+      if(res.success){
+        Taro.navigateBack()
+      }else{
+        Taro.atMessage({
+          message: res.msg,
+          type: 'error'
+        })
+      }
+    })
+    
   }
 
   onChange = (obj) => {
@@ -69,9 +108,11 @@ class CarMortgage extends Component<IProps, IState>{
     
     const { windowHeight } = this.props.systemInfo;
     const { contactName, contactNameError, contactPhone, contactPhoneError, acceptAddress, acceptAddressError, bak3 } = this.state;
-    const { name, carNo, frameNumber, licenseProvince, valuationCity, licenseCounty, contactCompany   } = this.props
+    const { licenseOwner, carNo, frameNumber, licenseProvince, valuationCity, licenseCounty, contactCompany   } = this.props.report.carMortgageInfo
+    const disabled:any = contactName && !contactNameError && contactPhone && !contactPhoneError && acceptAddress && !acceptAddressError
     return (
-      <View className="gps-install">
+      <View className="car-mortgage">
+        <AtMessage />
         <ScrollView
           scrollY
           scrollWithAnimation
@@ -79,8 +120,8 @@ class CarMortgage extends Component<IProps, IState>{
         >
           <View className="content">
             <CInput
-              name='clientName'
-              defaultValue={name}
+              name='licenseOwner'
+              defaultValue={licenseOwner}
               label="姓名"
               rules={[{
                 required: true,
@@ -173,7 +214,7 @@ class CarMortgage extends Component<IProps, IState>{
           </View>
         </ScrollView>
         <View className="btn-bottom">
-          <AtButton type='primary'  onClick={this.save}>保存</AtButton>
+          <AtButton type='primary' disabled={!disabled} onClick={this.save}>保存</AtButton>
         </View>
       </View>
     );

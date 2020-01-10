@@ -72,7 +72,7 @@ class IdCard extends Component<IProps, IState>{
     const { isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
       companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress } = props.report.formData;
     this.state = {
-      isDriverLicense: isDriverLicense || true, // 驾照qian'k
+      isDriverLicense: isDriverLicense==='无'? false: true,  // 驾照qian'k
       email: email || '', // 常用邮箱
       emailError: false,
       phone: phone || '', //手机号
@@ -192,7 +192,7 @@ class IdCard extends Component<IProps, IState>{
           payload: {
             id: orderId,
             updateStep: 0,
-            isDriverLicense: isDriverLicense ? 1 : 0, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
+            isDriverLicense: isDriverLicense ? '有' : '无', email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
             companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress
           }
         }).then((res) => {
@@ -358,10 +358,10 @@ class IdCard extends Component<IProps, IState>{
               label="详细地址"
               rules={[{
                 required: true,
-                pattern: /^\s*\S{2,}\s*$/,
+                pattern: /^\s*\S{1,}\s*$/,
                 message: '请输入详细地址!'
               }]}
-              trigger='onBlur'
+              // trigger='onBlur'
               error={livesAddrDetailsError}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'livesAddrDetailsError', valueKey: 'livesAddress' })}
             />

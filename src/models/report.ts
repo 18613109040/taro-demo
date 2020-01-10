@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps, OrderDetailProps } from '../interface/form'
 import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile, updateInfo, repayDetail,
-  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, generateTemplate } from '../services/report'
+  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, generateTemplate, carMortgage } from '../services/report'
 type IAddr = {
   provinces: Array<any>;
   citys: Array<any>;
@@ -160,7 +160,7 @@ const initState:InitStateProps = {
     desc: '',
     status: ''
   },{
-    title: '授信',
+    title: '签约',
     desc: '',
     status: ''
   },{
@@ -262,11 +262,15 @@ export default {
     *getCarMortgageInfoAction({payload}, { call, put}){
       const res = yield call(getCarMortgageInfo,payload)
       if(res.success){
-        yield put({ type: "setCarMortgageInfo", payload: res.obj })
+        yield put({ type: "setCarMortgageInfo", payload: res.obj[0] })
       }
     },
     *generateTemplateAction({payload}, { call, put}) {
       const res = yield call(generateTemplate,payload)
+      return res
+    },
+    *carMortgageAction({payload}, { call, put}){
+      const res = yield call(carMortgage,payload)
       return res
     }
     
@@ -334,8 +338,12 @@ export default {
       if(primaryStatus === '-1'){
         state.current = 0
       }else if(primaryStatus === '0') {
-        state.current = 2;
+        state.current = 1;
         state.steps[0].status = 'success'
+      }else if(primaryStatus === '1' || primaryStatus === '2' ) {
+        state.current = 1;
+        state.steps[0].status = 'success'
+        state.steps[1].status = 'success'
       }
       return fromJS(state).toJS()
     },

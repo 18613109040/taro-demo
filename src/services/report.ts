@@ -104,7 +104,7 @@ export const getGpsInstallInfo = data =>
 // 获取车辆抵押信息
 export const getCarMortgageInfo = data =>
   Request({
-    url: '/clCollectClientInfoController.do?clCarInfoList',
+    url: '/clCollectClientInfoController.do?getCarInfoList',
     method: 'GET',
     data,
   });
@@ -112,6 +112,14 @@ export const getCarMortgageInfo = data =>
 export const generateTemplate = data =>
   Request({
     url: '/clContractManageController.do?offlineContract',
+    method: 'POST',
+    data,
+  });
+
+// 车辆抵押提交
+export const carMortgage= data =>
+  Request({
+    url: '/clPledgeOrderController.do?doAdd',
     method: 'POST',
     data,
   });

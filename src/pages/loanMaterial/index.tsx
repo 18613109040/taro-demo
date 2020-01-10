@@ -188,6 +188,7 @@ class LoanMaterial extends Component<IProps, IState>{
                   name="pleaseDitchAndClient"
                   orderId={orderId}
                   count={5}
+                  isFile={true}
                   onChange={this.changeImage}
                 />
                 <ImagePicker

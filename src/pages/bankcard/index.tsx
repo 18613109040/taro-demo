@@ -204,11 +204,11 @@ class BankCard extends Component<IProps, IState>{
               label="联行号"
               rules={[{
                 required: true,
-                pattern: /^([1-9]{1})(\d{15}|\d{18})$/,
+                // pattern: /^([1-9]{1})(\d{15}|\d{18})$/,
                 message: '请输入联行号!'
               }]}
-              trigger='onBlur'
-              type="idcard"
+              // trigger='onBlur'
+              type="number"
               error={bankNoError}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'bankNoError', valueKey: 'bankNo' })}
             />

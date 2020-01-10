@@ -17,7 +17,7 @@ type IProps = {
   userInfo: common.userInfo
 }))
 class Home extends PureComponent<IProps, IState> {
-  config: Config= {
+  config: Config = {
     navigationBarTitleText: '威武金融',
     navigationBarBackgroundColor: "#4984FD",
     navigationBarTextStyle: 'white'
@@ -42,7 +42,7 @@ class Home extends PureComponent<IProps, IState> {
   onReachBottom() {
 
   }
-  addApply =() => {
+  addApply = () => {
     Taro.navigateTo({
       url: '/pages/prepare/index'
     })
@@ -62,16 +62,25 @@ class Home extends PureComponent<IProps, IState> {
         </View>
 
         <View className="at-row at-row__align--center">
-          <View className="">
-            <View>
-              <Text></Text>
-            </View>
-            <View>
-              <Text></Text>
-            </View>
-            <View>
-              <Text></Text>
-            </View>
+          <View className="at-col">
+            <View><Text>快批</Text></View>
+            <View><Text>20</Text></View>
+          </View>
+          <View className="at-col">
+            <View><Text>准入</Text></View>
+            <View><Text>20</Text></View>
+          </View>
+          <View className="at-col">
+            <View><Text>授信</Text></View>
+            <View><Text>20</Text></View>
+          </View>
+          <View className="at-col">
+            <View><Text>贷前</Text></View>
+            <View><Text>20</Text></View>
+          </View>
+          <View className="at-col">
+            <View><Text>贷后</Text></View>
+            <View><Text>20</Text></View>
           </View>
         </View>
 

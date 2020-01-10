@@ -25,7 +25,6 @@ page{
  .list-row{
    display: flex;
    align-items: center;
-   justify-content: space-between;
    flex-wrap: wrap;
    padding: $h-spacing-30;
  }
@@ -37,7 +36,4 @@ page{
     font-size: $font-size-30;
     padding: $h-spacing-30;
  }
-}
-.iconfont-upload::after {
-  content: "\e603";
 }

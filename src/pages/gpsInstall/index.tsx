@@ -12,8 +12,6 @@ import { InitStateProps } from '../../models/report';
 import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
 type IState = {
-  clientName: string;
-  cardNum: string;
   province: string;
   city: string;
   area: string;
@@ -22,7 +20,6 @@ type IState = {
   contactTel: string;
   contactPerson: string;
   type: string;
-  value: string;
   expectTime: string;
   orderRemark: string;
   addrError: boolean;
@@ -49,8 +46,6 @@ class GpsInstall extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     this.state = {
-      clientName: '',
-      cardNum: '',
       province: '',
       city: '',
       area: '',
@@ -59,7 +54,6 @@ class GpsInstall extends Component<IProps, IState>{
       contactTel: '',
       contactPerson: '',
       type: '',
-      value: '',
       expectTime: '',
       orderRemark: '',
       addrError: false,
@@ -81,12 +75,10 @@ class GpsInstall extends Component<IProps, IState>{
     dispatch({
       type: 'report/getGpsInstallInfoAction',
       payload: {
-        id: '20200106111618154' // orderId
+        id: orderId // orderId
       }
     })
-    
     this.getAddrData(provinces[0].id)
-
   }
   getAddrData = async (provinceId) => {
     const { dispatch } = this.props;
@@ -108,7 +100,6 @@ class GpsInstall extends Component<IProps, IState>{
     if(province&&city&&area&&serviceAddress&&contactTel&&contactPerson&&type&&expectTime && !addrError && !contactTelError && !serviceAddressError && !contactPersonError&& !typeError){
 
     }
-    console.dir('save')
   }
   onColumnChange = (e) => {
     const { column, value } = e.detail;
@@ -151,11 +142,12 @@ class GpsInstall extends Component<IProps, IState>{
     })
   }
   render() {
-    const { clientName, cardNum, province, city, area, serviceAddress, contactTel, contactPerson, type, value, expectTime, orderRemark, addrError, contactTelError, serviceAddressError, contactPersonError, typeError, expectTimeError } = this.state;
+    const { province, city, area, serviceAddress, contactTel, contactPerson, type, expectTime, orderRemark, addrError, contactTelError, serviceAddressError, contactPersonError, typeError, expectTimeError } = this.state;
     const disable: any = province&&city&&area&&serviceAddress&&contactTel&&contactPerson&&type&&expectTime
-    const { addr } = this.props.report;
+    const { addr, gpsInstallInfo } = this.props.report;
     const { provinces, citys, areas } = addr
     const { windowHeight } = this.props.systemInfo;
+    const { clilentName, cardNum, value } = gpsInstallInfo
     return (
       <View className="gps-install">
         <ScrollView
@@ -165,8 +157,8 @@ class GpsInstall extends Component<IProps, IState>{
         >
           <View className="content">
             <CInput
-              name='clientName'
-              defaultValue={clientName}
+              name='clilentName'
+              defaultValue={clilentName}
               label="客户姓名"
               rules={[{
                 required: true,
