@@ -1,6 +1,9 @@
 @import '../../styles/theme';
 .account-page{
-  
+  .bg-avatar{
+    width: 100%;
+    height: 400px;
+  }
 }
 .iconfont-contact::after {
   content: "\e645";

@@ -1,6 +1,6 @@
 import Taro, { useState } from '@tarojs/taro';
 import { View, Text, Image, Video } from '@tarojs/components';
-import { AtIcon, AtActivityIndicator, AtModal, AtModalContent, AtModalAction, AtButton } from 'taro-ui'
+import { AtIcon, AtActivityIndicator, AtModal, AtModalContent, AtModalAction, AtButton, AtCurtain } from 'taro-ui'
 import { baseUrl } from '../../config/index';
 import Request from '../../utils/request';
 import './index.scss'
@@ -25,10 +25,10 @@ type IProps = {
   defaultValue?: string;
   orderId?: string;
   disabled?: boolean;
-  isFile?: boolean;
-}
+  type?: string;// video, image, file
+} 
 const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
-  let { label = '', required, count = 1, files = [], orderId, name, onChange, disabled = false, isFile = false } = props;
+  let { label = '', required, count = 1, files = [], orderId, name, onChange, disabled = false, type = 'image' } = props;
   const [loadding, setLoadding] = useState(false)
   const [isShow, setIsShow] = useState(false)
   files.map(item => {
@@ -45,11 +45,19 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
   })
   const onChangeImage = () => {
     if (loadding) return;
-    Taro[isFile ? "chooseMessageFile" : "chooseImage"]({
+    Taro[type==='video' ?"chooseVideo":type==='file'?"chooseMessageFile" : "chooseImage"]({
       count: count - files.length,
+      type: 'file',
       success: (res) => {
         setLoadding(true)
-        const { tempFilePaths } = res
+        let tempFilePaths: any = [];
+        if(type==='video'){
+          tempFilePaths = [res.tempFilePath]
+        }else if(type==='file'){
+          tempFilePaths = res.tempFiles.map(item=> item.path)
+        }else{
+          tempFilePaths = res.tempFilePaths
+        }
         tempFilePaths && tempFilePaths.map(item => {
           Taro.uploadFile({
             url: `${baseUrl}/clCollectClientInfoController/filedeal.do?id=${orderId}`,
@@ -61,6 +69,7 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
             success: (resd) => {
               setLoadding(false)
               const data = JSON.parse(resd.data)
+              console.dir(data)
               if (data.success && onChange) {
                 onChange({
                   key: name,
@@ -99,9 +108,17 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
     setIsShow(false)
   }
   const preViewFile = (file) => {
-    Taro.openDocument({
-      filePath: file
+    // console.dir(file)
+    Taro.downloadFile({
+      url: file,
+      success:(res)=>{
+        const {tempFilePath } = res
+        Taro.openDocument({
+          filePath: tempFilePath
+        })
+      }
     })
+    
   }
   return (
     <View className="image-picker">
@@ -167,16 +184,26 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
               </View>
             </View>
       }
-      <AtModal isOpened={isShow}>
-        <AtModalContent>
+      <AtCurtain 
+      onClose={coloseModal}
+      closeBtnPosition="top-right"
+      isOpened={isShow}>
+        {/* <AtModalContent> */}
           <View className="modal-content">
 
             {files.map((item) => (
-              <View className="at-col">
+              <View className="flex-1 at-row__justify--center">
                 <View className="preview">
                   {
                     item.image ? <Image src={`${baseUrl}/${item.url}`} className="image" /> :
-                      item.file ? <View className="file-bm" onClick={() => preViewFile(`${baseUrl}/${item.url}`)}> <AtIcon value="file-generic" size="20" /></View> :
+                      item.file ? <View className="file-bm" onClick={() => preViewFile(`${baseUrl}/${item.url}`)}> 
+                        <View>
+                          <AtIcon value="file-generic" size="20" />
+                        </View>
+                        <View className="file-text">
+                          <Text>{item.name}</Text>
+                        </View>
+                      </View> :
                         item.video ? <Video className="file-video" src={`${baseUrl}/${item.url}`} /> : 
                         <View className="other">
                         <AtIcon value="file-generic" size="20" />
@@ -197,13 +224,13 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
               </View>
             </View>
           </View>
-        </AtModalContent>
-        <AtModalAction>
+        {/* </AtModalContent> */}
+        {/* <AtModalAction>
           <View className="colose-footer">
             <AtButton onClick={coloseModal} type='primary' >关闭</AtButton>
           </View>
-        </AtModalAction>
-      </AtModal>
+        </AtModalAction> */}
+      </AtCurtain>
     </View>
   )
 

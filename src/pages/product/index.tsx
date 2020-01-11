@@ -148,9 +148,8 @@ class Product extends Component<IProps, IState>{
   save = () => {
     const { orderId } =  this.$router.params
     const keys: Array<string> = ['name', 'applyAmount', 'repaymentCount']
-    const { name, applyAmount, repaymentCount, bond, nameError, applyAmountError, repaymentCountError } = this.state;
-    const { productDetail } = this.props.report;
-    const { serviceCharge, gpsCost, productMessage, repayment } = productDetail
+    const { name, applyAmount, repaymentCount, bond, nameError, applyAmountError, repaymentCountError, serviceCharge, gpsCost,
+      productMessage, repayment } = this.state;
     let temp: IState = this.state;
     keys.map(key => {
       if (!this.state[key]) {
@@ -172,12 +171,6 @@ class Product extends Component<IProps, IState>{
         }).then(res=>{
           if(res.success){
             Taro.navigateBack()
-            // dispatch({
-            //   type: 'report/setProductInfo',
-            //   payload: {
-            //     bond, name, applyAmount, repaymentCount,loanAmount:applyAmount,repaymentTotalAmount: repayment,serviceCharge,gpsCost, productDescription: productMessage
-            //   }
-            // })
           }
         })
       }
@@ -207,8 +200,7 @@ class Product extends Component<IProps, IState>{
     })
   }
   render() {
-    const { name, applyAmount, repaymentCount,
-      nameError, applyAmountError, repaymentCountError, periods,serviceCharge, gpsCost, productMessage, repayment, bond, isOpened, list  } = this.state;
+    const { name, applyAmount, repaymentCount, nameError, applyAmountError, repaymentCountError, periods,serviceCharge, gpsCost, productMessage, repayment, bond, isOpened, list  } = this.state;
     const { windowHeight } = this.props.systemInfo;
     const { productList } = this.props.report;
     return (

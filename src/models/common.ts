@@ -9,7 +9,7 @@ type InitStateProps = {
 }
 const initState:InitStateProps = {
   systemInfo: systemInfo,
-  userInfo: {
+  userInfo:  Taro.getStorageSync('userInfo')||{
     name: '骊山'
   }
 }
@@ -29,6 +29,7 @@ export default {
   reducers: {
     setAccount(state, {payload}) {
       state.userInfo = payload
+      Taro.setStorageSync('userInfo', payload)
       return fromJS(state).toJS()
     }
   },

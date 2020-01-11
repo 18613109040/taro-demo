@@ -3,6 +3,23 @@ page{
   background: $brand-13;
 }
 .material-card-page{
+  .title{
+    font-size: $font-size-30;
+    padding: $h-spacing-30;
+ }
+  .list-row{
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: $h-spacing-30;
+  }
+  .card-list{
+   background: $brand-8;
+    padding-bottom: $h-spacing-60;
+  }
+  .flex-1{
+    flex:1;
+  }
   .btn-bottom{
     position: fixed;
     bottom: 0px;

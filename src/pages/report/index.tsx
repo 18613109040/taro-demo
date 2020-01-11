@@ -144,7 +144,7 @@ class Report extends Component<IProps, IState>{
       factoryNameplatePhotos.length > 0 && internalSeatPhotoss.length > 0 && pleaseBak2s.length > 0 && applicationForms.length > 0 &&
       otherProves.length > 0 && peopleCredits.length > 0 && car300s.length > 0 && carReceiptss.length > 0)
     const isShowReport: any = isShowMaterial && name != '' && email != '' && contactName1 != '' &&
-     clCarInfoListStr && clCarInfoListStr.useType != '' && clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo != '' &&
+      clCarInfoListStr && clCarInfoListStr.useType != '' && clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo != '' &&
       clProductTypeListStr && clProductTypeListStr.applyAmount != ''
     if (current === 0) {
       return (
@@ -355,61 +355,86 @@ class Report extends Component<IProps, IState>{
       )
     } else if (current === 2) {
       return (
-      <ScrollView
-        scrollY
-        scrollWithAnimation
-        style={{ height: `${windowHeight - 79}px` }}
-      >
-        <View className="list-col">
-          <Router
-            title="GPS安装提报"
-            arrow={true}
-            extraColor={name ? '#4fc79a' : '#ffd915'}
-            extraText={name ? '完成' : '去完成'}
-            iconInfo={{
-              prefixClass: 'iconfont',
-              size: 25,
-              color: '#1D31AA',
-              value: 'idcard'
-            }}
-            orderId={orderId}
-            url="/pages/gpsInstall/index"
-          />
-         </View>
-         <View className="list-col">
-          <Router
-            title="车辆抵押"
-            arrow={true}
-            extraColor={name ? '#4fc79a' : '#ffd915'}
-            extraText={name ? '完成' : '去完成'}
-            iconInfo={{
-              prefixClass: 'iconfont',
-              size: 25,
-              color: '#1D31AA',
-              value: 'idcard'
-            }}
-            orderId={orderId}
-            url="/pages/carMortgage/index"
-          />
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={{ height: `${windowHeight - 79}px` }}
+        >
+          <View className="list-col">
+            <Router
+              title="GPS安装提报"
+              arrow={true}
+              extraColor={name ? '#4fc79a' : '#ffd915'}
+              extraText={name ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              orderId={orderId}
+              url="/pages/gpsInstall/index"
+            />
           </View>
           <View className="list-col">
-          <Router
-            title="合同下载"
-            arrow={true}
-            extraColor={name ? '#4fc79a' : '#ffd915'}
-            extraText={name ? '完成' : '去完成'}
-            iconInfo={{
-              prefixClass: 'iconfont',
-              size: 25,
-              color: '#1D31AA',
-              value: 'idcard'
-            }}
-            orderId={orderId}
-            url="/pages/contractDownload/index"
-          />
-        </View>
+            <Router
+              title="车辆抵押"
+              arrow={true}
+              extraColor={name ? '#4fc79a' : '#ffd915'}
+              extraText={name ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              orderId={orderId}
+              url="/pages/carMortgage/index"
+            />
+          </View>
+          <View className="list-col">
+            <Router
+              title="合同下载"
+              arrow={true}
+              extraColor={name ? '#4fc79a' : '#ffd915'}
+              extraText={name ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              orderId={orderId}
+              url="/pages/contractDownload/index"
+            />
+          </View>
 
-      </ScrollView>
+        </ScrollView>
+      )
+    } else if (current === 3) {
+      return (
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={{ height: `${windowHeight - 79}px` }}
+        >
+          <View className="list-col">
+            <Router
+              title="请款资料"
+              arrow={true}
+              extraColor={name ? '#4fc79a' : '#ffd915'}
+              extraText={name ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'idcard'
+              }}
+              orderId={orderId}
+              url="/pages/loanMaterial/index"
+            />
+          </View>
+        </ScrollView>
       )
     }
   }

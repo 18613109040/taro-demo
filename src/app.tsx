@@ -16,9 +16,12 @@ class App extends Component {
     pages: [
       
       'pages/report/index',
+      'pages/account/index',
+      'pages/loanMaterial/index',
+      'pages/login/index',
       'pages/fastApproval/index',
       'pages/home/index',
-      'pages/login/index',
+     
       'pages/contractDownload/index',
       'pages/carMortgage/index',
       'pages/material/index',
@@ -32,7 +35,7 @@ class App extends Component {
       'pages/car/base',
       'pages/bankcard/index',
       'pages/base/index',
-      'pages/account/index',
+      
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -45,16 +48,16 @@ class App extends Component {
     //   list: [
     //     {
     //       pagePath: 'pages/home/index',
-    //       text: '机票',
+    //       text: '首页',
     //       iconPath: './images/tabBar/home.png',
     //       selectedIconPath: './images/tabBar/home-fill.png',
     //     },
-    //     // {
-    //     //   pagePath: 'pages/products/index',
-    //     //   text: '订单',
-    //     //   iconPath: './images/tab/find.png',
-    //     //   selectedIconPath: './images/tab/find-active.png',
-    //     // },
+        // {
+        //   pagePath: 'pages/products/index',
+        //   text: '订单',
+        //   iconPath: './images/tabBar/order.png',
+        //   selectedIconPath: './images/tabBar/order-fill.png',
+        // },
     //     {
     //       pagePath: 'pages/account/index',
     //       text: '我的',

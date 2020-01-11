@@ -1,14 +1,14 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text } from '@tarojs/components';
-import { AtList, AtListItem, AtIcon } from "taro-ui"
+import { View, Text, Image } from '@tarojs/components';
+import { AtIcon, AtButton, AtForm, AtAvatar, AtGrid } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 type IState = {}
 type IProps =  {
-  
+  userInfo: any;
 }
-@connect(({ }) => ({
-
+@connect(({ common }) => ({
+  userInfo: common.userInfo
 }))
 class Account extends Component<IProps, IState>{
   config = {
@@ -19,19 +19,19 @@ class Account extends Component<IProps, IState>{
 
   }
 
-  // 小程序上拉加载
-  onReachBottom() {
-
-  }
-  goToUserList=()=>{
-    Taro.navigateTo({
-      url: '/pages/userlist/index'
-    })
-  }
   render() {
+    const { userInfo } = this.props;
+    const { realName, userName } = userInfo;
     return (
       <View className="account-page">
-        <View className=""></View>
+        <View >
+          <Image className="bg-avatar" src={require('../../images/account/bg.png')}/>
+          <View className="">
+            <AtAvatar size="large" circle text={realName} />
+          </View>
+          <View><Text></Text></View>
+          <View><Text></Text></View>
+        </View>
         <View></View>
       </View>
     );
