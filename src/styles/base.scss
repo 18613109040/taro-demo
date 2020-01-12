@@ -16,6 +16,10 @@ page{
   box-sizing: border-box;
   min-height: 100vh;
 }
+
+.at-curtain__container{
+  width: 690px !important;
+}
 view {
   box-sizing: border-box;
 }
@@ -29,3 +33,4 @@ view {
 .iconfont-upload::after {
   content: "\e61d";
 }
+

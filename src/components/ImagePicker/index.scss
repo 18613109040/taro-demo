@@ -11,6 +11,7 @@
   }
   .preview{
     position: relative;
+    width: 190px;
     .close{
       position: absolute;
       right: 10px;
@@ -59,13 +60,13 @@
   .modal-content{
     position: relative;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     // justify-content: space-between;
     flex-wrap: wrap;
-    padding: $h-spacing-30;
+    padding: $h-spacing-30 0px $h-spacing-30 $h-spacing-30;
     border-radius: $radius-16;
     background: $brand-8;
-    width: 650px;
+    width: 640px;
   }
   .upload-btn{
     width: 60px;
@@ -130,7 +131,8 @@
     }
   }
   .flex-1{
-    flex:1;
+    margin-right: $h-spacing-10;
+    width: 190px;
+    margin-bottom: $h-spacing-30;
   }
 }
-

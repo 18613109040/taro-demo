@@ -1,8 +1,41 @@
 @import '../../styles/theme';
+page{
+  background: $brand-5;
+}
 .account-page{
   .bg-avatar{
     width: 100%;
     height: 400px;
+    position: relative;
+  }
+  .user-info{
+    position: relative;
+    background: $brand-8;
+    border-radius: $radius-16;
+    box-shadow: 0px 5px 5px $brand-5;
+    padding: $h-spacing-30;
+    // width: 100%;
+    margin: $h-spacing-30;
+    margin-top: -200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .avatar{
+      position: relative;
+      margin-top: -80px;
+      box-shadow: 0px 30px 90px $brand-1;
+      border-radius: 100%;
+    }
+    .user-name{
+      font-size: $font-size-42;
+      font-weight: 400;
+      margin-top: $h-spacing-30;
+    }
+    .real-name{
+      font-size: $font-size-28;
+      margin-top: $h-spacing-10;
+    }
   }
 }
 .iconfont-contact::after {

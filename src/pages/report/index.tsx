@@ -277,8 +277,9 @@ class Report extends Component<IProps, IState>{
               extraText={clGuaranteeInfoListStr && clGuaranteeInfoListStr.email ? '完成' : '去完成'}
               iconInfo={{
                 size: 25,
+                prefixClass: 'iconfont',
                 color: '#1D31AA',
-                value: 'user'
+                value: 'danbao'
               }}
               url="/pages/guarantee/index"
             />

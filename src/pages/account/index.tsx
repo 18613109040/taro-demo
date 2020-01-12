@@ -26,11 +26,17 @@ class Account extends Component<IProps, IState>{
       <View className="account-page">
         <View >
           <Image className="bg-avatar" src={require('../../images/account/bg.png')}/>
-          <View className="">
-            <AtAvatar size="large" circle text={realName} />
+          <View className="user-info">
+            <View className="avatar">
+              <AtAvatar size="large" circle text={realName} />
+            </View>
+            <View className="user-name"><Text>{userName}</Text></View>
+            <View className="real-name"><Text>{realName}</Text></View>
+            <View>
+              
+            </View>
           </View>
-          <View><Text></Text></View>
-          <View><Text></Text></View>
+         
         </View>
         <View></View>
       </View>

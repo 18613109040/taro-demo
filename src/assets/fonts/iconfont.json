@@ -48,6 +48,13 @@
       "unicode_decimal": 58924
     },
     {
+      "icon_id": "1785890",
+      "name": "线上合同下载",
+      "font_class": "xianshanghetongxiazai",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
       "icon_id": "2150786",
       "name": "身份证",
       "font_class": "credentials_icon",
@@ -60,6 +67,13 @@
       "font_class": "yinhangqialiucheng",
       "unicode": "e612",
       "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "2903482",
+      "name": "gps",
+      "font_class": "gps",
+      "unicode": "e637",
+      "unicode_decimal": 58935
     },
     {
       "icon_id": "3058034",
@@ -95,6 +109,13 @@
       "font_class": "wancheng",
       "unicode": "e657",
       "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "3861194",
+      "name": "车辆抵押",
+      "font_class": "cheliangdiya",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
     },
     {
       "icon_id": "4141509",
@@ -146,11 +167,39 @@
       "unicode_decimal": 58920
     },
     {
+      "icon_id": "5725350",
+      "name": "产品信息",
+      "font_class": "product_info",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
       "icon_id": "6429415",
       "name": "联系人",
       "font_class": "lianxiren1",
       "unicode": "e618",
       "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "6501834",
+      "name": "账单还款信息",
+      "font_class": "zhangdanhuankuanxinxi",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "6631749",
+      "name": "车辆信息",
+      "font_class": "cheliangxinxi",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "6631857",
+      "name": "车辆信息",
+      "font_class": "cheliangxinxi1",
+      "unicode": "e647",
+      "unicode_decimal": 58951
     },
     {
       "icon_id": "7006653",
@@ -195,6 +244,13 @@
       "unicode_decimal": 58881
     },
     {
+      "icon_id": "8896421",
+      "name": "上传材料",
+      "font_class": "shangchuancailiao",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
       "icon_id": "8946013",
       "name": "授权书",
       "font_class": "shouquanshu",
@@ -230,11 +286,32 @@
       "unicode_decimal": 58930
     },
     {
+      "icon_id": "9553668",
+      "name": "产品信息",
+      "font_class": "product",
+      "unicode": "e7df",
+      "unicode_decimal": 59359
+    },
+    {
       "icon_id": "9612690",
       "name": "身份证反面",
       "font_class": "shenfenzhengfanmian1",
       "unicode": "e64d",
       "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "11542960",
+      "name": "担保人",
+      "font_class": "danbaoren",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "11674817",
+      "name": "产品信息",
+      "font_class": "chanpinxinxi",
+      "unicode": "e74d",
+      "unicode_decimal": 59213
     },
     {
       "icon_id": "12187778",
