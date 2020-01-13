@@ -341,7 +341,7 @@ export default {
         state.current = 1;
         state.steps[0].status = 'success'
       }else if(primaryStatus === '1' || primaryStatus === '2' ) {
-        state.current = 1;
+        state.current = 2;
         state.steps[0].status = 'success'
         state.steps[1].status = 'success'
       }

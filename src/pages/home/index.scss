@@ -18,28 +18,6 @@ page{
       margin-left: $h-spacing-30;
     }
   }
-  .bg{
-    height: 300px;
-    background: $brand-1;
-    border-bottom-left-radius: 100px;
-    border-bottom-right-radius: 100px;
-    .avatar{
-      display: flex;
-      justify-content: center;
-      padding-top: $h-spacing-20;
-    }
-    .account{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .real-name{
-      display: flex;
-      justify-content: center;
-      margin-top: $h-spacing-10;
-      color:  $brand-8;
-    }
-  }
   // .account{
   //   padding: $v-spacing-30;
   //   border-radius: $radius-16;

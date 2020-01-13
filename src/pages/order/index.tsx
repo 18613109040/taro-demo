@@ -60,6 +60,12 @@ class Order extends Component<IProps, IState>{
   onScrollToLower = () => {
     this.getData()
   }
+  orderDetail = (item) => {
+    const { id } = item;
+    Taro.reLaunch({
+      url: `/pages/report/index?orderId=${id}`
+    })
+  }
   render() {
     const { windowHeight } = this.props.systemInfo;
     const { order: { all } } = this.props;
@@ -80,7 +86,7 @@ class Order extends Component<IProps, IState>{
               <View>
                 {
                   all && all.list && all.list.map((item, index) => (
-                    <View className="card-detail" key={index} >
+                    <View className="card-detail" key={index} onClick={()=>this.orderDetail(item)} >
                       <View className="card-meta" >
                         <View className="des">
                           <Text className="user-name">{item.name}</Text>

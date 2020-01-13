@@ -52,16 +52,7 @@ class Home extends PureComponent<IProps, IState> {
     const { realName, userName } = userInfo;
     return (
       <View className="home-page">
-        <View className="bg">
-          <View className="avatar">
-            <AtAvatar circle text={realName} />
-          </View>
-          <View className="real-name">
-            <Text>{userName}</Text>
-          </View>
-        </View>
-
-        <View className="at-row at-row__align--center">
+        {/* <View className="at-row at-row__align--center">
           <View className="at-col">
             <View><Text>快批</Text></View>
             <View><Text>20</Text></View>
@@ -82,7 +73,7 @@ class Home extends PureComponent<IProps, IState> {
             <View><Text>贷后</Text></View>
             <View><Text>20</Text></View>
           </View>
-        </View>
+        </View> */}
 
         <View className="add-place" onClick={this.addApply}>
           <AtIcon value='add-circle' size='30' color='#fff' />

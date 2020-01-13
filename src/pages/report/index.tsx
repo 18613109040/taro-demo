@@ -27,15 +27,15 @@ class Report extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     this.state = {
-      orderId: '20200109172852171'
+      orderId: '' //'20200109172852171'
     }
   }
   componentDidShow = () => {
     const { orderId } = this.$router.params
-    this.getData('20200109172852171')
-    // this.setState({
-    //   orderId
-    // })
+    this.getData(orderId)
+    this.setState({
+      orderId
+    })
   }
   getData(orderId) {
     const { dispatch } = this.props;
@@ -97,7 +97,6 @@ class Report extends Component<IProps, IState>{
             id: orderId
           }
         }).then(res => {
-          console.dir(res)
           if (res.success) {
             this.getData(this.state.orderId)
           }
@@ -295,7 +294,7 @@ class Report extends Component<IProps, IState>{
                 prefixClass: 'iconfont',
                 size: 25,
                 color: '#1D31AA',
-                value: 'idcard'
+                value: 'carinfo'
               }}
               url="/pages/car/base"
             />
@@ -311,7 +310,7 @@ class Report extends Component<IProps, IState>{
                 prefixClass: 'iconfont',
                 size: 25,
                 color: '#1D31AA',
-                value: 'idcard'
+                value: 'gather'
               }}
               url="/pages/bankcard/index"
             />
@@ -325,9 +324,9 @@ class Report extends Component<IProps, IState>{
               extraText={clProductTypeListStr && clProductTypeListStr.applyAmount ? '完成' : '去完成'}
               iconInfo={{
                 prefixClass: 'iconfont',
-                size: 25,
+                size: 20,
                 color: '#1D31AA',
-                value: 'idcard'
+                value: 'product'
               }}
               url="/pages/product/index"
             />
@@ -343,7 +342,7 @@ class Report extends Component<IProps, IState>{
                 prefixClass: 'iconfont',
                 size: 25,
                 color: '#1D31AA',
-                value: 'idcard'
+                value: 'material'
               }}
               url="/pages/material/index"
             />
@@ -369,9 +368,9 @@ class Report extends Component<IProps, IState>{
               extraText={name ? '完成' : '去完成'}
               iconInfo={{
                 prefixClass: 'iconfont',
-                size: 25,
+                size: 20,
                 color: '#1D31AA',
-                value: 'idcard'
+                value: 'gps'
               }}
               orderId={orderId}
               url="/pages/gpsInstall/index"
@@ -387,7 +386,7 @@ class Report extends Component<IProps, IState>{
                 prefixClass: 'iconfont',
                 size: 25,
                 color: '#1D31AA',
-                value: 'idcard'
+                value: 'diya'
               }}
               orderId={orderId}
               url="/pages/carMortgage/index"
@@ -403,7 +402,7 @@ class Report extends Component<IProps, IState>{
                 prefixClass: 'iconfont',
                 size: 25,
                 color: '#1D31AA',
-                value: 'idcard'
+                value: 'hetong'
               }}
               orderId={orderId}
               url="/pages/contractDownload/index"

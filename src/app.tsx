@@ -14,29 +14,25 @@ const store = dvaApp.getStore();
 class App extends Component {
   config: Config = {
     pages: [
+      'pages/login/index',
+      'pages/order/index',
       'pages/report/index',
       'pages/account/index',
-      
-      
       'pages/loanMaterial/index',
-      'pages/login/index',
       'pages/fastApproval/index',
       'pages/home/index',
-     
       'pages/contractDownload/index',
       'pages/carMortgage/index',
       'pages/material/index',
       'pages/gpsInstall/index',
       'pages/product/index',
       'pages/prepare/index',
-      'pages/order/index',
       'pages/idcard/index',
       'pages/guarantee/index',
       'pages/contact/index',
       'pages/car/base',
       'pages/bankcard/index',
       'pages/base/index',
-      
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -45,32 +41,32 @@ class App extends Component {
       navigationBarTextStyle: 'black',
       // navigationStyle: "custom"
     },
-    // tabBar: {
-    //   list: [
-    //     {
-    //       pagePath: 'pages/home/index',
-    //       text: '首页',
-    //       iconPath: './images/tabBar/home.png',
-    //       selectedIconPath: './images/tabBar/home-fill.png',
-    //     },
-        // {
-        //   pagePath: 'pages/products/index',
-        //   text: '订单',
-        //   iconPath: './images/tabBar/order.png',
-        //   selectedIconPath: './images/tabBar/order-fill.png',
-        // },
-    //     {
-    //       pagePath: 'pages/account/index',
-    //       text: '我的',
-    //       iconPath: './images/tabBar/my.png',
-    //       selectedIconPath: './images/tabBar/my-fill.png',
-    //     },
-    //   ],
-    //   color: '#333',
-    //   selectedColor: '#283282',
-    //   backgroundColor: '#fff',
-    //   borderStyle: 'white',
-    // },
+    tabBar: {
+      list: [
+        {
+          pagePath: 'pages/home/index',
+          text: '首页',
+          iconPath: './images/tabBar/home.png',
+          selectedIconPath: './images/tabBar/home-fill.png',
+        },
+        {
+          pagePath: 'pages/order/index',
+          text: '订单',
+          iconPath: './images/tabBar/order.png',
+          selectedIconPath: './images/tabBar/order-fill.png',
+        },
+        {
+          pagePath: 'pages/account/index',
+          text: '我的',
+          iconPath: './images/tabBar/my.png',
+          selectedIconPath: './images/tabBar/my-fill.png',
+        },
+      ],
+      color: '#333',
+      selectedColor: '#283282',
+      backgroundColor: '#fff',
+      borderStyle: 'white',
+    },
   };
   componentWillMount() {
     // const cookies = Taro.getStorageSync('cookie');

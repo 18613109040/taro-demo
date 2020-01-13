@@ -2,10 +2,10 @@
 $color-brand: #4984FD;
 
 /** **** **/
-
+@import './iconfont.scss';
 @import "./theme.scss";
 @import "~taro-ui/dist/style/index.scss";
-@import './iconfont.scss';
+
 page{
   width: 100%;
   height: 100%;
