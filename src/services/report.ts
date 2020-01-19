@@ -64,7 +64,14 @@ export const repayDetail = data =>
     method: 'GET',
     data,
   });
-
+//提交
+export const submitInfo = data => 
+  Request({
+    url: '/clCollectClientInfoController.do?submitBtn',
+    method: 'POST',
+    data,
+  });
+// 任务更新
 export const updateInfo = data => 
   Request({
     url: '/clCollectClientInfoController.do?updateInfo',
@@ -120,6 +127,38 @@ export const generateTemplate = data =>
 export const carMortgage= data =>
   Request({
     url: '/clPledgeOrderController.do?doAdd',
+    method: 'POST',
+    data,
+  });
+
+// 获取修改信息
+export const getInfoAuth= data =>
+  Request({
+    url: '/clInfoAuthController.do?getInfoAuth',
+    method: 'POST',
+    data,
+  });
+
+// 获取结构产品
+export const getOrgCode= data =>
+  Request({
+    url: '/clCollectClientInfoBigDataController.do?getOrgCode',
+    method: 'GET',
+    data,
+  });
+
+// GPS 安装提报
+export const gpsAdd= data =>
+  Request({
+    url: '/clGpsInstallInfoController.do?doAdd',
+    method: 'POST',
+    data,
+  });
+
+// 获取电子签章合同
+export const getOnlineGreate= data =>
+  Request({
+    url: '/clContractManageController.do?onlineGreateContract',
     method: 'POST',
     data,
   });

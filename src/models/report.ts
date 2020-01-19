@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps, OrderDetailProps } from '../interface/form'
-import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile, updateInfo, repayDetail,
-  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, generateTemplate, carMortgage } from '../services/report'
+import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile, submitInfo, updateInfo, repayDetail,
+  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, generateTemplate, carMortgage, getInfoAuth, getOrgCode, gpsAdd, getOnlineGreate } from '../services/report'
 type IAddr = {
   provinces: Array<any>;
   citys: Array<any>;
@@ -17,6 +17,7 @@ export type InitStateProps = {
   addr: IAddr;
   gpsInstallInfo: any;
   carMortgageInfo: any;
+  authInfo: any;
 }
 const initState:InitStateProps = {
   formData: {
@@ -148,7 +149,9 @@ const initState:InitStateProps = {
   },
   orderDetail: {
     batchContent: '',
-    batchStatus: ''
+    batchStatus: '',
+    primaryStatus: '',
+    primaryContent: ''
   },
   current: -1,
   steps: [{
@@ -186,6 +189,9 @@ const initState:InitStateProps = {
   },
   carMortgageInfo: {
 
+  },
+  authInfo: {
+    clientInfo: []
   }
 }
 export default {
@@ -205,6 +211,7 @@ export default {
       const res = yield call(getOrderDetail,payload)
       if(res.success)
         yield put({ type: "setOrderDetail", payload: res.obj })
+      return res;
     },
     *getProductListAction({payload}, { call, put }) {
       const res = yield call(getProductList,payload)
@@ -222,6 +229,10 @@ export default {
     },
     *deteleFileAction({payload}, { call, put }){
       const res = yield call(deteleFile,payload)
+      return res
+    },
+    *submitInfoAction({payload}, { call, put }){
+      const res = yield call(submitInfo,payload)
       return res
     },
     *updateInfoAction({payload}, { call, put }){
@@ -272,10 +283,36 @@ export default {
     *carMortgageAction({payload}, { call, put}){
       const res = yield call(carMortgage,payload)
       return res
+    },
+    *getInfoAuthAction({payload}, { call, put}) {
+      const res = yield call(getInfoAuth,payload)
+      if(res.success){
+        yield put({ type: "setAuthInfo", payload: res.obj })
+      }
+    },
+    *getOrgCodeAction({payload}, { call, put}) {
+      const res = yield call(getOrgCode,payload)
+      return res
+    },
+    *gpsAddAction({payload}, { call, put}){
+      const res = yield call(gpsAdd,payload)
+      return res
+    },
+    *getOnlineGreateAction({payload}, { call, put}){
+      const res = yield call(getOnlineGreate,payload)
+      return res
     }
     
   },
   reducers: {
+    setAuthInfo(state, {payload}) {
+      if(payload) {
+        payload.clientInfo = JSON.parse(payload.clientInfo);
+        payload.enterAuth = JSON.parse(payload.enterAuth);
+      }
+      state.authInfo = payload;
+      return fromJS(state).toJS();
+    },
     setCarMortgageInfo(state, {payload}) {
       state.carMortgageInfo = payload
       return fromJS(state).toJS()
@@ -341,6 +378,9 @@ export default {
         state.current = 1;
         state.steps[0].status = 'success'
       }else if(primaryStatus === '1' || primaryStatus === '2' ) {
+        state.current = 1;
+        state.steps[0].status = 'success'
+      }else if(primaryStatus === '3' || primaryStatus === '4' ) {
         state.current = 2;
         state.steps[0].status = 'success'
         state.steps[1].status = 'success'

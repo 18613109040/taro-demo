@@ -59,11 +59,19 @@ class LoanMaterial extends Component<IProps, IState>{
       pleaseReturnedMoney: pleaseReturnedMoney&&JSON.parse(pleaseReturnedMoney)||[],
       pleaseBankContract: pleaseBankContract&&JSON.parse(pleaseBankContract)||[],
       pleaseRelatedDuty: pleaseRelatedDuty&&JSON.parse(pleaseRelatedDuty)||[],
-      pleaseOtherFile: pleaseOtherFile&&JSON.parse(pleaseOtherFile)||[]
+      pleaseOtherFile: pleaseOtherFile&&JSON.parse(pleaseOtherFile)||[],
+      height: props.systemInfo.windowHeight
     }
   }
-  componentDidMount = () => {
-
+  componentDidMount = async () => {
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res)=>{
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
   save = () => {
     Taro.navigateBack()
@@ -74,18 +82,17 @@ class LoanMaterial extends Component<IProps, IState>{
     })
   }
   render() {
-    const { pleaseIdCardPhoto, pleaseDeductPrintscreen, pleaseAddLoansSuccessPrintscreen, pleaseIwataAsks, pleaseRentIst, pleaseStorePhoto,
+    const { height, pleaseIdCardPhoto, pleaseDeductPrintscreen, pleaseAddLoansSuccessPrintscreen, pleaseIwataAsks, pleaseRentIst, pleaseStorePhoto,
       pleaseCarReceipts, pleaseGPSPhoto, pleaseCashVideo, pleaseRecommendLetter, pleaseDitchAndClient, pleaseReturnedMoney, pleaseBankContract,
       pleaseRelatedDuty, pleaseOtherFile
     } = this.state;
     const { orderId } = this.$router.params
-    const { windowHeight } = this.props.systemInfo;
     return (
       <View className="material-card-page">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View>
             <View className="title">收款人附件</View>

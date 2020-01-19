@@ -11,14 +11,15 @@ type StepsProps = {
 }
 
 const Steps: Taro.FC<StepsProps> = (props: StepsProps) => {
-  const { steps, current } = props;
+  const { steps=[], current } = props;
   return (
     <View className="stpes-list">
       {
-        steps&&steps.map((item, index) =>
+        steps.map((item, index) =>
           <View className="item" key={item.title}>
             {
-              current > index ? <AtIcon prefixClass='iconfont' value="sucess" size="15" color="#fff" /> : <AtIcon prefixClass='iconfont' value="point" size="10" color={current === index ? "#FFD915" : "#F5F5FA"} />
+              current > index ? 
+              <AtIcon prefixClass='iconfont' value="sucess" size="15" color="#fff" /> :<AtIcon prefixClass='iconfont' value="point" size="10" color={current === index ? "#FFD915" : "#F5F5FA"} />
             }
             <Text className={current == index ? "active-text" : "text"}>{item.title}</Text>
           </View>

@@ -14,15 +14,23 @@ const store = dvaApp.getStore();
 class App extends Component {
   config: Config = {
     pages: [
+      'pages/home/index',
       'pages/login/index',
-      'pages/order/index',
+      
+      
+      'pages/bigControl/index',
+      'pages/batchOrder/index',
+      'pages/infoSupplement/index',
       'pages/report/index',
+      'pages/order/index',
+      'pages/carMortgage/index',
+      'pages/car/base',
+      'pages/base/index',
+      'pages/bankcard/index',
+      'pages/fastApproval/index',
       'pages/account/index',
       'pages/loanMaterial/index',
-      'pages/fastApproval/index',
-      'pages/home/index',
       'pages/contractDownload/index',
-      'pages/carMortgage/index',
       'pages/material/index',
       'pages/gpsInstall/index',
       'pages/product/index',
@@ -30,9 +38,9 @@ class App extends Component {
       'pages/idcard/index',
       'pages/guarantee/index',
       'pages/contact/index',
-      'pages/car/base',
-      'pages/bankcard/index',
-      'pages/base/index',
+     
+      
+      
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -50,8 +58,14 @@ class App extends Component {
           selectedIconPath: './images/tabBar/home-fill.png',
         },
         {
+          pagePath: 'pages/batchOrder/index',
+          text: '秒批',
+          iconPath: './images/tabBar/order.png',
+          selectedIconPath: './images/tabBar/order-fill.png',
+        },
+        {
           pagePath: 'pages/order/index',
-          text: '订单',
+          text: '任务',
           iconPath: './images/tabBar/order.png',
           selectedIconPath: './images/tabBar/order-fill.png',
         },

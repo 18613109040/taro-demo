@@ -144,9 +144,12 @@ export type FormDataProps = {
   clCollectGatheringInfoListStr?: GatheringInfoProps;
   clFileInfoListStr?: any;
   clCollectClientInfoBigDataStr?: any;
+  returnReason?: any;
 }
 
 export type OrderDetailProps = {
   batchContent: any;
   batchStatus: any;
+  primaryStatus: any;
+  primaryContent: any;
 }

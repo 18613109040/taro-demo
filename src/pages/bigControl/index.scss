@@ -1,24 +1,28 @@
 @import '../../styles/theme';
 page{
   background: $brand-13;
+  overflow: hidden;
 }
-.order-page{
-  .at-tabs__header{
-    height: 44PX;
+.info-supplement{
+  .no-data{
+    display: flex;
     align-items: center;
-  }
-  .at-tabs__item{
-    // padding: 0px;
-    height: 44PX;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-
-    .at-tabs__item-underline{
-      height: 2PX;
-      width: 50px;
-      margin-left: calc(50% - 25px);
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    margin-top: -20%;
+    .no-dataimage{
+      width: 400px;
+      height: 400px;
     }
+    .text{
+      font-size: $font-size-28;
+      color: $brand-1;
+    }
+  }
+  .card{
+    margin: $h-spacing-30;
+    border-radius: $radius-16;
   }
   .card-detail{
     padding: $h-spacing-30;
@@ -49,10 +53,10 @@ page{
       margin-left: $h-spacing-10;
     }
     .product-name{
-      font-size: $font-size-22;
-      color: $brand-1;
-      background: #f1f2f6;
-      padding: $v-spacing-4 $h-spacing-10;
+      font-size: $font-size-24;
+      // color: $brand-1;
+      // background: #f1f2f6;
+      // padding: $v-spacing-4 $h-spacing-10;
     }
   }
 

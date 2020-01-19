@@ -132,13 +132,6 @@
       "unicode_decimal": 59741
     },
     {
-      "icon_id": "5532450",
-      "name": "上传图片",
-      "font_class": "shangchuantupian",
-      "unicode": "e628",
-      "unicode_decimal": 58920
-    },
-    {
       "icon_id": "5725350",
       "name": "产品信息",
       "font_class": "product_info",
@@ -249,6 +242,13 @@
       "font_class": "product",
       "unicode": "e7df",
       "unicode_decimal": 59359
+    },
+    {
+      "icon_id": "9873488",
+      "name": "前进",
+      "font_class": "qianjin",
+      "unicode": "e612",
+      "unicode_decimal": 58898
     },
     {
       "icon_id": "11542960",

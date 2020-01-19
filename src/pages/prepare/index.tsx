@@ -30,7 +30,7 @@ class PrePare extends PureComponent<IProps, IState>{
 
   }
   quick = () => {
-    Taro.navigateTo({
+    Taro.redirectTo({
       url: '/pages/fastApproval/index'
     })
   }

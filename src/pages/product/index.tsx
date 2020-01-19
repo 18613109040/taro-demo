@@ -29,10 +29,12 @@ type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
   dispatch?: any;
+  isTask: boolean;
 }
 @connect(({ report, common }) => ({
   report: report,
-  systemInfo: common.systemInfo
+  systemInfo: common.systemInfo,
+  isTask: common.isTask
 }))
 class Product extends Component<IProps, IState>{
   config = {
@@ -56,7 +58,8 @@ class Product extends Component<IProps, IState>{
       repayment: repaymentTotalAmount || '', 
       bond: bond || '',
       isOpened: false,
-      list: []
+      list: [],
+      height: props.systemInfo.windowHeight
     }
   }
   componentDidMount = async () => {
@@ -81,7 +84,14 @@ class Product extends Component<IProps, IState>{
         productMessage: res.productMessage
       })
     }
-    
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res)=>{
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
   onChange = async (obj) => {
     const { error, value, valueKey, errorKey } = obj;
@@ -200,18 +210,25 @@ class Product extends Component<IProps, IState>{
     })
   }
   render() {
-    const { name, applyAmount, repaymentCount, nameError, applyAmountError, repaymentCountError, periods,serviceCharge, gpsCost, productMessage, repayment, bond, isOpened, list  } = this.state;
-    const { windowHeight } = this.props.systemInfo;
-    const { productList } = this.props.report;
+    const { height, name, applyAmount, repaymentCount, nameError, applyAmountError, repaymentCountError, periods,serviceCharge, gpsCost, productMessage, repayment, bond, isOpened, list  } = this.state;
+    const { productList, authInfo, orderDetail: { primaryStatus } } = this.props.report;
+    const { isTask } = this.props;
+    let disabled: boolean = true;
+    if (isTask) {
+      disabled = (!authInfo || (authInfo.clientInfo.includes('form_step3'))) ? false : true;
+    } else {
+      disabled = primaryStatus > 0 ? true : false;
+    }
     return (
       <View className="product-card-page">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="card-body">
             <BasePicker
+              disabled={disabled}
               label="产品名称"
               defaultValue={name}
               error={nameError}
@@ -226,6 +243,7 @@ class Product extends Component<IProps, IState>{
               name='applyAmount'
               defaultValue={applyAmount}
               label="申请金额"
+              disabled={disabled}
               type="number"
               trigger="onBlur"
               rules={[{
@@ -251,6 +269,7 @@ class Product extends Component<IProps, IState>{
               label="期数"
               defaultValue={repaymentCount}
               error={repaymentCountError}
+              disabled={disabled}
               rules={[{
                 required: true,
                 message: '请选择期数!'
@@ -318,7 +337,7 @@ class Product extends Component<IProps, IState>{
           </View>
         </ScrollView>
         <View className="btn-bottom">
-          <AtButton type='primary' onClick={this.save}>保存</AtButton>
+          <AtButton type='primary' disabled={disabled}  onClick={this.save}>保存</AtButton>
         </View>
         <AtModal isOpened={isOpened} onClose={this.enter}>
           <AtModalHeader>还款明细</AtModalHeader>

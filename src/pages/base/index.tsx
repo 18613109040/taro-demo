@@ -51,17 +51,19 @@ type IState = {
   companyAddress: string; //公司所在省市区及地址
   companyAddrDetailsError: boolean;
   [key: string]: string | boolean | Array<any> | number;
-  
-  
+
+
 }
 type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
   dispatch?: any;
+  isTask: boolean;
 }
 @connect(({ report, common }) => ({
   report: report,
-  systemInfo: common.systemInfo
+  systemInfo: common.systemInfo,
+  isTask: common.isTask
 }))
 class IdCard extends Component<IProps, IState>{
   config = {
@@ -72,7 +74,7 @@ class IdCard extends Component<IProps, IState>{
     const { isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
       companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress } = props.report.formData;
     this.state = {
-      isDriverLicense: isDriverLicense==='无'? false: true,  // 驾照qian'k
+      isDriverLicense: isDriverLicense === '无' ? false : true,  // 驾照qian'k
       email: email || '', // 常用邮箱
       emailError: false,
       phone: phone || '', //手机号
@@ -110,11 +112,19 @@ class IdCard extends Component<IProps, IState>{
       companyCounty: companyCounty || '', //区
       companyAddrError: false,
       companyAddress: companyAddress || '', //公司所在省市区及地址
-      companyAddrDetailsError: false
+      companyAddrDetailsError: false,
+      height: props.systemInfo.windowHeight
     }
   }
   componentDidMount = () => {
-    // console.dir()
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res) => {
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
   onChange = (obj) => {
     const { error, value, valueKey, errorKey } = obj;
@@ -198,30 +208,30 @@ class IdCard extends Component<IProps, IState>{
         }).then((res) => {
           if (res.success) {
             Taro.navigateBack()
-            // dispatch({
-            //   type: 'report/setFormData',
-            //   payload: {
-            //     isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
-            //     companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress
-            //   }
-            // })
           }
         })
       }
     })
   }
   render() {
-    const { isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
+    const { height, isDriverLicense, email, phone, realEstateCategory, education, marriage, childrenSum, childrenStatus, livesProvince, livesCity, livesCountry, livesAddress,
       companyName, yearsWorking, jobYears, entryUnitTime, annualIncome, unitPhoneNumber, companyProvince, companyCity, companyCounty, companyAddress,
       emailError, phoneError, realEstateCategoryError, educationError, marriageError, childrenSumError, childrenStatusError, liveAddrError, livesAddrDetailsError,
       companyNameError, yearsWorkingError, jobYearsError, annualIncomeError, entryUnitTimeError, unitPhoneNumberError, companyAddrError, companyAddrDetailsError } = this.state;
-    const { windowHeight } = this.props.systemInfo;
+    const { isTask, report } = this.props;
+    const { authInfo, orderDetail: { primaryStatus } } = report;
+    let disabled: boolean = true;
+    if (isTask) {
+      disabled = (!authInfo || (authInfo.clientInfo.includes('form_step0'))) ? false : true;
+    } else {
+      disabled = primaryStatus > 0 ? true : false;
+    }
     return (
       <View className="base-card-page">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="card-body">
             {/* 邮箱 */}
@@ -234,6 +244,7 @@ class IdCard extends Component<IProps, IState>{
                 pattern: /^(([^<>()\[\]\\.,;:@"]+(\.[^<>()\[\]\\.,;:@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\s*$/,
                 message: '请输入正确的邮箱!'
               }]}
+              disabled={disabled}
               error={emailError}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'emailError', valueKey: 'email' })}
             />
@@ -243,6 +254,7 @@ class IdCard extends Component<IProps, IState>{
               name='realEstateCategory'
               defaultValue={realEstateCategory}
               label="微信号"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^([a-zA-Z0-9]{5,19})+$/,
@@ -257,6 +269,7 @@ class IdCard extends Component<IProps, IState>{
               defaultValue={phone}
               label="手机号"
               type="number"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^[1][2,3,4,5,6,7,8,9][0-9]{9}$/,
@@ -270,9 +283,10 @@ class IdCard extends Component<IProps, IState>{
               <RadioGroup
                 name={isDriverLicense ? '0' : '1'}
                 onChange={this.driverLicenseChange}
+               
               >
-                <Radio value={'0'} color="#283282" checked={isDriverLicense ? true : false}>有</Radio>
-                <Radio value={'1'} color="#283282" className="radio" checked={isDriverLicense ? false : true} >无</Radio>
+                <Radio value={'0'}  disabled={disabled} color="#283282" checked={isDriverLicense ? true : false}>有</Radio>
+                <Radio value={'1'}  disabled={disabled} color="#283282" className="radio" checked={isDriverLicense ? false : true} >无</Radio>
               </RadioGroup>
             </View>
             <View className="flex-row">
@@ -282,6 +296,7 @@ class IdCard extends Component<IProps, IState>{
                   label="学历"
                   defaultValue={education}
                   error={educationError}
+                  disabled={disabled}
                   rules={[{
                     required: true,
                     // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
@@ -297,6 +312,7 @@ class IdCard extends Component<IProps, IState>{
                   label="婚姻状况"
                   defaultValue={marriage}
                   error={marriageError}
+                  disabled={disabled}
                   rules={[{
                     required: true,
                     // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
@@ -315,6 +331,7 @@ class IdCard extends Component<IProps, IState>{
                   name='childrenSum'
                   defaultValue={childrenSum}
                   label="家庭人口数量"
+                  disabled={disabled}
                   rules={[{
                     required: true,
                     pattern: /^[0-9]*$/,
@@ -329,6 +346,7 @@ class IdCard extends Component<IProps, IState>{
               <View className="col-right">
                 <BasePicker
                   label="子女数量"
+                  disabled={disabled}
                   defaultValue={childrenStatus}
                   error={childrenStatusError}
                   rules={[{
@@ -345,6 +363,7 @@ class IdCard extends Component<IProps, IState>{
               label="现居住地址"
               defaultValue={(livesProvince || livesCity || livesCountry) ? `${livesProvince}/${livesCity}/${livesCountry}` : ''}
               error={liveAddrError}
+              disabled={disabled}
               rules={[{
                 required: true,
                 message: '请选择现居住地址!'
@@ -356,6 +375,7 @@ class IdCard extends Component<IProps, IState>{
               name='livesAddress'
               defaultValue={livesAddress}
               label="详细地址"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^\s*\S{1,}\s*$/,
@@ -368,6 +388,7 @@ class IdCard extends Component<IProps, IState>{
             {/* 公司名称 */}
             <CInput
               name='companyName'
+              disabled={disabled}
               defaultValue={companyName}
               label="公司名称"
               rules={[{
@@ -384,6 +405,7 @@ class IdCard extends Component<IProps, IState>{
                 {/*  工龄（年）*/}
                 <CInput
                   name='yearsWorking'
+                  disabled={disabled}
                   defaultValue={yearsWorking}
                   label="工龄（年）"
                   rules={[{
@@ -400,6 +422,7 @@ class IdCard extends Component<IProps, IState>{
               <View className="col-right">
                 <BasePicker
                   label="现公司工作年限"
+                  disabled={disabled}
                   defaultValue={jobYears}
                   error={jobYearsError}
                   rules={[{
@@ -418,6 +441,7 @@ class IdCard extends Component<IProps, IState>{
                 {/* 个人税后月收入(元) */}
                 <CInput
                   name='annualIncome'
+                  disabled={disabled}
                   defaultValue={annualIncome}
                   label="个人税后月收入(元)"
                   rules={[{
@@ -435,6 +459,7 @@ class IdCard extends Component<IProps, IState>{
                 <DatePicker
                   label="进入单位时间"
                   defaultValue={entryUnitTime}
+                  disabled={disabled}
                   error={entryUnitTimeError}
                   rules={[{
                     required: true,
@@ -449,6 +474,7 @@ class IdCard extends Component<IProps, IState>{
             {/* 单位电话 */}
             <CInput
               name='unitPhoneNumber'
+              disabled={disabled}
               defaultValue={unitPhoneNumber}
               label="单位电话"
               rules={[{
@@ -463,6 +489,7 @@ class IdCard extends Component<IProps, IState>{
 
             <Addr
               label="公司地址"
+              disabled={disabled}
               defaultValue={(companyProvince || companyCity || companyCounty) ? `${companyProvince}/${companyCity}/${companyCounty}` : ''}
               error={companyAddrError}
               rules={[{
@@ -474,6 +501,7 @@ class IdCard extends Component<IProps, IState>{
             {/* 公司详细地址 */}
             <CInput
               name='companyAddress'
+              disabled={disabled}
               defaultValue={companyAddress}
               label="详细地址"
               rules={[{
@@ -488,7 +516,7 @@ class IdCard extends Component<IProps, IState>{
           </View>
         </ScrollView>
         <View className="btn-bottom">
-          <AtButton type='primary' onClick={this.save}>保存</AtButton>
+          <AtButton type='primary'  disabled={disabled} onClick={this.save}>保存</AtButton>
         </View>
       </View>
     );

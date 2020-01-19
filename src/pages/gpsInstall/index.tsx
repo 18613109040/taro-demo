@@ -61,7 +61,8 @@ class GpsInstall extends Component<IProps, IState>{
       serviceAddressError: false,
       contactPersonError: false,
       typeError: false,
-      expectTimeError: false
+      expectTimeError: false,
+      height: props.systemInfo.windowHeight
     }
   }
   componentDidMount = async () => {
@@ -79,6 +80,14 @@ class GpsInstall extends Component<IProps, IState>{
       }
     })
     this.getAddrData(provinces[0].id)
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res)=>{
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
   getAddrData = async (provinceId) => {
     const { dispatch } = this.props;
@@ -96,9 +105,16 @@ class GpsInstall extends Component<IProps, IState>{
     })
   }
   save = () => {
+    const { dispatch } = this.props;
+    const { orderId } = this.$router.params
     const { province, city, area, serviceAddress, contactTel, contactPerson, type, expectTime, addrError, contactTelError, serviceAddressError, contactPersonError, typeError } = this.state;
     if(province&&city&&area&&serviceAddress&&contactTel&&contactPerson&&type&&expectTime && !addrError && !contactTelError && !serviceAddressError && !contactPersonError&& !typeError){
-
+      dispatch({
+        type: 'report/gpsAddAction',
+        payload: {
+          id: orderId // orderId
+        }
+      })
     }
   }
   onColumnChange = (e) => {
@@ -142,18 +158,17 @@ class GpsInstall extends Component<IProps, IState>{
     })
   }
   render() {
-    const { province, city, area, serviceAddress, contactTel, contactPerson, type, expectTime, orderRemark, addrError, contactTelError, serviceAddressError, contactPersonError, typeError, expectTimeError } = this.state;
+    const { height, province, city, area, serviceAddress, contactTel, contactPerson, type, expectTime, orderRemark, addrError, contactTelError, serviceAddressError, contactPersonError, typeError, expectTimeError } = this.state;
     const disable: any = province&&city&&area&&serviceAddress&&contactTel&&contactPerson&&type&&expectTime
     const { addr, gpsInstallInfo } = this.props.report;
     const { provinces, citys, areas } = addr
-    const { windowHeight } = this.props.systemInfo;
     const { clilentName, cardNum, value } = gpsInstallInfo
     return (
       <View className="gps-install">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="content">
             <CInput

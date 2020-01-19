@@ -40,10 +40,12 @@ type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
   dispatch?: any;
+  isTask: boolean;
 }
 @connect(({ report, common }) => ({
   report: report,
-  systemInfo: common.systemInfo
+  systemInfo: common.systemInfo,
+  isTask: common.isTask
 }))
 class Contact extends Component<IProps, IState>{
   config = {
@@ -80,13 +82,23 @@ class Contact extends Component<IProps, IState>{
       contactIdCard3: contactIdCard3 || '', // 联系人身份证号3
       contactIdCard3Error: false,
       check: check || '0',
+      height: props.systemInfo.windowHeight
     }
   }
-  componentDidMount = () => {
 
+  componentDidMount = async () => {
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res) => {
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
+
   save = () => {
-    const { orderId } =  this.$router.params
+    const { orderId } = this.$router.params
     const keys: Array<string> = ['contactName1', 'contactRelationship1', 'contactPhone1', 'contactIdCard1',
       'contactName2', 'contactRelationship2', 'contactPhone2', 'contactIdCard2',
       'contactName3', 'contactRelationship3', 'contactPhone3', 'contactIdCard3',]
@@ -116,21 +128,14 @@ class Contact extends Component<IProps, IState>{
         dispatch({
           type: 'report/temporaryAction',
           payload: {
-            id:orderId, 
+            id: orderId,
             updateStep: 0,
             contactName1, contactRelationship1, contactPhone1, contactIdCard1, contactName2, contactRelationship2, contactPhone2, contactIdCard2,
             contactName3, contactRelationship3, contactPhone3, contactIdCard3
           }
-        }).then((res)=>{
-          if(res.success){
+        }).then((res) => {
+          if (res.success) {
             Taro.navigateBack()
-            // dispatch({
-            //   type: 'report/setFormData',
-            //   payload: {
-            //     contactName1, contactRelationship1, contactPhone1, contactIdCard1, contactName2, contactRelationship2, contactPhone2, contactIdCard2,
-            //     contactName3, contactRelationship3, contactPhone3, contactIdCard3
-            //   }
-            // })
             const { clGuaranteeInfoListStr } = this.props.report.formData
             if (check && check !== '0' && clGuaranteeInfoListStr && !clGuaranteeInfoListStr.name) {
               dispatch({
@@ -145,7 +150,7 @@ class Contact extends Component<IProps, IState>{
             }
           }
         })
-       
+
       }
     })
   }
@@ -191,17 +196,25 @@ class Contact extends Component<IProps, IState>{
   render() {
     const { marriage } = this.props.report.formData
     const contactRelationshipOptions = marriage ? [{ name: '配偶' }, { name: '父母' }, { name: '子女' }, { name: '亲戚' }, { name: '朋友' }] : [{ name: '父母' }, { name: '子女' }, { name: '亲戚' }, { name: '朋友' }]
-    const { check, contactName1, contactName1Error, contactRelationship1, contactRelationship1Error, contactPhone1, contactPhone1Error,
+    const { height, check, contactName1, contactName1Error, contactRelationship1, contactRelationship1Error, contactPhone1, contactPhone1Error,
       contactName2, contactName2Error, contactRelationship2, contactRelationship2Error, contactPhone2, contactPhone2Error,
       contactName3, contactName3Error, contactRelationship3, contactRelationship3Error, contactPhone3, contactPhone3Error,
       contactIdCard1, contactIdCard1Error, contactIdCard2, contactIdCard2Error, contactIdCard3, contactIdCard3Error } = this.state;
-    const { windowHeight } = this.props.systemInfo;
+
+    const { isTask, report } = this.props;
+    const { authInfo, orderDetail: { primaryStatus } } = report;
+    let disabled: boolean = true;
+    if (isTask) {
+      disabled = (!authInfo || (authInfo.clientInfo.includes('form_step0'))) ? false : true;
+    } else {
+      disabled = primaryStatus > 0 ? true : false;
+    }
     return (
       <View className="contact-card-page">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
 
           <View className="title">
@@ -209,6 +222,7 @@ class Contact extends Component<IProps, IState>{
             <View className="check">
               <AtSwitch
                 border={false}
+                disabled={disabled}
                 title='是否选择为担保人'
                 onChange={() => this.changeCheck('1')}
                 checked={check === '1' ? true : false}
@@ -255,6 +269,7 @@ class Contact extends Component<IProps, IState>{
                 pattern: /^[1][2,3,4,5,6,7,8,9][0-9]{9}$/,
                 message: '手机格式不正确或者与其他联系人重复!'
               }]}
+              disabled={disabled}
               error={contactPhone1Error}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'contactPhone1Error', valueKey: 'contactPhone1' })}
             />
@@ -263,6 +278,7 @@ class Contact extends Component<IProps, IState>{
                 name='contactIdCard1'
                 defaultValue={contactIdCard1}
                 label="身份证号"
+                disabled={disabled}
                 rules={[{
                   required: true,
                   pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
@@ -279,6 +295,7 @@ class Contact extends Component<IProps, IState>{
             <Text className="name">联系人2</Text>
             <View className="check">
               <AtSwitch
+               disabled={disabled}
                 border={false}
                 title='是否选择为担保人'
                 checked={check === '2' ? true : false}
@@ -293,6 +310,7 @@ class Contact extends Component<IProps, IState>{
                   name='contactName2'
                   defaultValue={contactName2}
                   label="姓名"
+                  disabled={disabled}
                   rules={[{
                     required: true,
                     pattern: /^(([\u4e00-\u9fff]{2,4})|([a-z\.\s\,]{2,50}))$/i,
@@ -321,6 +339,7 @@ class Contact extends Component<IProps, IState>{
               defaultValue={contactPhone2}
               label="手机号"
               type="number"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^[1][2,3,4,5,6,7,8,9][0-9]{9}$/,
@@ -334,6 +353,7 @@ class Contact extends Component<IProps, IState>{
                 name='contactIdCard2'
                 defaultValue={contactIdCard2}
                 label="身份证号"
+                disabled={disabled}
                 rules={[{
                   required: true,
                   pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
@@ -352,6 +372,7 @@ class Contact extends Component<IProps, IState>{
             <Text className="name">联系人3</Text>
             <View className="check">
               <AtSwitch
+               disabled={disabled}
                 border={false}
                 title='是否选择为担保人'
                 onChange={() => this.changeCheck('3')}
@@ -363,6 +384,7 @@ class Contact extends Component<IProps, IState>{
             <View className="flex-row">
               <View className="col">
                 <CInput
+                 disabled={disabled}
                   name='contactName3'
                   defaultValue={contactName3}
                   label="姓名"
@@ -377,6 +399,7 @@ class Contact extends Component<IProps, IState>{
               </View>
               <View className="col-right">
                 <BasePicker
+                 disabled={disabled}
                   label="与借款人关系"
                   defaultValue={contactRelationship3}
                   error={contactRelationship3Error}
@@ -393,6 +416,7 @@ class Contact extends Component<IProps, IState>{
               name='contactPhone3'
               defaultValue={contactPhone3}
               label="手机号"
+              disabled={disabled}
               type="number"
               rules={[{
                 required: true,
@@ -405,6 +429,7 @@ class Contact extends Component<IProps, IState>{
             {
               check === '3' && <CInput
                 name='contactIdCard3'
+                disabled={disabled}
                 defaultValue={contactIdCard3}
                 label="身份证号"
                 rules={[{
@@ -421,7 +446,7 @@ class Contact extends Component<IProps, IState>{
           </View>
         </ScrollView>
         <View className="btn-bottom">
-          <AtButton type='primary' onClick={this.save}>保存</AtButton>
+          <AtButton type='primary' disabled={disabled}  onClick={this.save}>保存</AtButton>
         </View>
       </View>
     );

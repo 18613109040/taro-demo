@@ -29,10 +29,12 @@ type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
   dispatch?: any;
+  isTask: boolean;
 }
 @connect(({ report, common }) => ({
   report: report,
-  systemInfo: common.systemInfo
+  systemInfo: common.systemInfo,
+  isTask: common.isTask
 }))
 class BankCard extends Component<IProps, IState>{
   config = {
@@ -56,11 +58,19 @@ class BankCard extends Component<IProps, IState>{
       bankNo: bankNo || '', //联行号
       bankNoError: false,
       repaymentAccount: repaymentAccount || '', //还款账号
-      repaymentAccountError: false
+      repaymentAccountError: false,
+      height: props.systemInfo.windowHeight
     }
   }
   componentDidMount = () => {
-
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res)=>{
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
   onChange = (obj) => {
     const { error, value, valueKey, errorKey } = obj;
@@ -109,22 +119,32 @@ class BankCard extends Component<IProps, IState>{
   }
 
   render() {
-    const {
+    const { height,
       bankNoType, accountName, bankPhone, openingBank, accountOpeningBranch, bankNo, repaymentAccount,
       bankNoTypeError, accountNameError, bankPhoneError, openingBankError, accountOpeningBranchError, bankNoError, repaymentAccountError
     } = this.state;
+    const { isTask, report } = this.props;
+    const { authInfo, orderDetail: { primaryStatus } } = report;
     const productsOptions = [{ name: '1类卡' }]
-    const { windowHeight } = this.props.systemInfo;
+    let disabled: boolean = true;
+
+    if(isTask){
+      disabled = (!authInfo || (authInfo.clientInfo.includes('form_step4')))? false: true;
+    }else{
+      disabled = primaryStatus>0?true: false;
+    }
+    console.dir(disabled)
     return (
       <View className="product-card-page">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="card-body">
             <BasePicker
               label="银行卡类型"
+              disabled={disabled}
               defaultValue={bankNoType}
               error={bankNoTypeError}
               rules={[{
@@ -149,6 +169,7 @@ class BankCard extends Component<IProps, IState>{
               name='accountName'
               defaultValue={accountName}
               label="开户名"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^\s*\S{2,}\s*$/,
@@ -162,6 +183,7 @@ class BankCard extends Component<IProps, IState>{
               name='bankPhone'
               defaultValue={bankPhone}
               label="银行预留手机号"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^[1][2,3,4,5,6,7,8,9][0-9]{9}$/,
@@ -176,6 +198,7 @@ class BankCard extends Component<IProps, IState>{
               name='openingBank'
               defaultValue={openingBank}
               label="开户行"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^\s*\S{2,}\s*$/,
@@ -189,6 +212,7 @@ class BankCard extends Component<IProps, IState>{
               name='accountOpeningBranch'
               defaultValue={accountOpeningBranch}
               label="开户支行"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^\s*\S{2,}\s*$/,
@@ -201,6 +225,7 @@ class BankCard extends Component<IProps, IState>{
             <CInput
               name='bankNo'
               defaultValue={bankNo}
+              disabled={disabled}
               label="联行号"
               rules={[{
                 required: true,
@@ -214,6 +239,7 @@ class BankCard extends Component<IProps, IState>{
             />
             <CInput
               name='repaymentAccount'
+              disabled={disabled}
               defaultValue={repaymentAccount}
               label="收款还款账号"
               rules={[{
@@ -229,7 +255,7 @@ class BankCard extends Component<IProps, IState>{
           </View>
         </ScrollView>
         <View className="btn-bottom">
-          <AtButton type='primary' onClick={this.save}>保存</AtButton>
+          <AtButton type='primary' disabled={disabled} onClick={this.save}>保存</AtButton>
         </View>
       </View>
     );

@@ -37,11 +37,12 @@ type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
   dispatch?: any;
-
+  isTask: boolean;
 }
 @connect(({ report, common }) => ({
   report: report,
-  systemInfo: common.systemInfo
+  systemInfo: common.systemInfo,
+  isTask: common.isTask
 }))
 class Material extends Component<IProps, IState>{
   config = {
@@ -77,10 +78,18 @@ class Material extends Component<IProps, IState>{
       relationProve: relationProve && JSON.parse(relationProve) || [],
       marriageInfo: marriageInfo && JSON.parse(marriageInfo) || [],
       visitFamilyPhoto: visitFamilyPhoto && JSON.parse(visitFamilyPhoto) || [],
+      height: props.systemInfo.windowHeight
     }
   }
-  componentDidMount = () => {
-
+  componentDidMount = async () => {
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res)=>{
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
   save = () => {
     Taro.navigateBack()
@@ -90,19 +99,30 @@ class Material extends Component<IProps, IState>{
       [`${key}`]: value
     })
   }
+  computeDisabled(key){
+    const { isTask, report } = this.props;
+    const { authInfo, orderDetail: { primaryStatus } } = report;
+    let disabled: boolean = true;
+    if (isTask) {
+      disabled = (!authInfo || (authInfo.enterAuth.includes(key))) ? false : true;
+    } else {
+      disabled = primaryStatus > 0 ? true : false;
+    }
+    return disabled
+  }
   render() {
-    const { idCardAndBodyUrl, runCard, runCard2, workIncomeProve, carRegisterCard, carPhoto, framePhotos, trunkPhotos, dashboardPhotos,
+    const { height, idCardAndBodyUrl, runCard, runCard2, workIncomeProve, carRegisterCard, carPhoto, framePhotos, trunkPhotos, dashboardPhotos,
       factoryNameplatePhoto, internalSeatPhotos, pleaseBak2, applicationForm, otherProve, peopleCredit, car300, carReceipts, phoneRecord,
       bankRunWater, liveProve, otherBak, relationProve, marriageInfo, visitFamilyPhoto
     } = this.state;
     const { orderId } = this.$router.params
-    const { windowHeight } = this.props.systemInfo;
+  
     return (
       <View className="material-card-page">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View>
             <View className="title">主借贷人</View>
@@ -111,6 +131,7 @@ class Material extends Component<IProps, IState>{
                 <View className='at-col at-row at-row__align--center at-row__justify--center '>
                   <ImagePicker
                     required={true}
+                    disabled={this.computeDisabled('idCardAndBodyUrl')}
                     label="手持身份证"
                     files={idCardAndBodyUrl}
                     name="idCardAndBodyUrl"
@@ -122,6 +143,7 @@ class Material extends Component<IProps, IState>{
                   <ImagePicker
                     required={true}
                     label="行驶证主页"
+                    disabled={this.computeDisabled('runCard')}
                     files={runCard}
                     name="runCard"
                     orderId={orderId}
@@ -132,6 +154,7 @@ class Material extends Component<IProps, IState>{
                   <ImagePicker
                     required={true}
                     label="行驶证副页"
+                    disabled={this.computeDisabled('runCard2')}
                     files={runCard2}
                     name="runCard2"
                     orderId={orderId}
@@ -146,6 +169,7 @@ class Material extends Component<IProps, IState>{
                     label="进件银行卡复印件"
                     files={workIncomeProve}
                     name="workIncomeProve"
+                    disabled={this.computeDisabled('workIncomeProve')}
                     orderId={orderId}
                     count={2}
                     onChange={this.changeImage}
@@ -157,6 +181,7 @@ class Material extends Component<IProps, IState>{
                     label="车辆登记证"
                     files={carRegisterCard}
                     name="carRegisterCard"
+                    disabled={this.computeDisabled('carRegisterCard')}
                     orderId={orderId}
                     count={5}
                     onChange={this.changeImage}
@@ -173,6 +198,7 @@ class Material extends Component<IProps, IState>{
                     label="车辆照片"
                     files={carPhoto}
                     name="carPhoto"
+                    disabled={this.computeDisabled('carPhoto')}
                     orderId={orderId}
                     count={8}
                     onChange={this.changeImage}
@@ -184,6 +210,7 @@ class Material extends Component<IProps, IState>{
                     label="车架号"
                     files={framePhotos}
                     name="framePhotos"
+                    disabled={this.computeDisabled('framePhotos')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -194,6 +221,7 @@ class Material extends Component<IProps, IState>{
                     label="后备箱"
                     files={trunkPhotos}
                     name="trunkPhotos"
+                    disabled={this.computeDisabled('trunkPhotos')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -206,6 +234,7 @@ class Material extends Component<IProps, IState>{
                     label="仪表盘"
                     files={dashboardPhotos}
                     name="dashboardPhotos"
+                    disabled={this.computeDisabled('dashboardPhotos')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -216,6 +245,7 @@ class Material extends Component<IProps, IState>{
                     label="出厂铭牌"
                     files={factoryNameplatePhoto}
                     name="factoryNameplatePhoto"
+                    disabled={this.computeDisabled('factoryNameplatePhoto')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -227,6 +257,7 @@ class Material extends Component<IProps, IState>{
                     count={2}
                     files={internalSeatPhotos}
                     name="internalSeatPhotos"
+                    disabled={this.computeDisabled('internalSeatPhotos')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -239,6 +270,7 @@ class Material extends Component<IProps, IState>{
                     label="人车合影"
                     files={pleaseBak2}
                     name="pleaseBak2"
+                    disabled={this.computeDisabled('pleaseBak2')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -249,6 +281,7 @@ class Material extends Component<IProps, IState>{
                     label="威武融资租赁申请表"
                     files={applicationForm}
                     name="applicationForm"
+                    disabled={this.computeDisabled('applicationForm')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -259,6 +292,7 @@ class Material extends Component<IProps, IState>{
                     label="工作收入证明"
                     files={otherProve}
                     name="otherProve"
+                    disabled={this.computeDisabled('otherProve')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -271,6 +305,7 @@ class Material extends Component<IProps, IState>{
                     label="征信授权书原件+手持照+面签照"
                     files={peopleCredit}
                     name="peopleCredit"
+                    disabled={this.computeDisabled('peopleCredit')}
                     count={3}
                     orderId={orderId}
                     onChange={this.changeImage}
@@ -282,6 +317,7 @@ class Material extends Component<IProps, IState>{
                     label="车300网页"
                     files={car300}
                     name="car300"
+                    disabled={this.computeDisabled('car300')}
                     orderId={orderId}
                     onChange={this.changeImage}
                   />
@@ -292,6 +328,7 @@ class Material extends Component<IProps, IState>{
                     files={carReceipts}
                     name="carReceipts"
                     count={2}
+                    disabled={this.computeDisabled('carReceipts')}
                     orderId={orderId}
                     onChange={this.changeImage}
                     label="车辆保单"
@@ -305,6 +342,7 @@ class Material extends Component<IProps, IState>{
                 <View className='at-col at-row at-row__align--center at-row__justify--center'>
                   <ImagePicker
                     label="户口本"
+                    disabled={this.computeDisabled('relationProve')}
                     files={relationProve}
                     name="relationProve"
                     count={4}
@@ -316,6 +354,7 @@ class Material extends Component<IProps, IState>{
                   <ImagePicker
                     label="婚姻信息"
                     files={marriageInfo}
+                    disabled={this.computeDisabled('marriageInfo')}
                     name="marriageInfo"
                     count={4}
                     orderId={orderId}
@@ -327,6 +366,7 @@ class Material extends Component<IProps, IState>{
                     label="家访图片"
                     files={visitFamilyPhoto}
                     name="visitFamilyPhoto"
+                    disabled={this.computeDisabled('visitFamilyPhoto')}
                     count={15}
                     orderId={orderId}
                     onChange={this.changeImage}
@@ -339,6 +379,7 @@ class Material extends Component<IProps, IState>{
                     label="通话清单"
                     files={phoneRecord}
                     name="phoneRecord"
+                    disabled={this.computeDisabled('phoneRecord')}
                     orderId={orderId}
                     count={5}
                     onChange={this.changeImage}
@@ -349,6 +390,7 @@ class Material extends Component<IProps, IState>{
                     label="银行流水"
                     files={bankRunWater}
                     name="bankRunWater"
+                    disabled={this.computeDisabled('bankRunWater')}
                     orderId={orderId}
                     count={30}
                     onChange={this.changeImage}
@@ -359,6 +401,7 @@ class Material extends Component<IProps, IState>{
                     label="居住证明"
                     files={liveProve}
                     name="liveProve"
+                    disabled={this.computeDisabled('liveProve')}
                     orderId={orderId}
                     count={3}
                     onChange={this.changeImage}
@@ -371,6 +414,7 @@ class Material extends Component<IProps, IState>{
                   files={otherBak}
                   name="otherBak"
                   orderId={orderId}
+                  disabled={this.computeDisabled('otherBak')}
                   count={5}
                   isFile={true}
                   onChange={this.changeImage}
@@ -381,7 +425,7 @@ class Material extends Component<IProps, IState>{
 
         </ScrollView>
         <View className="btn-bottom">
-          <AtButton type='primary' onClick={this.save}>保存</AtButton>
+          <AtButton type='primary' onClick={this.save}>返回</AtButton>
         </View>
       </View>
     );

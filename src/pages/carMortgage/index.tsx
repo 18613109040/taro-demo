@@ -39,9 +39,11 @@ class CarMortgage extends Component<IProps, IState>{
       contactPhoneError: false,
       acceptAddress: '', 
       acceptAddressError: false,
-      bak3: ''
+      bak3: '',
+      height: props.systemInfo.windowHeight
     }
   }
+
   componentDidMount = async () => {
     const { dispatch } = this.props; 
     const { orderId } = this.$router.params
@@ -51,8 +53,14 @@ class CarMortgage extends Component<IProps, IState>{
         id: orderId
       }
     })
-    
-    
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res)=>{
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
 
   save = () => {
@@ -105,9 +113,8 @@ class CarMortgage extends Component<IProps, IState>{
   }
 
   render() {
-    
-    const { windowHeight } = this.props.systemInfo;
-    const { contactName, contactNameError, contactPhone, contactPhoneError, acceptAddress, acceptAddressError, bak3 } = this.state;
+  
+    const { height, contactName, contactNameError, contactPhone, contactPhoneError, acceptAddress, acceptAddressError, bak3 } = this.state;
     const { licenseOwner, carNo, frameNumber, licenseProvince, valuationCity, licenseCounty, contactCompany   } = this.props.report.carMortgageInfo
     const disabled:any = contactName && !contactNameError && contactPhone && !contactPhoneError && acceptAddress && !acceptAddressError
     return (
@@ -116,7 +123,7 @@ class CarMortgage extends Component<IProps, IState>{
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="content">
             <CInput

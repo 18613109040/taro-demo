@@ -24,14 +24,9 @@
   .btn-bottom{
     position: fixed;
     bottom: 0px;
-    height: 60PX;
     background: $brand-8;
     width: 100%;
-    padding-left: $h-spacing-30;
-    padding-right: $h-spacing-30;
-    padding-top: $h-spacing-10;
-    display: flex;
-    align-items: center;
+    padding: $h-spacing-30;
     border-top: 1px solid $brand-5;
     at-button {
       width: 100%;

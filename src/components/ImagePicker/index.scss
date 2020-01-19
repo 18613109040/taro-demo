@@ -129,6 +129,13 @@
     .required-icon{
       color: $brand-12;
     }
+    .lable-text{
+      display: block;
+      width: 180px;
+      word-wrap: break-word;
+      word-break:break-all;
+      white-space:pre-wrap;
+    }
   }
   .flex-1{
     margin-right: $h-spacing-10;

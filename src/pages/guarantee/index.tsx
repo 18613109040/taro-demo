@@ -43,10 +43,12 @@ type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
   dispatch?: any;
+  isTask: boolean;
 }
 @connect(({ report, common }) => ({
   report: report,
-  systemInfo: common.systemInfo
+  systemInfo: common.systemInfo,
+  isTask: common.isTask
 }))
 class Guarantee extends Component<IProps, IState>{
   config = {
@@ -85,11 +87,19 @@ class Guarantee extends Component<IProps, IState>{
       area: area || '', //区
       companyAddrError: false,
       companyAddress: companyAddress || '', //详细地址
-      companyAddressError: false
+      companyAddressError: false,
+      height: props.systemInfo.windowHeight
     }
   }
-  componentDidMount = () => {
-
+  componentDidMount = async () => {
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res)=>{
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
   onChange = (obj) => {
     const { error, value, valueKey, errorKey } = obj;
@@ -114,12 +124,6 @@ class Guarantee extends Component<IProps, IState>{
       }).then(res => {
         if (res.success) {
           Taro.navigateBack()
-          // dispatch({
-          //   type: 'report/setFormData',
-          //   payload: {
-          //     clGuaranteeInfoListStr: { name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress }
-          //   }
-          // })
         }
 
       })
@@ -161,17 +165,24 @@ class Guarantee extends Component<IProps, IState>{
   }
   render() {
     const { marriage } = this.props.report.formData
-    const { name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress,
+    const { height, name, phone, relationship, cardId, email, liveProvince, liveCity, liveArea, address, companyName, companyPhone, annualIncome, province, city, area, companyAddress,
       nameError, relationshipError, phoneError, cardIdError, emailError, liveAddrError, addressError, companyNameError, companyPhoneError, annualIncomeError, companyAddrError, companyAddressError } = this.state;
 
     const relationshipOptions = marriage ? [{ name: '配偶' }, { name: '父母' }, { name: '子女' }, { name: '亲戚' }, { name: '朋友' }] : [{ name: '父母' }, { name: '子女' }, { name: '亲戚' }, { name: '朋友' }]
-    const { windowHeight } = this.props.systemInfo;
+    const { isTask, report } = this.props;
+    const { authInfo, orderDetail: { primaryStatus } } = report;
+    let disabled: boolean = true;
+    if (isTask) {
+      disabled = (!authInfo || (authInfo.clientInfo.includes('form_step1'))) ? false : true;
+    } else {
+      disabled = primaryStatus > 0 ? true : false;
+    }
     return (
       <View className="guarantee-card-page">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="card-body">
             {/* 姓名 */}
@@ -179,6 +190,7 @@ class Guarantee extends Component<IProps, IState>{
               <View className="col">
                 <CInput
                   name='name'
+                  disabled={disabled}
                   defaultValue={name}
                   label="姓名"
                   rules={[{
@@ -193,6 +205,7 @@ class Guarantee extends Component<IProps, IState>{
               <View className="col-right">
                 <BasePicker
                   label="与担保人关系"
+                  disabled={disabled}
                   defaultValue={relationship}
                   error={relationshipError}
                   rules={[{
@@ -210,6 +223,7 @@ class Guarantee extends Component<IProps, IState>{
               defaultValue={phone}
               label="手机号"
               type="number"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^[1][2,3,4,5,6,7,8,9][0-9]{9}$/,
@@ -222,6 +236,7 @@ class Guarantee extends Component<IProps, IState>{
               name='cardId'
               defaultValue={cardId}
               label="身份证号"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
@@ -236,6 +251,7 @@ class Guarantee extends Component<IProps, IState>{
               name='email'
               defaultValue={email}
               label="邮箱"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^(([^<>()\[\]\\.,;:@"]+(\.[^<>()\[\]\\.,;:@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))\s*$/,
@@ -248,6 +264,7 @@ class Guarantee extends Component<IProps, IState>{
               label="现居住地址"
               defaultValue={(liveProvince || liveCity || liveArea) ? `${liveProvince}/${liveCity}/${liveArea}` : ''}
               error={liveAddrError}
+              disabled={disabled}
               rules={[{
                 required: true,
                 message: '请选择现居住地址!'
@@ -259,6 +276,7 @@ class Guarantee extends Component<IProps, IState>{
               name='address'
               defaultValue={address}
               label="详细地址"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^\s*\S{2,}\s*$/,
@@ -272,6 +290,7 @@ class Guarantee extends Component<IProps, IState>{
               name='companyName'
               defaultValue={companyName}
               label="公司名称"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^\s*\S{2,}\s*$/,
@@ -284,6 +303,7 @@ class Guarantee extends Component<IProps, IState>{
               name='companyPhone'
               defaultValue={companyPhone}
               label="单位电话"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^[0-9]*$/,
@@ -297,6 +317,7 @@ class Guarantee extends Component<IProps, IState>{
               name='annualIncome'
               defaultValue={annualIncome}
               label="个人税后月收入(元)"
+              disabled={disabled}
               rules={[{
                 required: true,
                 pattern: /^[0-9]*$/,
@@ -308,6 +329,7 @@ class Guarantee extends Component<IProps, IState>{
             />
             <Addr
               label="公司地址"
+              disabled={disabled}
               defaultValue={(province || city || area) ? `${province}/${city}/${area}` : ''}
               error={companyAddrError}
               rules={[{
@@ -319,6 +341,7 @@ class Guarantee extends Component<IProps, IState>{
             {/* 公司详细地址 */}
             <CInput
               name='companyAddress'
+              disabled={disabled}
               defaultValue={companyAddress}
               label="详细地址"
               rules={[{
@@ -333,7 +356,7 @@ class Guarantee extends Component<IProps, IState>{
           </View>
         </ScrollView>
         <View className="btn-bottom">
-          <AtButton type='primary' onClick={this.save}>保存</AtButton>
+          <AtButton type='primary'  disabled={disabled} onClick={this.save}>保存</AtButton>
         </View>
       </View>
     );

@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Text, ScrollView, Image } from '@tarojs/components';
-import { AtIcon, AtButton } from "taro-ui"
+import { AtIcon, AtButton, AtToast } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import { baseUrl } from '../../config/index';
 import Router from '../../components/Navigator'
@@ -10,15 +10,21 @@ import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
 type IState = {
   orderId: string;
+  height: number;
+  isOpened: boolean;
+  taskId: string;
+  [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
+  isTask: boolean;
   dispatch?: any;
 }
 @connect(({ report, common }) => ({
   report,
-  systemInfo: common.systemInfo
+  systemInfo: common.systemInfo,
+  isTask: common.isTask
 }))
 class Report extends Component<IProps, IState>{
   config = {
@@ -27,14 +33,18 @@ class Report extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     this.state = {
-      orderId: '' //'20200109172852171'
+      orderId: '',
+      taskId: '',
+      isOpened: false,
+      height: props.systemInfo.windowHeight
     }
   }
   componentDidShow = () => {
-    const { orderId } = this.$router.params
+    const { orderId, taskId } = this.$router.params
     this.getData(orderId)
     this.setState({
-      orderId
+      orderId,
+      taskId
     })
   }
   getData(orderId) {
@@ -44,6 +54,36 @@ class Report extends Component<IProps, IState>{
       payload: {
         id: orderId
       }
+    }).then(res => {
+      if (+res.obj.primaryStatus > 0) {
+        dispatch({
+          type: 'report/getInfoAuthAction',
+          payload: {
+            id: orderId
+          }
+        })
+      }
+      setTimeout(() => {
+        const query = Taro.createSelectorQuery();
+        query.select('.step-mes').boundingClientRect();
+        query.select('.btn-footer').boundingClientRect();
+        const { systemInfo } = this.props;
+        const { windowHeight } = systemInfo;
+        query.exec((res) => {
+          let h = res[0].height;
+          if (res && res[1]) {
+            const { top } = res[1];
+            this.setState({
+              height: top - h
+            })
+          } else {
+            this.setState({
+              height: windowHeight - res[0].height
+            })
+          }
+        });
+      }, 500);
+
     })
   }
   componentWillUnmount() {
@@ -85,32 +125,70 @@ class Report extends Component<IProps, IState>{
     })
   }
   reportForm = () => {
-    const { dispatch } = this.props;
-    const { orderId } = this.state;
+    const { dispatch, report } = this.props;
+    const { orderId, taskId } = this.state;
+    const { orderDetail } = report;
+    const { primaryStatus } = orderDetail;
     Taro.showModal({
       title: '订单提交',
       content: '确定要提交本单吗?',
       success: () => {
-        dispatch({
-          type: 'report/updateInfoAction',
-          payload: {
-            id: orderId
-          }
-        }).then(res => {
-          if (res.success) {
-            this.getData(this.state.orderId)
-          }
+        this.setState({
+          isOpened: true
         })
+        if (primaryStatus > 0) {
+          dispatch({
+            type: 'report/updateInfoAction',
+            payload: {
+              id: orderId,
+              status: 1,
+              taskId: taskId,
+              comment: ''
+            }
+          }).then(res => {
+            this.setState({
+              isOpened: false
+            })
+            if (res.success) {
+              Taro.showToast({
+                title: '提交成功',
+                icon: 'success',
+                duration: 2000
+              })
+              this.getData(this.state.orderId)
+            }
+          })
+        } else {
+          dispatch({
+            type: 'report/submitInfoAction',
+            payload: {
+              id: orderId
+            }
+          }).then(res => {
+            this.setState({
+              isOpened: false
+            })
+            if (res.success) {
+              Taro.showToast({
+                title: '更新成功',
+                icon: 'success',
+                duration: 2000
+              })
+              this.getData(this.state.orderId)
+            }
+          })
+        }
       }
     })
 
 
   }
   renderStepContent = () => {
-    const { report, systemInfo } = this.props;
+    const { report, systemInfo, isTask } = this.props;
     const { windowHeight } = systemInfo;
-    const { formData, current } = report;
-    const { orderId } = this.state;
+    const { formData, current, orderDetail, authInfo } = report;
+    const { primaryStatus } = orderDetail;
+    const { orderId, height, taskId } = this.state;
     const { email, contactName1, clGuaranteeInfoListStr, clCarInfoListStr, clCollectGatheringInfoListStr, clCollectClientInfoBigDataStr, clProductTypeListStr, clFileInfoListStr } = formData
     const { bankNo, driveCard, idCardPhoto, idCardPhoto2, idCardAndBodyUrl, runCard, runCard2, workIncomeProve, carRegisterCard,
       carPhoto, framePhotos, trunkPhotos, dashboardPhotos, factoryNameplatePhoto, internalSeatPhotos, pleaseBak2,
@@ -145,6 +223,12 @@ class Report extends Component<IProps, IState>{
     const isShowReport: any = isShowMaterial && name != '' && email != '' && contactName1 != '' &&
       clCarInfoListStr && clCarInfoListStr.useType != '' && clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo != '' &&
       clProductTypeListStr && clProductTypeListStr.applyAmount != ''
+    let disabled: boolean = true;
+    if (isTask) {
+      disabled = (!authInfo || (authInfo.clientInfo.length>0)) ? false : true;
+    } else {
+      disabled = primaryStatus > 0 ? true : false;
+    }
     if (current === 0) {
       return (
         <ScrollView
@@ -220,7 +304,7 @@ class Report extends Component<IProps, IState>{
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 179}px` }}>
+          style={{ height: `${height}px` }}>
           <View className="list-col">
             <Router
               title="身份证信息(必填)"
@@ -301,22 +385,6 @@ class Report extends Component<IProps, IState>{
           </View>
           <View className="list-col">
             <Router
-              title="还款信息(必填)"
-              arrow={true}
-              orderId={orderId}
-              extraColor={clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo ? '#4fc79a' : '#ffd915'}
-              extraText={clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo ? '完成' : '去完成'}
-              iconInfo={{
-                prefixClass: 'iconfont',
-                size: 25,
-                color: '#1D31AA',
-                value: 'gather'
-              }}
-              url="/pages/bankcard/index"
-            />
-          </View>
-          <View className="list-col">
-            <Router
               title="产品信息(必填)"
               arrow={true}
               orderId={orderId}
@@ -329,6 +397,22 @@ class Report extends Component<IProps, IState>{
                 value: 'product'
               }}
               url="/pages/product/index"
+            />
+          </View>
+          <View className="list-col">
+            <Router
+              title="还款信息(必填)"
+              arrow={true}
+              orderId={orderId}
+              extraColor={clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo ? '#4fc79a' : '#ffd915'}
+              extraText={clCollectGatheringInfoListStr && clCollectGatheringInfoListStr.bankNo ? '完成' : '去完成'}
+              iconInfo={{
+                prefixClass: 'iconfont',
+                size: 25,
+                color: '#1D31AA',
+                value: 'gather'
+              }}
+              url="/pages/bankcard/index"
             />
           </View>
           <View className="list-col">
@@ -347,9 +431,8 @@ class Report extends Component<IProps, IState>{
               url="/pages/material/index"
             />
           </View>
-          <View className="spacing"></View>
           <View className="btn-footer">
-            <AtButton type='primary' disabled={!isShowReport} onClick={this.reportForm}>提报表单</AtButton>
+            <AtButton type='primary' disabled={!isShowReport && disabled } onClick={this.reportForm}>提报表单</AtButton>
           </View>
         </ScrollView>
       )
@@ -358,7 +441,7 @@ class Report extends Component<IProps, IState>{
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 79}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="list-col">
             <Router
@@ -372,6 +455,7 @@ class Report extends Component<IProps, IState>{
                 color: '#1D31AA',
                 value: 'gps'
               }}
+              taskId={taskId}
               orderId={orderId}
               url="/pages/gpsInstall/index"
             />
@@ -389,6 +473,7 @@ class Report extends Component<IProps, IState>{
                 value: 'diya'
               }}
               orderId={orderId}
+              taskId={taskId}
               url="/pages/carMortgage/index"
             />
           </View>
@@ -404,6 +489,7 @@ class Report extends Component<IProps, IState>{
                 color: '#1D31AA',
                 value: 'hetong'
               }}
+              taskId={taskId}
               orderId={orderId}
               url="/pages/contractDownload/index"
             />
@@ -441,32 +527,41 @@ class Report extends Component<IProps, IState>{
 
   render() {
     const { steps, current, orderDetail, formData } = this.props.report;
-    const { batchContent, batchStatus } = orderDetail;
+    const { batchContent, batchStatus, primaryContent, primaryStatus } = orderDetail;
+    const { returnReason } = formData;
     const { name, idCard, sex, phone } = formData.clCollectClientInfoBigDataStr
+    const { isOpened } = this.state;
     return (
       <View className="report-page">
-        <View className="prompt">
-          <View className="status">
-            <AtIcon value={batchStatus == 0 ? "underReview" : batchStatus == 1 ? "sucess" : "colose"} size="30" prefixClass='iconfont'
-              color={batchStatus == 0 ? "#fff" : "#FFD915"} />
-            <Text className="message">{batchContent}</Text>
-            <AtIcon value="chevron-right" size="20" />
-          </View>
-          {
-            batchStatus == 2 && <View className="error-des">
-              <View><Text className="reason-title">退回原因:</Text></View>
-              <View><Text className="reason"></Text></View>
+        <AtToast isOpened={isOpened} text="加载中..." status="loading"></AtToast>
+        <View className="step-mes">
+          <View className="prompt">
+            <View className="status">
+              <View className="status-left">
+                <AtIcon value={batchStatus == 0 ? "underReview" : batchStatus == 1 ? "sucess" : "colose"} size="30" prefixClass='iconfont'
+                  color={batchStatus == 0 ? "#fff" : "#FFD915"} />
+                <Text className="message">{parseInt(primaryStatus)>0?primaryContent:batchContent}</Text>
+                <AtIcon value="chevron-right" size="20" />
+              </View>
+              <AtButton type='primary' size='small' className="small-btn" >审批流程</AtButton>
+
             </View>
-          }
-          <View className="link-message">
-            <Text className="name">{name}</Text>
-            <AtIcon value="phone" size="16" onClick={() => this.callPhone(phone)} prefixClass='iconfont' color="#d0d3d9" />
-            <AtIcon value="shuxian" size="16" prefixClass='iconfont' color="#d0d3d9" />
-            <Text className="code">{sex}</Text>
-            <Text className="code">{idCard}</Text>
+            {
+              returnReason && <View className="error-des">
+                <View><Text className="reason-title">退回原因:</Text></View>
+                <View><Text className="reason">{returnReason}</Text></View>
+              </View>
+            }
+            <View className="link-message">
+              <Text className="name">{name}</Text>
+              <AtIcon value="phone" size="16" onClick={() => this.callPhone(phone)} prefixClass='iconfont' color="#d0d3d9" />
+              <AtIcon value="shuxian" size="16" prefixClass='iconfont' color="#d0d3d9" />
+              <Text className="code">{sex}</Text>
+              <Text className="code">{idCard}</Text>
+            </View>
           </View>
+          <Steps current={current} steps={steps} />
         </View>
-        <Steps current={current} steps={steps} />
         {
           this.renderStepContent()
         }

@@ -34,13 +34,6 @@ export default (options = { method: 'GET', data: {} }) => {
           res.data
         );
       }
-      // if (data.status !== 'ok') {
-      //   Taro.showToast({
-      //     title: `${res.data.error.message}~` || res.data.error.code,
-      //     icon: 'none',
-      //     mask: true,
-      //   });
-      // }
       return data;
     } else {
       Taro.showToast({

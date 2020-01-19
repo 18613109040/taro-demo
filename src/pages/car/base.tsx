@@ -53,10 +53,13 @@ type IProps = {
   report: InitStateProps;
   systemInfo: SystemInfoProps;
   dispatch?: any;
+  isTask: boolean;
+
 }
 @connect(({ report, common }) => ({
   report: report,
-  systemInfo: common.systemInfo
+  systemInfo: common.systemInfo,
+  isTask: common.isTask
 }))
 class CarBase extends Component<IProps, IState>{
   config = {
@@ -65,7 +68,8 @@ class CarBase extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     const { name, clCarInfoListStr } = props.report.formData;
-    const { carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber } = clCarInfoListStr;
+    const { carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, engineNo,
+      newCarPrice, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty } = clCarInfoListStr;
     this.state = {
       licenseOwner: name || '', //* 行驶证车主名 
       useType: useType || '', //用途 
@@ -82,9 +86,9 @@ class CarBase extends Component<IProps, IState>{
       factoryDayError: false,
       carFristLoginDay: carFristLoginDay || '',//初次登记日期
       carFristLoginDayError: false,
-      engineNo: '', //发动机号
+      engineNo: engineNo || '', //发动机号
       engineNoError: false,
-      newCarPrice: '', //新车指导价(元) 
+      newCarPrice: newCarPrice || '', //新车指导价(元) 
       newCarPriceError: false,
       carSystem: carSystem || '', //车系 
       carSystemError: false,
@@ -92,24 +96,31 @@ class CarBase extends Component<IProps, IState>{
       carDisplacementError: false,
       frameNumber: frameNumber || '',//车架号
       frameNumberError: false,
-
-      powerCteType: '', // 动力系统类别 
+      powerCteType: powerCteType || '', // 动力系统类别 
       powerCteTypeError: false,
-      drivenDistance: '', //行驶里程（整数km
+      drivenDistance: drivenDistance || '', //行驶里程（整数km
       drivenDistanceError: false,
-      advanceOffer: '', //车商零售价（元）
+      advanceOffer: advanceOffer || '', //车商零售价（元）
       advanceOfferError: false,
-      licenseProvince: '', // 省
-      valuationCity: '',
-      licenseCounty: '',
-      addrError: false
+      licenseProvince: licenseProvince || '', // 省
+      valuationCity: valuationCity || '',
+      licenseCounty: licenseCounty || '',
+      addrError: false,
+      height: props.systemInfo.windowHeight
     }
   }
   componentDidMount = () => {
-
+    const query = Taro.createSelectorQuery();
+    query.select('.btn-bottom').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res) => {
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
   }
   save = () => {
-    const { orderId } =  this.$router.params
+    const { orderId } = this.$router.params
     const keys: Array<string> = ['licenseOwner', 'carType', 'useType', 'carBrand', 'carSystem', 'carColour', 'factoryDay', 'carFristLoginDay', 'carNo', 'frameNumber', 'powerCteType', 'drivenDistance', 'advanceOffer', 'licenseProvince', 'valuationCity', 'licenseCounty', 'newCarPrice', 'engineNo']
     const { licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo } = this.state;
     let temp: IState = this.state;
@@ -131,12 +142,12 @@ class CarBase extends Component<IProps, IState>{
         dispatch({
           type: 'report/temporaryAction',
           payload: {
-            id:orderId, 
+            id: orderId,
             updateStep: 2,
-            clCarInfoListStr: JSON.stringify({ licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo})
+            clCarInfoListStr: JSON.stringify({ licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo })
           }
-        }).then(res=>{
-          if(res.success){
+        }).then(res => {
+          if (res.success) {
             Taro.navigateBack()
             dispatch({
               type: 'report/setCarInfo',
@@ -167,15 +178,22 @@ class CarBase extends Component<IProps, IState>{
 
   }
   render() {
-    const { licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo,
+    const { height, licenseOwner, carType, useType, carBrand, carSystem, carColour, factoryDay, carFristLoginDay, carNo, carDisplacement, frameNumber, powerCteType, drivenDistance, advanceOffer, licenseProvince, valuationCity, licenseCounty, newCarPrice, engineNo,
       carTypeError, useTypeError, carBrandError, carSystemError, carColourError, factoryDayError, carFristLoginDayError, carNoError, carDisplacementError, frameNumberError, powerCteTypeError, drivenDistanceError, advanceOfferError, addrError, newCarPriceError, engineNoError } = this.state;
-    const { windowHeight } = this.props.systemInfo;
+    const { isTask, report } = this.props;
+    const { authInfo, orderDetail: { primaryStatus } } = report;
+    let disabled: boolean = true;
+    if (isTask) {
+      disabled = (!authInfo || (authInfo.clientInfo.includes('form_step2'))) ? false : true;
+    } else {
+      disabled = primaryStatus > 0 ? true : false;
+    }
     return (
       <View className="content-table-form">
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 60}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="card-body">
             <View className="flex-row">
@@ -203,6 +221,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{2,}\s*$/,
                     message: '请输入车型!'
                   }]}
+                  disabled={disabled}
                   error={carTypeError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'carTypeError', valueKey: 'carType' })}
                 />
@@ -219,6 +238,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{2,}\s*$/,
                     message: '请输入用途!'
                   }]}
+                  disabled={disabled}
                   error={useTypeError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'useTypeError', valueKey: 'useType' })}
                 />
@@ -233,6 +253,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{2,}\s*$/,
                     message: '请输入品牌!'
                   }]}
+                  disabled={disabled}
                   error={carBrandError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'carBrandError', valueKey: 'carBrand' })}
                 />
@@ -249,6 +270,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{2,}\s*$/,
                     message: '请输入车系!'
                   }]}
+                  disabled={disabled}
                   error={carSystemError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'carSystemError', valueKey: 'carSystem' })}
                 />
@@ -262,6 +284,7 @@ class CarBase extends Component<IProps, IState>{
                     required: true,
                     message: '请选择车辆颜色!'
                   }]}
+                  disabled={disabled}
                   range={[{ name: '灰色' }, { name: '白色' }, { name: '棕色' }, { name: '黄色' }, { name: '红色' }, { name: '紫色' }, { name: '绿色' }, { name: '多彩色' }, { name: '黑色' }, { name: '银灰色' },
                   { name: '香槟色' }, { name: '橙色' }, { name: '粉红色' }, { name: '蓝色' }, { name: '咖啡色' }, { name: '其他' }]}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'carColourError', valueKey: 'carColour' })}
@@ -279,6 +302,7 @@ class CarBase extends Component<IProps, IState>{
                     // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                     message: '请选择出厂日期!'
                   }]}
+                  disabled={disabled}
                   end={moment().format('YYYY-MM-DD')}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'factoryDayError', valueKey: 'factoryDay' })}
                 />
@@ -293,6 +317,7 @@ class CarBase extends Component<IProps, IState>{
                     // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                     message: '请选择初次登记日期!'
                   }]}
+                  disabled={disabled}
                   end={moment().format('YYYY-MM-DD')}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'carFristLoginDayError', valueKey: 'carFristLoginDay' })}
                 />
@@ -309,6 +334,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{2,}\s*$/,
                     message: '请输入车牌号!'
                   }]}
+                  disabled={disabled}
                   error={carNoError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'carNoError', valueKey: 'carNo' })}
                 />
@@ -323,6 +349,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{1,}\s*$/,
                     message: '请输入排量!'
                   }]}
+                  disabled={disabled}
                   type="digit"
                   error={carDisplacementError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'carDisplacementError', valueKey: 'carDisplacement' })}
@@ -340,6 +367,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{2,}\s*$/,
                     message: '请输入新车指导价!'
                   }]}
+                  disabled={disabled}
                   error={newCarPriceError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'newCarPriceError', valueKey: 'newCarPrice' })}
                 />
@@ -354,6 +382,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{2,}\s*$/,
                     message: '请输入发动机号!'
                   }]}
+                  disabled={disabled}
                   error={engineNoError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'engineNoError', valueKey: 'engineNo' })}
                 />
@@ -368,6 +397,7 @@ class CarBase extends Component<IProps, IState>{
                 pattern: /^\s*\S{2,}\s*$/,
                 message: '请输入车架号!'
               }]}
+              disabled={disabled}
               error={frameNumberError}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'frameNumberError', valueKey: 'frameNumber' })}
             />
@@ -381,6 +411,7 @@ class CarBase extends Component<IProps, IState>{
                     required: true,
                     message: '请选择动力系统类别!'
                   }]}
+                  disabled={disabled}
                   range={[{ name: '传统动力' }]}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'powerCteTypeError', valueKey: 'powerCteType' })}
                 />
@@ -395,6 +426,7 @@ class CarBase extends Component<IProps, IState>{
                     pattern: /^\s*\S{1,}\s*$/,
                     message: '请输入行驶里程!'
                   }]}
+                  disabled={disabled}
                   type="number"
                   error={drivenDistanceError}
                   onChange={(obj) => this.onChange({ ...obj, errorKey: 'drivenDistanceError', valueKey: 'drivenDistance' })}
@@ -410,6 +442,7 @@ class CarBase extends Component<IProps, IState>{
                 // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                 message: '请选择上牌地址!'
               }]}
+              disabled={disabled}
               onChange={(obj) => this.onChangeAddr({ ...obj })}
             />
             <CInput
@@ -421,6 +454,7 @@ class CarBase extends Component<IProps, IState>{
                 pattern: /^\s*\S{1,}\s*$/,
                 message: '请输入车商零售价!'
               }]}
+              disabled={disabled}
               type="number"
               error={advanceOfferError}
               onChange={(obj) => this.onChange({ ...obj, errorKey: 'advanceOfferError', valueKey: 'advanceOffer' })}
@@ -428,7 +462,7 @@ class CarBase extends Component<IProps, IState>{
           </View>
         </ScrollView>
         <View className="btn-bottom">
-          <AtButton type='primary' onClick={this.save}>保存</AtButton>
+          <AtButton type='primary' disabled={disabled} onClick={this.save}>保存</AtButton>
         </View>
 
       </View>

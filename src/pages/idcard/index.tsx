@@ -243,9 +243,6 @@ class IdCard extends Component<IProps, IState>{
             /> */}
           </View>
         </ScrollView>
-        {/* <View className="btn-bottom">
-          <AtButton type='primary' onClick={this.save}>保存</AtButton>
-        </View> */}
       </View>
     );
   }

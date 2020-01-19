@@ -7,6 +7,7 @@ import CInput from '../../components/Input';
 import Addr from '../../components/Addr';
 import Gender from '../../components/Gender';
 import DatePicker from '../../components/DatePicker'
+import BasePicker from '../../components/BasePicker'
 import { SystemInfoProps } from '../../interface/common'
 import { connect } from '@tarojs/redux';
 import { baseUrl } from '../../config/index';
@@ -22,6 +23,8 @@ type IState = {
   authFileStr: string;
   bankNo: string;
   bankNoStr: string;
+  orgCode: string; // 机构产品
+  orgCodeError: boolean;
   name: string; // 姓名
   nameError: boolean;
   idCard: string; // 身份证号
@@ -53,6 +56,7 @@ type IState = {
   items: Array<any>;
   current: number;
   loading: boolean;
+  orgCodeRange: Array<any>;
   [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
@@ -72,7 +76,10 @@ class FastApproval extends Component<IProps, IState>{
     super(props)
     this.state = {
       items: [{ title: '上传资料', status: '' }, { title: '核对信息', status: '' }, { title: '完成', status: '' }],
+      orgCodeRange: [{ name: '车直融', typecode: 'WWHX' }, { name: '车满融', typecode: 'WWRC' }],
       current: 0,
+      orgCode: '', // 机构产品
+      orgCodeError: false,
       name: '', // 姓名
       nameError: false,
       idCard: '', // 身份证号
@@ -121,11 +128,41 @@ class FastApproval extends Component<IProps, IState>{
       orderId: '',
       incomingProvince: '',
       incomingCity: '',
-      loading: false
+      loading: false,
+      height: props.systemInfo.windowHeight
     }
   }
-  componentDidMount = () => {
-
+  componentDidMount =  () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'report/getOrgCodeAction',
+      payload: {}
+    }).then(res=>{
+      if(res.success){
+        res.obj&&res.obj.map(item=>item.name = item.typename)
+        this.setState({
+          orgCodeRange: res.obj
+        })
+      }
+      
+    })
+    const query = Taro.createSeleclCollectClientInfoController.do?datagridctorQuery();
+    query.select('.steps-bg').boundingClientRect();
+    query.select('.btn-footer').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res) => {
+      let h = res[0].height;
+      if (res && res[1]) {
+        // const { top } = res[1];
+        this.setState({
+          height: windowHeight - h - res[1].height
+        })
+      } else {
+        this.setState({
+          height: windowHeight - res[0].height
+        })
+      }
+    });
   }
 
   // 小程序上拉加载
@@ -143,7 +180,7 @@ class FastApproval extends Component<IProps, IState>{
         Taro.uploadFile({
           url: `${baseUrl}/clCollectClientInfoBigDataController/filedeal.do?id=${this.state[`${key}Id`]}`,
           filePath: res.tempFiles[0].path,
-          header:{
+          header: {
             Cookie: Taro.getStorageSync('cookie'),
           },
           name: key,
@@ -158,10 +195,10 @@ class FastApproval extends Component<IProps, IState>{
                 [`${key}Str`]: data.attributes.value,
                 [`${key}`]: `${baseUrl}/${value[0].url}`
               })
-              if(key === 'idCardPhoto'){
+              if (key === 'idCardPhoto') {
                 this.setState({
                   name,
-                  sex: sex==='M'? '男': '女',
+                  sex: sex === 'M' ? '男' : '女',
                   idCard,
                   idAddrProvince,
                   idAddrArea,
@@ -169,22 +206,22 @@ class FastApproval extends Component<IProps, IState>{
                   idAddrDetails,
                   birthday
                 })
-              }else if(key === 'idCardPhoto2') {
-                  this.setState({
-                    placeOfissue,
-                    idCardStartDate,
-                    idCardEndDate,
-                    effectiveness: effectiveness==="否"?false:true,
-                  })
-              } else if(key === 'bankNo') {
+              } else if (key === 'idCardPhoto2') {
+                this.setState({
+                  placeOfissue,
+                  idCardStartDate,
+                  idCardEndDate,
+                  effectiveness: effectiveness === "否" ? false : true,
+                })
+              } else if (key === 'bankNo') {
                 this.setState({
                   repaymentAccount
                 })
-              } else if(key === 'driveCard' ) {
+              } else if (key === 'driveCard') {
                 this.setState({
-                  isDriverLicense: isDriverLicense === '有'? true: false
+                  isDriverLicense: isDriverLicense === '有' ? true : false
                 })
-                
+
               }
             }
           }
@@ -228,8 +265,8 @@ class FastApproval extends Component<IProps, IState>{
     })
   }
   submit = async () => {
-    if(this.state.loading)
-      return ;
+    if (this.state.loading)
+      return;
     this.setState({
       loading: true
     })
@@ -237,10 +274,12 @@ class FastApproval extends Component<IProps, IState>{
     const { name, idCard, sex, birthday, placeOfissue,
       effectiveness, idCardStartDate, idCardEndDate, idAddrProvince,
       idAddrCity, idAddrArea, idAddrDetails, isDriverLicense, phone, repaymentAccount,
-      idCardPhotoStr, idCardPhoto2Str, bankNoStr, driveCardStr, authFileStr, items, incomingProvince, incomingCity } = this.state;
+      idCardPhotoStr, idCardPhoto2Str, bankNoStr, driveCardStr, authFileStr, items, incomingProvince, incomingCity, orgCode, orgCodeRange } = this.state;
+    const orgCodeId = orgCodeRange.find(item => item.name === orgCode).typecode
     const res = await dispatch({
       type: 'approval/approvalAction',
       payload: {
+        orgCode: orgCodeId || '',
         name,
         idCard,
         incomingProvince,
@@ -294,27 +333,25 @@ class FastApproval extends Component<IProps, IState>{
   }
   order = () => {
     const { orderId } = this.state;
-    Taro.reLaunch({
+    Taro.redirectTo({
       url: `/pages/report/index?orderId=${orderId}`
     })
   }
   stepContent() {
-    const { idCardPhoto, idCardPhoto2, bankNo, driveCard, authFile,
+    const { height, idCardPhoto, idCardPhoto2, bankNo, driveCard, authFile,
       name, nameError, idCard, idCardError, sex, sexError, birthday, birthdayError, placeOfissue, placeOfissueError,
       effectiveness, idCardStartDate, idCardStartDateError, idCardEndDate, idCardEndDateError, idAddrProvince,
       idAddrCity, idAddrArea, idAddrError, idAddrDetails, idAddrDetailsError, isDriverLicense, phone, phoneError,
-      repaymentAccount, repaymentAccountError, current, loading
+      repaymentAccount, repaymentAccountError, current, loading, orgCode, orgCodeError, orgCodeRange
     } = this.state;
     const nextDisable: any = (idCardPhoto && idCardPhoto2 && bankNo && driveCard && authFile) ? false : true;
-    const submitDisable: any = (name && !nameError && idCard && !idCardError && sex && !sexError && birthday && !birthdayError && placeOfissue && !placeOfissueError && idCardStartDate && !idCardStartDateError && idCardEndDate && !idCardEndDateError && idAddrProvince && idAddrCity && idAddrArea && !idAddrError && idAddrDetails && !idAddrDetailsError && phone && !phoneError && repaymentAccount && !repaymentAccountError) ? false : true
-    const { systemInfo } = this.props;
-    const { windowHeight } = systemInfo;
+    const submitDisable: any = (orgCode && !orgCodeError && name && !nameError && idCard && !idCardError && sex && !sexError && birthday && !birthdayError && placeOfissue && !placeOfissueError && idCardStartDate && !idCardStartDateError && idCardEndDate && !idCardEndDateError && idAddrProvince && idAddrCity && idAddrArea && !idAddrError && idAddrDetails && !idAddrDetailsError && phone && !phoneError && repaymentAccount && !repaymentAccountError) ? false : true
     if (current === 0) {
       return (
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 140}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="step-one">
             <View className="content-upload at-row at-row__align--center">
@@ -373,7 +410,7 @@ class FastApproval extends Component<IProps, IState>{
                 <View className="des"><Text>上传您银行卡正面</Text></View>
               </View>
               <View>
-              {
+                {
                   bankNo ?
                     <View className="preview">
                       <Image className="id-card_image" src={bankNo} />
@@ -413,7 +450,7 @@ class FastApproval extends Component<IProps, IState>{
                 <View className="des"><Text>上传您签署授权书</Text></View>
               </View>
               <View>
-              {
+                {
                   authFile ?
                     <View className="preview">
                       <Image className="id-card_image" src={authFile} />
@@ -432,20 +469,32 @@ class FastApproval extends Component<IProps, IState>{
               type='primary'
               onClick={this.next}>下一步</AtButton>
           </View>
-        
+
         </ScrollView>)
     } else if (current === 1) {
       return (
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 140}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className='header at-row at-row__align--center'>
-            <AtIcon value="verticalline" size="20" prefixClass='iconfont' color="#4984FD" />
-            <View className="title">基本信息</View>
+            <AtIcon value="alert-circle" size="14" color="#FE677A" />
+            <View className="warring-title">图片识别的数据可能会存在误差,请仔细检查</View>
           </View>
           <View className="user-info">
+            <BasePicker
+              label="机构产品"
+              defaultValue={orgCode}
+              error={orgCodeError}
+              rules={[{
+                required: true,
+                // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+                message: '请选择机构产品!'
+              }]}
+              range={orgCodeRange}
+              onChange={(obj) => this.onChange({ ...obj, errorKey: 'orgCodeError', valueKey: 'orgCode' })}
+            />
             {/* 姓名 */}
             <CInput
               name='name'
@@ -634,7 +683,7 @@ class FastApproval extends Component<IProps, IState>{
 
           <View className="btn-footer at-row at-row__align--center">
             <View className="at-col"><AtButton onClick={this.previous}  >上一步</AtButton></View>
-            <View className="at-col submit-btn"><AtButton type='primary' loading={loading} disabled={submitDisable} onClick={this.submit}>{loading?"提交中":"提交"}</AtButton></View>
+            <View className="at-col submit-btn"><AtButton type='primary' loading={loading} disabled={submitDisable} onClick={this.submit}>{loading ? "提交中" : "提交"}</AtButton></View>
           </View>
         </ScrollView>
       )
@@ -643,7 +692,7 @@ class FastApproval extends Component<IProps, IState>{
         <ScrollView
           scrollY
           scrollWithAnimation
-          style={{ height: `${windowHeight - 80}px` }}
+          style={{ height: `${height}px` }}
         >
           <View className="sucess">
             <View><AtIcon value="orderSucess" size="100" prefixClass='iconfont' color="#4984FD" /></View>
