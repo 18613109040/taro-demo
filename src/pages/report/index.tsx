@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Text, ScrollView, Image } from '@tarojs/components';
-import { AtIcon, AtButton, AtToast } from "taro-ui"
+import { AtIcon, AtButton } from "taro-ui"
 import { connect } from '@tarojs/redux';
 import { baseUrl } from '../../config/index';
 import Router from '../../components/Navigator'
@@ -11,8 +11,8 @@ import './index.scss';
 type IState = {
   orderId: string;
   height: number;
-  isOpened: boolean;
   taskId: string;
+  taskName: string;
   [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
@@ -35,16 +35,17 @@ class Report extends Component<IProps, IState>{
     this.state = {
       orderId: '',
       taskId: '',
-      isOpened: false,
+      taskName: '',
       height: props.systemInfo.windowHeight
     }
   }
   componentDidShow = () => {
-    const { orderId, taskId } = this.$router.params
+    const { orderId, taskId, taskName } = this.$router.params
     this.getData(orderId)
     this.setState({
       orderId,
-      taskId
+      taskId,
+      taskName
     })
   }
   getData(orderId) {
@@ -133,8 +134,8 @@ class Report extends Component<IProps, IState>{
       title: '订单提交',
       content: '确定要提交本单吗?',
       success: () => {
-        this.setState({
-          isOpened: true
+        Taro.showLoading({
+          title: '提交中...'
         })
         if (primaryStatus > 0) {
           dispatch({
@@ -146,9 +147,7 @@ class Report extends Component<IProps, IState>{
               comment: ''
             }
           }).then(res => {
-            this.setState({
-              isOpened: false
-            })
+            Taro.hideLoading()
             if (res.success) {
               Taro.showToast({
                 title: '提交成功',
@@ -165,9 +164,7 @@ class Report extends Component<IProps, IState>{
               id: orderId
             }
           }).then(res => {
-            this.setState({
-              isOpened: false
-            })
+            Taro.hideLoading()
             if (res.success) {
               Taro.showToast({
                 title: '更新成功',
@@ -188,7 +185,7 @@ class Report extends Component<IProps, IState>{
     const { windowHeight } = systemInfo;
     const { formData, current, orderDetail, authInfo } = report;
     const { primaryStatus } = orderDetail;
-    const { orderId, height, taskId } = this.state;
+    const { orderId, height, taskId, taskName } = this.state;
     const { email, contactName1, clGuaranteeInfoListStr, clCarInfoListStr, clCollectGatheringInfoListStr, clCollectClientInfoBigDataStr, clProductTypeListStr, clFileInfoListStr } = formData
     const { bankNo, driveCard, idCardPhoto, idCardPhoto2, idCardAndBodyUrl, runCard, runCard2, workIncomeProve, carRegisterCard,
       carPhoto, framePhotos, trunkPhotos, dashboardPhotos, factoryNameplatePhoto, internalSeatPhotos, pleaseBak2,
@@ -455,6 +452,7 @@ class Report extends Component<IProps, IState>{
                 color: '#1D31AA',
                 value: 'gps'
               }}
+              taskName={taskName}
               taskId={taskId}
               orderId={orderId}
               url="/pages/gpsInstall/index"
@@ -464,6 +462,7 @@ class Report extends Component<IProps, IState>{
             <Router
               title="车辆抵押"
               arrow={true}
+              taskName={taskName}
               extraColor={name ? '#4fc79a' : '#ffd915'}
               extraText={name ? '完成' : '去完成'}
               iconInfo={{
@@ -481,6 +480,7 @@ class Report extends Component<IProps, IState>{
             <Router
               title="合同下载"
               arrow={true}
+              taskName={taskName}
               extraColor={name ? '#4fc79a' : '#ffd915'}
               extraText={name ? '完成' : '去完成'}
               iconInfo={{
@@ -494,16 +494,6 @@ class Report extends Component<IProps, IState>{
               url="/pages/contractDownload/index"
             />
           </View>
-
-        </ScrollView>
-      )
-    } else if (current === 3) {
-      return (
-        <ScrollView
-          scrollY
-          scrollWithAnimation
-          style={{ height: `${windowHeight - 79}px` }}
-        >
           <View className="list-col">
             <Router
               title="请款资料"
@@ -516,10 +506,22 @@ class Report extends Component<IProps, IState>{
                 color: '#1D31AA',
                 value: 'idcard'
               }}
+              taskId={taskId}
+              taskName={taskName}
               orderId={orderId}
               url="/pages/loanMaterial/index"
             />
           </View>
+        </ScrollView>
+      )
+    } else if (current === 3) {
+      return (
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={{ height: `${windowHeight - 79}px` }}
+        >
+          
         </ScrollView>
       )
     }
@@ -530,10 +532,8 @@ class Report extends Component<IProps, IState>{
     const { batchContent, batchStatus, primaryContent, primaryStatus } = orderDetail;
     const { returnReason } = formData;
     const { name, idCard, sex, phone } = formData.clCollectClientInfoBigDataStr
-    const { isOpened } = this.state;
     return (
       <View className="report-page">
-        <AtToast isOpened={isOpened} text="加载中..." status="loading"></AtToast>
         <View className="step-mes">
           <View className="prompt">
             <View className="status">

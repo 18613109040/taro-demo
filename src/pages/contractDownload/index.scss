@@ -6,12 +6,7 @@ page{
   background: $brand-8;
   border-radius: $radius-16;
   margin:$h-spacing-30;
-  .toast-body-content__icon{
-    font-size: 50PX !important;
-  }
-  .toast-body-content__info{
-    font-size: 14PX !important;
-  }
+
   .line{
     padding: $h-spacing-30;
     border-bottom: 1px solid $brand-5;

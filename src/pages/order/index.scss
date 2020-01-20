@@ -55,5 +55,21 @@ page{
       padding: $v-spacing-4 $h-spacing-10;
     }
   }
+  .no-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    margin-top: -20%;
+    .no-dataimage {
+      width: 400px;
+      height: 400px;
+    }
+    .text {
+      font-size: $font-size-28;
+      color: $brand-1;
+    }
+  }
 
 }

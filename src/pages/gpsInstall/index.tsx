@@ -1,19 +1,24 @@
-import Taro, { Component } from '@tarojs/taro';
-import { View, Text, Picker, Textarea, ScrollView } from '@tarojs/components';
-import { AtButton } from "taro-ui"
-import { connect } from '@tarojs/redux';
+import Taro, { Component } from '@tarojs/taro'
+import { View, Picker, Textarea, ScrollView } from '@tarojs/components'
+import { connect } from '@tarojs/redux'
+import { getProvince, getCity, getCounty } from '@/utils/barea'
 import moment from 'moment'
+import { AtButton } from "taro-ui"
 import CInput from '../../components/Input';
 import BasePicker from '../../components/BasePicker'
 import DatePicker from '../../components/DatePicker'
-
 import ListItem from '../../components/ListItem'
-import { InitStateProps } from '../../models/report';
+import { InitStateProps } from '../../models/report'
 import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
 type IState = {
+  provinces: any;
+  citys: any;
+  areas: any;
   province: string;
+  provinceId: string;
   city: string;
+  cityId: string;
   area: string;
   areaId: string;
   serviceAddress: string;
@@ -21,6 +26,8 @@ type IState = {
   contactPerson: string;
   type: string;
   expectTime: string;
+  time: string;
+  timeError: boolean;
   orderRemark: string;
   addrError: boolean;
   contactTelError: boolean;
@@ -46,8 +53,13 @@ class GpsInstall extends Component<IProps, IState>{
   constructor(props) {
     super(props)
     this.state = {
+      provinces: getProvince(),
+      citys: getCity('1'),
+      areas: getCounty('100'),
       province: '',
+      provinceId: '1',
       city: '',
+      cityId: '1',
       area: '',
       areaId: '',
       serviceAddress: '',
@@ -55,6 +67,8 @@ class GpsInstall extends Component<IProps, IState>{
       contactPerson: '',
       type: '',
       expectTime: '',
+      time: '',
+      timeError: false,
       orderRemark: '',
       addrError: false,
       contactTelError: false,
@@ -67,69 +81,108 @@ class GpsInstall extends Component<IProps, IState>{
   }
   componentDidMount = async () => {
     const { dispatch } = this.props;
-    const { orderId } = this.$router.params
-    const provinces = await dispatch({
-      type: 'report/getProvinceAction',
-      payload: {
-      }
-    })
-    dispatch({
-      type: 'report/getGpsInstallInfoAction',
-      payload: {
-        id: orderId // orderId
-      }
-    })
-    this.getAddrData(provinces[0].id)
+    const { orderId } = this.$router.params;
     const query = Taro.createSelectorQuery();
     query.select('.btn-bottom').boundingClientRect();
     const { windowHeight } = Taro.getSystemInfoSync();
-    query.exec((res)=>{
+    query.exec((res) => {
       this.setState({
         height: windowHeight - res[0].height
       })
     });
-  }
-  getAddrData = async (provinceId) => {
-    const { dispatch } = this.props;
-    const citys = await dispatch({
-      type: 'report/getCitysAction',
+    const info = await dispatch({
+      type: 'report/getGpsInstallInfoAction',
       payload: {
-        pid: provinceId
+        id: orderId 
       }
     })
-    await dispatch({
-      type: 'report/getAreasAction',
-      payload: {
-        pid: citys[0].id
-      }
+    let date1 = ''
+    let date2 = ''
+    if (info.expectTime) {
+      date1 = info.expectTime.split(' ')[0]
+      date2 = info.expectTime.split(' ')[1]
+    }
+    // getProvince, getCity, getCounty 
+    const { value, serviceAddress, contactTel, contactPerson, orderRemark, province, city, areaId } = info;
+    let provinceName: any = {}
+    let cityName: any = {}
+    let areaName: any = {}
+    if(province&&city&&areaId){
+       provinceName = getProvince().find(item=> item.id == province);
+       cityName = getCity(province).find(item=> item.id == city);    
+       areaName = getCounty(city).find(item=> item.id == areaId);
+    }
+    this.setState({
+      value,
+      expectTime: date1,
+      time: date2,
+      serviceAddress,
+      contactTel,
+      contactPerson,
+      type:  '车牌号',
+      orderRemark,
+      province: provinceName && provinceName.name || '',
+      city: cityName && cityName.name || '',
+      area: areaName && areaName.name || ''
     })
   }
-  save = () => {
+  save = async () => {
     const { dispatch } = this.props;
-    const { orderId } = this.$router.params
-    const { province, city, area, serviceAddress, contactTel, contactPerson, type, expectTime, addrError, contactTelError, serviceAddressError, contactPersonError, typeError } = this.state;
-    if(province&&city&&area&&serviceAddress&&contactTel&&contactPerson&&type&&expectTime && !addrError && !contactTelError && !serviceAddressError && !contactPersonError&& !typeError){
-      dispatch({
+    const { taskId, taskName, orderId } = this.$router.params
+    const { province, city, area, areaId, provinceId, cityId, time, serviceAddress, contactTel, contactPerson, type, expectTime, timeError, orderRemark, addrError, contactTelError, serviceAddressError, contactPersonError, typeError } = this.state;
+    const { gpsInstallInfo } = this.props.report;
+    const { clilentName, cardNum, value } = gpsInstallInfo
+    const { id } = gpsInstallInfo
+    Taro.showLoading({
+      title: '保存中...'
+    })
+    if (province && city && area && serviceAddress && contactTel && contactPerson && type && expectTime && time && !addrError && !timeError && !contactTelError && !serviceAddressError && !contactPersonError && !typeError) {
+      const res = await dispatch({
         type: 'report/gpsAddAction',
         payload: {
-          id: orderId // orderId
+          clilentName,
+          cardNum,
+          id: id ? id : '',
+          collectClientInfoId: orderId,
+          taskId,
+          province: provinceId,
+          city:cityId,
+          taskName,
+          areaId,
+          serviceAddress,
+          contactPerson,
+          contactTel,
+          type: 2, //@todo 车牌号码 
+          value,
+          expectTime: `${expectTime} ${time}`,
+          orderRemark
         }
       })
+      if (res.success) {
+        Taro.hideLoading()
+        Taro.navigateBack()
+      } else {
+        Taro.hideLoading()
+        Taro.showToast({
+          title: res.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
     }
   }
   onColumnChange = (e) => {
     const { column, value } = e.detail;
-    const { dispatch, report } = this.props;
-    const { addr } = report;
-    const { provinces, citys } = addr
+    const { provinces, citys } = this.state;
+    const currentCitys: any = getCity(provinces[value].id)
     if (column === 0) {
-      this.getAddrData(provinces[value].id)
+      this.setState({
+        citys: currentCitys,
+        areas: getCounty(currentCitys[0].id)
+      })
     } else if (column === 1) {
-      dispatch({
-        type: 'report/getAreasAction',
-        payload: {
-          pid: citys[value].id
-        }
+      this.setState({
+        areas: getCounty(citys[value].id)
       })
     }
   }
@@ -148,21 +201,24 @@ class GpsInstall extends Component<IProps, IState>{
   }
   onAddrChange = (e) => {
     const { value } = e.detail
-    const { addr } = this.props.report;
-    const { provinces, citys, areas } = addr;
+    const { provinces, citys, areas } = this.state;
     this.setState({
       province: provinces[value[0]].name,
-      city: citys[value[0]].name,
-      area: areas[value[0]].name,
-      areaId: areas[value[0]].id
+      provinceId: provinces[value[0]].id,
+      city: citys[value[1]].name,
+      cityId: citys[value[1]].id,
+      area: areas[value[2]].name,
+      areaId: areas[value[2]].id
     })
   }
   render() {
-    const { height, province, city, area, serviceAddress, contactTel, contactPerson, type, expectTime, orderRemark, addrError, contactTelError, serviceAddressError, contactPersonError, typeError, expectTimeError } = this.state;
-    const disable: any = province&&city&&area&&serviceAddress&&contactTel&&contactPerson&&type&&expectTime
-    const { addr, gpsInstallInfo } = this.props.report;
-    const { provinces, citys, areas } = addr
+    const {  gpsInstallInfo } = this.props.report;
     const { clilentName, cardNum, value } = gpsInstallInfo
+    const { height, province, city, area, serviceAddress, contactTel, contactPerson,
+      provinces, citys, areas,
+      type, expectTime, orderRemark, addrError, contactTelError, serviceAddressError, 
+      contactPersonError, typeError, expectTimeError, time, timeError } = this.state;
+    const disable: any = province && city && area && serviceAddress && contactTel && contactPerson && type && expectTime  && time    
     return (
       <View className="gps-install">
         <ScrollView
@@ -269,22 +325,43 @@ class GpsInstall extends Component<IProps, IState>{
                     pattern: /^\s*\S{2,}\s*$/,
                     message: '车辆参数值'
                   }]}
+                  // error={valueError}
+                  // onChange={(obj) => this.onChange({ ...obj, errorKey: 'valueError', valueKey: 'value' })}
                   disabled={true}
                 />
               </View>
             </View>
-            <DatePicker
-              label="上门时间"
-              defaultValue={expectTime}
-              error={expectTimeError}
-              rules={[{
-                required: true,
-                // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
-                message: '请选择上门时间!'
-              }]}
-              end={moment().format('YYYY-MM-DD')}
-              onChange={(obj) => this.onChange({ ...obj, errorKey: 'expectTimeError', valueKey: 'expectTime' })}
-            />
+            <View className="flex-row">
+              <View className="col">
+                <DatePicker
+                  label="上门日期"
+                  defaultValue={expectTime || date1}
+                  error={expectTimeError}
+                  rules={[{
+                    required: true,
+                    // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+                    message: '请选择上门日期!'
+                  }]}
+                  end={moment().format('YYYY-MM-DD')}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'expectTimeError', valueKey: 'expectTime' })}
+                />
+              </View>
+              <View className="col-right">
+                <DatePicker
+                  label="上门时间"
+                  mode="time"
+                  defaultValue={time || date2}
+                  error={timeError}
+                  rules={[{
+                    required: true,
+                    // pattern: /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
+                    message: '请选择上门时间!'
+                  }]}
+                  onChange={(obj) => this.onChange({ ...obj, errorKey: 'timeError', valueKey: 'time' })}
+                />
+              </View>
+            </View>
+
 
             <Textarea
               value={orderRemark}

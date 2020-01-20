@@ -162,3 +162,12 @@ export const getOnlineGreate= data =>
     method: 'POST',
     data,
   });
+
+// 请款材料提交
+export const submitPleaseMaterial= data =>
+  Request({
+    url: '/clCollectClientInfoController.do?submitPleaseMaterial',
+    method: 'POST',
+    data,
+  });
+

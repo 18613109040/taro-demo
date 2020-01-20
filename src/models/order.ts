@@ -170,22 +170,28 @@ export default {
     setOrderList(state, {payload}){
       const { type, list, total }= payload
       state[type].list = [...state[type].list, ...list]
-      state[type].page = state[type].page+1;
-      state[type].total = total;
+      if(list.length > 0){
+        state[type].page = state[type].page+1;
+      }
+      state[type].total = total || 0;
       return fromJS(state).toJS()
     },
     setTaskList(state, {payload}) {
       const { type, list, total }= payload;
       state[type].list = [...state[type].list, ...list];
-      state[type].page = state[type].page+1;
-      state[type].total = total;
+      if(list.length > 0){
+        state[type].page = state[type].page+1;
+      }
+      state[type].total = total || 0;
       return fromJS(state).toJS();
     },
     setBigList(state, {payload}) {
       const { type, list, total }= payload;
       state[type].list = [...state[type].list, ...list];
-      state[type].page = state[type].page+1;
-      state[type].total = total;
+      if(list.length > 0){
+        state[type].page = state[type].page+1;
+      }
+      state[type].total = total || 0;
       return fromJS(state).toJS();
     }
   

@@ -343,10 +343,12 @@ class Product extends Component<IProps, IState>{
           <AtModalHeader>还款明细</AtModalHeader>
           <AtModalContent>
          
-            <View className="at-row at-row__align--center at-row__justify--between">
+            <View className="row row__align--center row__justify--between">
               <View className="at-col header-title"><Text>期数</Text></View>
               <View className="at-col header-title"><Text>月组金(元)</Text></View>
               <View className="at-col header-title"><Text>管理费</Text></View>
+              <View className="at-col header-title"><Text>月总租金</Text></View>
+              <View className="at-col header-title"><Text>提前还款金额</Text></View>
             </View>
             <ScrollView
               scrollY
@@ -355,10 +357,12 @@ class Product extends Component<IProps, IState>{
             >
             {
               list.map(item=>
-                <View className="at-row at-row__align--center at-row__justify--between" key={item.period}>
+                <View className="row row__align--center row__justify--between" key={item.period}>
                   <View className="at-col content-title"><Text>{item.period}</Text></View>
                   <View className="at-col content-title "><Text>{item.monthlyRent}</Text></View>
                   <View className="at-col content-title"><Text>{item.managementExpense}</Text></View>
+                  <View className="at-col content-title"><Text>{item.stillReturnAmount}</Text></View>
+                  <View className="at-col content-title"><Text>{item.beforeRepayment}</Text></View>
                 </View>
               ) 
             }

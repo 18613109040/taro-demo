@@ -7,9 +7,6 @@ import { InitStateProps } from '../../models/report';
 import './index.scss';
 type IState = {
   loading: boolean;
-  isOpened:  boolean;
-  text: string;
-  icon: string;
   [key: string]: string | boolean | Array<any> | number;
 }
 type IProps = {
@@ -27,9 +24,6 @@ class ContractDownload extends Component<IProps, IState>{
     super(props)
     this.state = {
       loading: false,
-      icon: '',
-      text: '',
-      isOpened: false
 
     }
   }
@@ -40,6 +34,9 @@ class ContractDownload extends Component<IProps, IState>{
   download = async (name) => {
     const { orderId } = this.$router.params
     const { dispatch } = this.props;
+    Taro.showLoading({
+      title: '下载中...'
+    })
     const res = await dispatch({
       type: 'report/generateTemplateAction',
       payload: {
@@ -53,65 +50,71 @@ class ContractDownload extends Component<IProps, IState>{
         header: {
           Cookie: Taro.getStorageSync('cookie'),
         },
-        success: (res) => {
+        success: (resd) => {
+          Taro.hideLoading()
           Taro.openDocument({
-            filePath: res.tempFilePath
+            filePath: resd.tempFilePath
           })
-        },
-        fail: (res) => {
-          console.dir(res)
         }
+      })
+    } else {
+      Taro.hideLoading()
+      Taro.showToast({
+        title: res.msg,
+        icon: 'none',
+        duration: 2000
       })
     }
   }
   send= async() =>{
     this.setState({loading: true})
     const { dispatch } = this.props;
-    const { orderId, taskId } = this.$router.params
+    const { orderId, taskId, taskName } = this.$router.params
     const res = await dispatch({
       type: 'report/getOnlineGreateAction',
       payload: {
-        taskId: taskId,
-        id: orderId
+        taskId,
+        id: orderId,
+        taskName
       }
     })
     this.setState({loading: false})
     if(res.success){
-      this.setState({
-        isOpened: true,
-        text: '短信发送成功,请注意查收',
-        icon: 'check-circle'
+      Taro.showToast({
+        title: res.msg,
+        icon: 'success',
+        duration: 2000
       })
     }else{
-      this.setState({
-        isOpened: true,
-        text: res.msg,
-        icon: 'close-circle'
+      Taro.showToast({
+        title: res.msg,
+        icon: 'none',
+        duration: 2000
       })
     }
   }
   render() {
-    const { loading, isOpened, text, icon } = this.state;
+    const { loading } = this.state;
     return (
       <View className="contract-download">
-        <AtToast isOpened={isOpened}  text={text} icon={icon}></AtToast>
-        <View className="at-row at-row__align--center line">
+        
+        <View className="row row__align--center line">
           <Text className="at-col">融资租赁信息问答笔录（线下）</Text>
           <AtButton type='primary' size="small" onClick={() => this.download('iwataAsks')}>下载</AtButton>
         </View>
-        <View className="at-row at-row__align--center line">
+        <View className="row row__align--center line">
           <Text className="at-col">租金明细表</Text>
           <AtButton type='primary' size="small"  onClick={() => this.download('rentIst')} >下载</AtButton>
         </View>
-        <View className="at-row at-row__align--center line">
+        <View className="row row__align--center line">
           <Text className="at-col">确认函（线下）</Text>
           <AtButton type='primary' size="small"  onClick={() => this.download('recommendLetter')}>下载</AtButton>
         </View>
-        <View className="at-row at-row__align--center line">
+        <View className="row row__align--center line">
           <Text className="at-col">汽车租赁合同</Text>
           <AtButton type='primary' size="small" onClick={() => this.download('leaseContract')}>下载</AtButton>
         </View>
-        <View className="at-row at-row__align--center line">
+        <View className="row row__align--center line">
           <Text className="at-col">发送电子签章合同</Text>
           <AtButton type='primary' loading={loading} size="small" onClick={this.send}>{loading?'短信发送中...':'发送短信'}</AtButton>
         </View>

@@ -36,7 +36,7 @@ class Account extends Component<IProps, IState>{
             </View>
             <View className="user-name"><Text>{userName}</Text></View>
             <View className="real-name"><Text>{realName}</Text></View>
-            <View className="status at-row at-row__align--center">
+            <View className="status row row__align--center">
               <View className="at-col">
                 <View className="title"><Text>提交</Text></View>
                 <View className="number"><Text>100</Text></View>

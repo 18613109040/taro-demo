@@ -1,76 +1,65 @@
-@import '../../styles/theme';
-page{
+@import "../../styles/theme";
+page {
   background: $brand-13;
 }
-.order-page{
-  .at-tabs__header{
-    height: 44PX;
-    align-items: center;
-  }
-  .at-tabs__item{
-    // padding: 0px;
-    height: 44PX;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-
-    .at-tabs__item-underline{
-      height: 2PX;
+.order-page {
+  .at-tabs__item {
+    .at-tabs__item-underline {
+      height: 2px;
       width: 50px;
       margin-left: calc(50% - 25px);
     }
   }
-  .card{
+  .card {
     margin: $h-spacing-30;
     border-radius: $radius-16;
   }
-  .card-detail{
+  .card-detail {
     padding: $h-spacing-30;
     background: $brand-8;
     margin-bottom: $h-spacing-20;
-    .card-meta{
+    .card-meta {
       display: flex;
       align-items: center;
       margin-bottom: $h-spacing-10;
-      .des{
+      .des {
         flex: 1;
-        .user-name{
+        .user-name {
           font-size: $font-size-34;
           font-weight: 600;
         }
-        .time{
+        .time {
           margin-left: $h-spacing-20;
           font-size: $font-size-28;
         }
       }
-      .status{
+      .status {
         font-size: $font-size-28;
-        
       }
     }
-    .task-title{
+    .task-title {
       font-size: $font-size-28;
       margin-left: $h-spacing-10;
     }
-    .product-name{
+    .product-name {
       font-size: $font-size-24;
       // color: $brand-1;
       // background: #f1f2f6;
       // padding: $v-spacing-4 $h-spacing-10;
     }
   }
-  .no-data{
+  .no-data {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     height: 100%;
     margin-top: -20%;
-    .no-dataimage{
+    .no-dataimage {
       width: 400px;
       height: 400px;
     }
-    .text{
+    .text {
       font-size: $font-size-28;
       color: $brand-1;
     }

@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, ScrollView, Text, Image } from '@tarojs/components';
-import { AtTabs, AtTabsPane, AtLoadMore } from 'taro-ui'
+import { AtTabs, AtLoadMore } from 'taro-ui'
 import { connect } from '@tarojs/redux';
 import { SystemInfoProps } from '../../interface/common'
 import './index.scss';
@@ -65,8 +65,18 @@ class Order extends Component<IProps, IState>{
     }
   }
   componentDidMount = () => {
+    const query = Taro.createSelectorQuery();
+    query.select('.tabs').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res) => {
+      console.dir(res)
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
     this.getData();
   }
+
   async getData () {
     this.setState({ loadMore: true })
     const { current, tabList } = this.state;
@@ -124,26 +134,28 @@ class Order extends Component<IProps, IState>{
     })
   }
   render() {
-    const { windowHeight } = this.props.systemInfo;
-    const { current, tabList, loadMore } = this.state;
+    const { current, tabList, loadMore, height } = this.state;
     const status = loadMore ? 'loading' : loadMore && this.props[tabList[current].type].list.length === this.props[tabList[current].type].total ? 'noMore' : ''
     return (
       <View className="order-page">
-        <AtTabs scroll current={current} tabList={tabList} onClick={this.handleClick}>
-        </AtTabs>
+        <View className="tabs">
+          <AtTabs scroll  current={current} tabList={tabList} onClick={this.handleClick}> </AtTabs>
+        </View>
         <ScrollView
           scrollY
           scrollWithAnimation
           onScrollToLower={this.onScrollToLower}
-          style={{ height: `${windowHeight - 54}px`, marginTop: '10PX' }}
+          style={{ height: `${height}px`, marginTop: '10PX' }}
         >
           {
-            this.props[tabList[current].type].total === 0 ? <View className="no-data">
+            this.props[tabList[current].type].total.toString() == 0 ? 
+            <View className="no-data">
               <Image className="no-dataimage" src={require('../../images/task/meiyoushuju.png')} />
               <View className="text">
                 <Text>没有数据</Text>
               </View>
-            </View> : <View>
+            </View> : 
+            <View>
                 {
                   this.props[tabList[current].type].list.map((data) => (
                     <View className="card">

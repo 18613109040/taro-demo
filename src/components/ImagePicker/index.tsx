@@ -49,6 +49,7 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
       count: count - files.length,
       type: 'file',
       success: (res) => {
+        console.dir(res)
         setLoadding(true)
         let tempFilePaths: any = [];
         if (type === 'video') {
@@ -190,7 +191,7 @@ const ImagePicker: Taro.FC<IProps> = (props: IProps) => {
         <View className="modal-content">
 
           {files.map((item) => (
-            <View className="flex-1 at-row__justify--center">
+            <View className="flex-1 row__justify--center">
               <View className="preview">
                 {
                   item.image ? <Image src={`${baseUrl}/${item.url}`} className="image" /> :

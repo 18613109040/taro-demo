@@ -73,8 +73,28 @@ class LoanMaterial extends Component<IProps, IState>{
       })
     });
   }
-  save = () => {
-    Taro.navigateBack()
+  save =  () => {
+    const { dispatch } = this.props;
+    const { taskId, taskName, orderId } = this.$router.params
+    dispatch({
+      type: 'report/submitPleaseMaterialAction',
+      payload: {
+        taskId, 
+        taskName, 
+        id: orderId
+      }
+    }).then(res=>{
+      if(res.success) {
+        Taro.navigateBack()
+      }else{
+        Taro.showToast({
+          title: res.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    })
+    
   }
   changeImage = ({ key, value }) => {
     this.setState({
@@ -98,7 +118,7 @@ class LoanMaterial extends Component<IProps, IState>{
             <View className="title">收款人附件</View>
             <View className="card-list">
               <View className="list-row">
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="身份证复印件扫描件"
@@ -108,7 +128,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="划扣绑定成功截图"
@@ -119,7 +139,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="添加贷后成功截图"
@@ -132,7 +152,7 @@ class LoanMaterial extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="融资租赁信息问答笔录"
@@ -143,7 +163,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="租金明细表"
@@ -154,7 +174,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     // required={true}
                     label="门店签约合照"
@@ -166,7 +186,7 @@ class LoanMaterial extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="车辆保单"
@@ -177,7 +197,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="GPS照片"
@@ -188,7 +208,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="客户请款视频"
@@ -202,7 +222,7 @@ class LoanMaterial extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="推荐确认函"
@@ -213,7 +233,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     // required={true}
                     label="通话清单"
@@ -225,7 +245,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     // required={true}
                     label="回款凭证对话框"
@@ -238,7 +258,7 @@ class LoanMaterial extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     // required={true}
                     label="租赁合同框（上传银行要求的版本）"
@@ -249,7 +269,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     // required={true}
                     label="连带责任保证书"
@@ -260,7 +280,7 @@ class LoanMaterial extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='flex-1 at-row at-row__align--center at-row__justify--center'>
+                <View className='flex-1 row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="其他资料"

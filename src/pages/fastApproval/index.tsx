@@ -146,7 +146,7 @@ class FastApproval extends Component<IProps, IState>{
       }
       
     })
-    const query = Taro.createSeleclCollectClientInfoController.do?datagridctorQuery();
+    const query = Taro.createSelectorQuery();
     query.select('.steps-bg').boundingClientRect();
     query.select('.btn-footer').boundingClientRect();
     const { windowHeight } = Taro.getSystemInfoSync();
@@ -354,7 +354,7 @@ class FastApproval extends Component<IProps, IState>{
           style={{ height: `${height}px` }}
         >
           <View className="step-one">
-            <View className="content-upload at-row at-row__align--center">
+            <View className="content-upload row row__align--center">
               <View className="at-col">
                 <View className="name-title">
                   <Text>身份证</Text>
@@ -377,7 +377,7 @@ class FastApproval extends Component<IProps, IState>{
 
               </View>
             </View>
-            <View className="content-upload divider at-row at-row__align--center">
+            <View className="content-upload divider row row__align--center">
               <View className="at-col">
                 <View className="name-title">
                   <Text>身份证</Text>
@@ -400,7 +400,7 @@ class FastApproval extends Component<IProps, IState>{
                 }
               </View>
             </View>
-            <View className="content-upload divider at-row at-row__align--center">
+            <View className="content-upload divider row row__align--center">
               <View className="at-col">
                 <View className="name-title">
                   <Text>银行卡</Text>
@@ -422,7 +422,7 @@ class FastApproval extends Component<IProps, IState>{
                 }
               </View>
             </View>
-            <View className="content-upload divider at-row at-row__align--center">
+            <View className="content-upload divider row row__align--center">
               <View className="at-col">
                 <View className="name-title">
                   <Text>驾驶证</Text>
@@ -442,7 +442,7 @@ class FastApproval extends Component<IProps, IState>{
                 }
               </View>
             </View>
-            <View className="content-upload divider at-row at-row__align--center">
+            <View className="content-upload divider row row__align--center">
               <View className="at-col">
                 <View className="name-title">
                   <Text>签署授权书</Text>
@@ -478,7 +478,7 @@ class FastApproval extends Component<IProps, IState>{
           scrollWithAnimation
           style={{ height: `${height}px` }}
         >
-          <View className='header at-row at-row__align--center'>
+          <View className='header row row__align--center'>
             <AtIcon value="alert-circle" size="14" color="#FE677A" />
             <View className="warring-title">图片识别的数据可能会存在误差,请仔细检查</View>
           </View>
@@ -681,7 +681,7 @@ class FastApproval extends Component<IProps, IState>{
             />
           </View>
 
-          <View className="btn-footer at-row at-row__align--center">
+          <View className="btn-footer row row__align--center">
             <View className="at-col"><AtButton onClick={this.previous}  >上一步</AtButton></View>
             <View className="at-col submit-btn"><AtButton type='primary' loading={loading} disabled={submitDisable} onClick={this.submit}>{loading ? "提交中" : "提交"}</AtButton></View>
           </View>
@@ -698,7 +698,7 @@ class FastApproval extends Component<IProps, IState>{
             <View><AtIcon value="orderSucess" size="100" prefixClass='iconfont' color="#4984FD" /></View>
             <View><Text className="sucess-title">提交成功</Text></View>
             <View><Text className="sucess-des">您的申请已经提交成功,我们会在第一时间审核。</Text></View>
-            <View className="btn-sucess-footer at-row at-row__align--center">
+            <View className="btn-sucess-footer row row__align--center">
               <View className="at-col"><AtButton onClick={this.home} >返回首页</AtButton></View>
               <View className="at-col submit-btn"><AtButton type='primary' onClick={this.order}>查看订单</AtButton></View>
             </View>

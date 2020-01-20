@@ -65,7 +65,7 @@ class Home extends PureComponent<IProps, IState> {
             <AtIcon value='add-circle' size='30' color='#fff' />
             <Text className="text">进件快速申请</Text>
           </View>
-          {/* <View className="list-header at-row at-row__align--center">
+          {/* <View className="list-header row row__align--center">
             <AtIcon value='verticalline' size='20' color='#4984FD' prefixClass='iconfont' />
             <Text className="task-title">待办任务</Text>
           </View> */}

@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable';
 import { FormDataProps, StepsProps, OrderDetailProps } from '../interface/form'
 import { validRepetition, temporaryService, getOrderDetail, getProductList, getProduct, getProductCompute, deteleFile, submitInfo, updateInfo, repayDetail,
-  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, generateTemplate, carMortgage, getInfoAuth, getOrgCode, gpsAdd, getOnlineGreate } from '../services/report'
+  getProvince, getCitysById, getAreasById, getGpsInstallInfo, getCarMortgageInfo, generateTemplate, carMortgage, getInfoAuth, getOrgCode, gpsAdd, getOnlineGreate, submitPleaseMaterial } from '../services/report'
 type IAddr = {
   provinces: Array<any>;
   citys: Array<any>;
@@ -267,7 +267,8 @@ export default {
     *getGpsInstallInfoAction({payload}, { call, put}) {
       const res = yield call(getGpsInstallInfo,payload)
       if(res.success){
-        yield put({ type: "setGpsInstallInfo", payload: res.obj })
+        yield put({ type: "setGpsInstallInfo", payload: res.obj })  
+        return res.obj
       }
     },
     *getCarMortgageInfoAction({payload}, { call, put}){
@@ -301,8 +302,11 @@ export default {
     *getOnlineGreateAction({payload}, { call, put}){
       const res = yield call(getOnlineGreate,payload)
       return res
+    },
+    *submitPleaseMaterialAction({payload}, { call, put}){
+      const res = yield call(submitPleaseMaterial,payload)
+      return res
     }
-    
   },
   reducers: {
     setAuthInfo(state, {payload}) {
@@ -384,6 +388,11 @@ export default {
         state.current = 2;
         state.steps[0].status = 'success'
         state.steps[1].status = 'success'
+      }else if(primaryStatus === '5' ) {
+        state.current = 3;
+        state.steps[0].status = 'success'
+        state.steps[1].status = 'success'
+        state.steps[2].status = 'success'
       }
       return fromJS(state).toJS()
     },

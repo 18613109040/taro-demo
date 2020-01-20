@@ -32,6 +32,7 @@ class InfoSupplement extends PureComponent<IProps, IState> {
       loadMore: false
     }
   }
+
   componentWillMount() {
     this.getTaskListData()
   }
@@ -62,14 +63,14 @@ class InfoSupplement extends PureComponent<IProps, IState> {
 
   }
   taskDetail = (item) => {
-    const { businessKey, taskId } = item;
+    const { businessKey, taskId, taskName } = item;
     const { dispatch } = this.props;
     dispatch({
       type: 'common/setIsTask',
       payload: true
     })
     Taro.navigateTo({
-      url: `/pages/report/index?orderId=${businessKey}&taskId=${taskId}`
+      url: `/pages/report/index?orderId=${businessKey}&taskId=${taskId}&taskName=${taskName}`
     })
   }
   onScrollToLower = () => {

@@ -128,7 +128,7 @@ class Material extends Component<IProps, IState>{
             <View className="title">主借贷人</View>
             <View className="card-list">
               <View className="list-row">
-                <View className='at-col at-row at-row__align--center at-row__justify--center '>
+                <View className='at-col row row__align--center row__justify--center '>
                   <ImagePicker
                     required={true}
                     disabled={this.computeDisabled('idCardAndBodyUrl')}
@@ -139,7 +139,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="行驶证主页"
@@ -150,7 +150,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="行驶证副页"
@@ -163,7 +163,7 @@ class Material extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="进件银行卡复印件"
@@ -175,7 +175,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="车辆登记证"
@@ -192,7 +192,7 @@ class Material extends Component<IProps, IState>{
             <View className="title">车辆信息</View>
             <View className="card-list">
               <View className="list-row">
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="车辆照片"
@@ -204,7 +204,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="车架号"
@@ -215,7 +215,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="后备箱"
@@ -228,7 +228,7 @@ class Material extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="仪表盘"
@@ -239,7 +239,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="出厂铭牌"
@@ -250,7 +250,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="内部座位"
@@ -264,7 +264,7 @@ class Material extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="人车合影"
@@ -275,7 +275,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="威武融资租赁申请表"
@@ -286,7 +286,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="工作收入证明"
@@ -299,7 +299,7 @@ class Material extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="征信授权书原件+手持照+面签照"
@@ -311,7 +311,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     label="车300网页"
@@ -322,7 +322,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     required={true}
                     files={carReceipts}
@@ -339,7 +339,7 @@ class Material extends Component<IProps, IState>{
             <View className="title">家庭</View>
             <View className="card-list">
               <View className="list-row">
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     label="户口本"
                     disabled={this.computeDisabled('relationProve')}
@@ -350,7 +350,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     label="婚姻信息"
                     files={marriageInfo}
@@ -361,7 +361,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     label="家访图片"
                     files={visitFamilyPhoto}
@@ -374,7 +374,7 @@ class Material extends Component<IProps, IState>{
                 </View>
               </View>
               <View className="list-row">
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     label="通话清单"
                     files={phoneRecord}
@@ -385,7 +385,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center'>
+                <View className='at-col row row__align--center row__justify--center'>
                   <ImagePicker
                     label="银行流水"
                     files={bankRunWater}
@@ -396,7 +396,7 @@ class Material extends Component<IProps, IState>{
                     onChange={this.changeImage}
                   />
                 </View>
-                <View className='at-col at-row at-row__align--center at-row__justify--center '>
+                <View className='at-col row row__align--center row__justify--center '>
                   <ImagePicker
                     label="居住证明"
                     files={liveProve}

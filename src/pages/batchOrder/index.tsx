@@ -39,6 +39,15 @@ class batchOrder extends Component<IProps, IState>{
     }
   }
   componentDidMount = () => {
+    const query = Taro.createSelectorQuery();
+    query.select('.tabs').boundingClientRect();
+    const { windowHeight } = Taro.getSystemInfoSync();
+    query.exec((res) => {
+      console.dir(res)
+      this.setState({
+        height: windowHeight - res[0].height
+      })
+    });
     this.getData();
   }
   async getData() {
@@ -98,199 +107,58 @@ class batchOrder extends Component<IProps, IState>{
     })
   }
   render() {
-    const { windowHeight } = this.props.systemInfo;
-    const { current, tabList, loadMore } = this.state;
+    const { current, tabList, loadMore, height } = this.state;
     const status = loadMore ? 'loading' : loadMore && this.props[tabList[current].type].list.length === this.props[tabList[current].type].total ? 'noMore' : ''
     return (
       <View className="order-page">
-        <AtTabs current={current} tabList={tabList} onClick={this.handleClick}>
-
-          <AtTabsPane current={current} index={0} >
-            <ScrollView
-              scrollY
-              scrollWithAnimation
-              onScrollToLower={this.onScrollToLower}
-              style={{ height: `${windowHeight - 54}px`, marginTop: '10PX' }}
-            >
-              {
-                this.props[tabList[current].type].total === 0 ? <View className="no-data">
-                  <Image className="no-dataimage" src={require('../../images/task/meiyoushuju.png')} />
-                  <View className="text">
-                    <Text>没有数据</Text>
-                  </View>
-                </View> : <View>
-                    {
-                      this.props[tabList[current].type].list.map((data) => (
-                        <View className="card">
-                          <View className="card-detail" key={data.id} onClick={() => this.orderDetail(data)} >
-                            <View className="card-meta" >
-                              <View className="des">
-                                <Text className="user-name">{data.name}</Text>
-                                <Text className="time">{data.createDate}</Text>
-                              </View>
-                            </View>
-                            <View>
-                              <Text className="product-name">地址: {`${data.idAddrProvince}${data.idAddrCity}${data.idAddrArea}${data.idAddrDetails}`}</Text>
-                            </View>
-                            <View>
-                              <Text className="product-name">手机号码: {data.phone}</Text>
-                            </View>
+        <View className="tabs">
+          <AtTabs current={current} tabList={tabList} onClick={this.handleClick}></AtTabs>
+        </View>
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          onScrollToLower={this.onScrollToLower}
+          style={{ height: `${height}px`, marginTop: '10PX' }}
+        >
+          {
+            this.props[tabList[current].type].total.toString() == 0 ?
+              <View className="no-data">
+                <Image className="no-dataimage" src={require('../../images/task/meiyoushuju.png')} />
+                <View className="text">
+                  <Text>没有数据</Text>
+                </View>
+              </View> :
+              <View>
+                {
+                  this.props[tabList[current].type].list.map((data) => (
+                    <View className="card">
+                      <View className="card-detail" key={data.id} onClick={() => this.orderDetail(data)} >
+                        <View className="card-meta" >
+                          <View className="des">
+                            <Text className="user-name">{data.name}</Text>
+                            <Text className="time">{data.createDate}</Text>
                           </View>
                         </View>
-
-                      ))
-                    }
-
-                  </View>
-              }
-              {loadMore &&
-                <AtLoadMore
-                  status={status}
-                />
-              }
-            </ScrollView>
-          </AtTabsPane>
-
-          <AtTabsPane current={current} index={1} >
-            <ScrollView
-              scrollY
-              scrollWithAnimation
-              onScrollToLower={this.onScrollToLower}
-              style={{ height: `${windowHeight - 54}px`, marginTop: '10PX' }}
-            >
-              {
-                this.props[tabList[current].type].total === 0 ? <View className="no-data">
-                  <Image className="no-dataimage" src={require('../../images/task/meiyoushuju.png')} />
-                  <View className="text">
-                    <Text>没有数据</Text>
-                  </View>
-                </View> : <View>
-                    {
-                      this.props[tabList[current].type].list.map((data) => (
-                        <View className="card">
-                          <View className="card-detail" key={data.id} onClick={() => this.orderDetail(data)} >
-                            <View className="card-meta" >
-                              <View className="des">
-                                <Text className="user-name">{data.name}</Text>
-                                <Text className="time">{data.createDate}</Text>
-                              </View>
-                            </View>
-                            <View>
-                              <Text className="product-name">地址: {`${data.idAddrProvince}${data.idAddrCity}${data.idAddrArea}${data.idAddrDetails}`}</Text>
-                            </View>
-                            <View>
-                              <Text className="product-name">手机号码: {data.phone}</Text>
-                            </View>
-                          </View>
+                        <View>
+                          <Text className="product-name">地址: {`${data.idAddrProvince}${data.idAddrCity}${data.idAddrArea}${data.idAddrDetails}`}</Text>
                         </View>
-
-                      ))
-                    }
-
-                  </View>
-              }
-              {loadMore &&
-                <AtLoadMore
-                  status={status}
-                />
-              }
-            </ScrollView>
-          </AtTabsPane>
-
-          <AtTabsPane current={current} index={2} >
-            <ScrollView
-              scrollY
-              scrollWithAnimation
-              onScrollToLower={this.onScrollToLower}
-              style={{ height: `${windowHeight - 54}px`, marginTop: '10PX' }}
-            >
-              {
-                this.props[tabList[current].type].total === 0 ? <View className="no-data">
-                  <Image className="no-dataimage" src={require('../../images/task/meiyoushuju.png')} />
-                  <View className="text">
-                    <Text>没有数据</Text>
-                  </View>
-                </View> : <View>
-                    {
-                      this.props[tabList[current].type].list.map((data) => (
-                        <View className="card">
-                          <View className="card-detail" key={data.id} onClick={() => this.orderDetail(data)} >
-                            <View className="card-meta" >
-                              <View className="des">
-                                <Text className="user-name">{data.name}</Text>
-                                <Text className="time">{data.createDate}</Text>
-                              </View>
-                            </View>
-                            <View>
-                              <Text className="product-name">地址: {`${data.idAddrProvince}${data.idAddrCity}${data.idAddrArea}${data.idAddrDetails}`}</Text>
-                            </View>
-                            <View>
-                              <Text className="product-name">手机号码: {data.phone}</Text>
-                            </View>
-                          </View>
+                        <View>
+                          <Text className="product-name">手机号码: {data.phone}</Text>
                         </View>
+                      </View>
+                    </View>
 
-                      ))
-                    }
+                  ))
+                }
 
-                  </View>
-              }
-              {loadMore &&
-                <AtLoadMore
-                  status={status}
-                />
-              }
-            </ScrollView>
-          </AtTabsPane>
-
-          <AtTabsPane current={current} index={3} >
-            <ScrollView
-              scrollY
-              scrollWithAnimation
-              onScrollToLower={this.onScrollToLower}
-              style={{ height: `${windowHeight - 54}px`, marginTop: '10PX' }}
-            >
-              {
-                this.props[tabList[current].type].total === 0 ? <View className="no-data">
-                  <Image className="no-dataimage" src={require('../../images/task/meiyoushuju.png')} />
-                  <View className="text">
-                    <Text>没有数据</Text>
-                  </View>
-                </View> : <View>
-                    {
-                      this.props[tabList[current].type].list.map((data) => (
-                        <View className="card">
-                          <View className="card-detail" key={data.id} onClick={() => this.orderDetail(data)} >
-                            <View className="card-meta" >
-                              <View className="des">
-                                <Text className="user-name">{data.name}</Text>
-                                <Text className="time">{data.createDate}</Text>
-                              </View>
-                            </View>
-                            <View>
-                              <Text className="product-name">地址: {`${data.idAddrProvince}${data.idAddrCity}${data.idAddrArea}${data.idAddrDetails}`}</Text>
-                            </View>
-                            <View>
-                              <Text className="product-name">手机号码: {data.phone}</Text>
-                            </View>
-                          </View>
-                        </View>
-
-                      ))
-                    }
-
-                  </View>
-              }
-              {loadMore &&
-                <AtLoadMore
-                  status={status}
-                />
-              }
-            </ScrollView>
-          </AtTabsPane>
-
-          
-        </AtTabs>
+              </View>
+          }
+          {loadMore &&
+            <AtLoadMore
+              status={status}
+            />
+          }
+        </ScrollView>
 
       </View>
     );

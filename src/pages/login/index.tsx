@@ -90,7 +90,7 @@ class Login extends PureComponent<IProps, IState> {
           <AtIcon value="loginimage" size="150" prefixClass='iconfont' color="#fff" />
         </View>
         <View className="login-content">
-          <View className="list at-row at-row__align--center">
+          <View className="list row row__align--center">
             <AtIcon value="user" size="20" color="#232833" />
             <Input
               placeholder="请输入用户名"
@@ -98,7 +98,7 @@ class Login extends PureComponent<IProps, IState> {
               onInput={this.onChangeName}
             />
           </View>
-          <View className="list at-row at-row__align--center">
+          <View className="list row row__align--center">
             <AtIcon value="lock" size="20" color="#232833" />
             <Input
               placeholder="请输入用户名"

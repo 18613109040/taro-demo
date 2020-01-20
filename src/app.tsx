@@ -14,10 +14,9 @@ const store = dvaApp.getStore();
 class App extends Component {
   config: Config = {
     pages: [
+      
       'pages/home/index',
       'pages/login/index',
-      
-      
       'pages/bigControl/index',
       'pages/batchOrder/index',
       'pages/infoSupplement/index',
@@ -60,8 +59,8 @@ class App extends Component {
         {
           pagePath: 'pages/batchOrder/index',
           text: '秒批',
-          iconPath: './images/tabBar/order.png',
-          selectedIconPath: './images/tabBar/order-fill.png',
+          iconPath: './images/tabBar/fengkong.png',
+          selectedIconPath: './images/tabBar/fengkong-fill.png',
         },
         {
           pagePath: 'pages/order/index',
